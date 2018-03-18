@@ -16,16 +16,16 @@ namespace Bloggy.API.Features.Posts
             _mediator = mediator;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPost([FromQuery] GetPost.Query query)
+        [HttpGet("GetAllPosts")]
+        public async Task<IActionResult> GetAllPosts([FromQuery] GetPost.Query query)
         {
             var result = await _mediator.Send(query)
 
             return OK(result) 
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPosts([FromQuery] GetPosts.Query query)
+        [HttpGet("GetUserPosts")]
+        public async Task<IActionResult> GetUserPosts([FromQuery] GetPosts.Query query)
         {
             var result = await _mediator.Send(query)
 
