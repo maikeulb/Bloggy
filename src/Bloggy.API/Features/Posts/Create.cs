@@ -9,7 +9,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Conduit.Features.Blog
+namespace Conduit.Features.Posts
 {
     public class Create
     {
@@ -45,7 +45,7 @@ namespace Conduit.Features.Blog
             {
                 var author = await _context.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
                 var tags = new List<Tag>();
-                foreach(var tag in (message.Blog.TagList ?? Enumerable.Empty<string>()))
+                foreach(var tag in (message.Post.TagList ?? Enumerable.Empty<string>()))
                 {
                     var t = await _context.Tags.FindAsync(tag);
                     if (t == null)
@@ -60,17 +60,17 @@ namespace Conduit.Features.Blog
                     tags.Add(t);
                 }
 
-                var blog = new Blog()
+                var post = new Post()
                 {
                     Author = author,
-                    Body = message.Blog.Body,
+                    Body = message.Post.Body,
                     CreationDate = DateTime.UtcNow,
-                    Title = message.Blog.Title,
+                    Title = message.Post.Title,
                 };
-                await _context.Blog.AddAsync(blog, cancellationToken);
-                await _context.BlogTags.AddRangeAsync(tags.Select(x => new BlogTag()
+                await _context.Post.AddAsync(post, cancellationToken);
+                await _context.PostTags.AddRangeAsync(tags.Select(x => new PostTag()
                 {
-                    Blog = Blog,
+                    Post = Post,
                     Tag = x
                 }), cancellationToken);
 
