@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bloggy.Features.Posts
+namespace Bloggy.API.Features.Posts
 {
     [Route("api/posts")]
     public class PostsController : Controller

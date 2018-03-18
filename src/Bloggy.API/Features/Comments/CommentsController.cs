@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bloggy.Features.Comments
+namespace Bloggy.API.Features.Comments
 {
     [Route("api/posts/{postId}/comments")]
     public class CommentsController : Controller
