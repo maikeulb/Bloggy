@@ -61,7 +61,7 @@ namespace Bloggy.API.Features.Posts
                 }
                 if (!string.IsNullOrWhiteSpace(message.Author))
                 {
-                    var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Author, cancellationToken);
+                    var author = await _context.Users.FirstOrDefaultAsync(x => x.Username == message.Author, cancellationToken);
                     if (author != null)
                     {
                         queryable = queryable.Where(x => x.Author == author);
