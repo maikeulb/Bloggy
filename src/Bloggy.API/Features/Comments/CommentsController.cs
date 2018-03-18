@@ -4,28 +4,20 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bloggy.Features.Posts
+namespace Bloggy.Features.Comments
 {
-    [Route("api/posts")]
-    public class PostsController : Controller
+    [Route("api/posts/{postId}/comments")]
+    public class CommentsController : Controller
     {
         private readonly IMediator _mediator;
 
-        public PostsController(IMediator mediator)
+        public CommentsController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPost([FromQuery] GetPost.Query query)
-        {
-            result = await _mediator.Send(query)
-
-            return OK() 
-        }
-
         [HttpGet]
-        public async Task<IActionResult> GetPosts([FromQuery] GetPosts.Query query)
+        public async Task<IActionResult> GetComments([FromQuery] GetPost.Query query)
         {
             result = await _mediator.Send(query)
 
@@ -35,15 +27,6 @@ namespace Bloggy.Features.Posts
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> Create([FromBody]Create.Command command)
-        {
-            await _mediator.Send(command);
-
-            return NoContent ();
-        }
-
-        [HttpPut("{id}")]
-        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<IActionResult> Edit(string id, [FromBody]Edit.Command command)
         {
             command.Id = id;
             await _mediator.Send(command);
