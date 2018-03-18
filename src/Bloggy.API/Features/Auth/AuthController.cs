@@ -17,13 +17,17 @@ namespace Bloggy.API.Features.Auth
         [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] Create.Command command)
         {
-            return await _mediator.Send(command);
+            await _mediator.Send(command);
+
+            return NoContent ();
         }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] Login.Command command)
         {
-            return await _mediator.Send(command);
+            await _mediator.Send(command);
+
+            return NoContent ();
         }
     }
 }

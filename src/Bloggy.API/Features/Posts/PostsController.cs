@@ -19,17 +19,17 @@ namespace Bloggy.API.Features.Posts
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost([FromQuery] GetPost.Query query)
         {
-            result = await _mediator.Send(query)
+            var result = await _mediator.Send(query)
 
-            return OK() 
+            return OK(result) 
         }
 
         [HttpGet]
         public async Task<IActionResult> GetPosts([FromQuery] GetPosts.Query query)
         {
-            result = await _mediator.Send(query)
+            var result = await _mediator.Send(query)
 
-            return OK() 
+            return OK(result) 
         }
 
         [HttpPost]

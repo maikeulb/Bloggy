@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggy.API.Features.Users
 {
-    [Route("users")]
+    [Route("api/users")]
     public class UsersController
     {
         private readonly IMediator _mediator;
@@ -27,22 +27,28 @@ namespace Bloggy.API.Features.Users
         public async Task<IActionResult> GetUser([FromBody] GetUser.Query query)
         {
             query.Username = _currentUserAccessor.GetCurrentUsername()
-            return await _mediator.Send(query);
+
+            var result =  await _mediator.Send(query);
+
+            return OK(result) 
         }
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> GetCurrent()
         {
-            return await _mediator.Send(command);
+            var result = await _mediator.Send(command);
 
+            return NoContent (result );
         }
 
         [HttpPut]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> UpdateUser([FromBody]Edit.Command command)
         {
-            return await _mediator.Send(command);
+            await _mediator.Send(command);
+
+            return NoContent ();
         }
     }
 }

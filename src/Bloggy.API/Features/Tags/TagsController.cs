@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggy.API.Features.Tags
 {
-    [Route("tags")]
+    [Route("api/tags")]
     public class TagsController : Controller
     {
         private readonly IMediator _mediator;
@@ -17,7 +17,9 @@ namespace Bloggy.API.Features.Tags
         [HttpGet]
         public async Task<IActionResult> GetTags()
         {
-            return await _mediator.Send(new GetCommands.Query query)
+            var result = await _mediator.Send(new GetCommands.Query query)
+
+            return OK(result) 
         }
     }
 }

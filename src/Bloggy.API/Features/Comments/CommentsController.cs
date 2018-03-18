@@ -21,7 +21,7 @@ namespace Bloggy.API.Features.Comments
         {
             result = await _mediator.Send(query)
 
-            return OK() 
+            return OK(result) 
         }
 
         [HttpPost]
