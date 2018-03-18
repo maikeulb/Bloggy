@@ -1,4 +1,4 @@
-namespace Bloggy.Entities
+namespace Bloggy.API.Entities
 {
     public class PostTag
     {

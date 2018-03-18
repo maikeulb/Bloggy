@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Conduit.Domain;
-using Conduit.Infrastructure;
+using Bloggy.API.Entities;
+using Bloggy.API.Infrastructure;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Conduit.Features.Posts
+namespace Bloggy.API.Features.Posts
 {
     public class Create
     {

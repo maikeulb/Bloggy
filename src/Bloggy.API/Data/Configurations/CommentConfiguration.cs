@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Bloggy.API.Entities;
 
-namespace Bloggy.API.Data
+namespace Bloggy.API.Data.Configurations
 {
     class CommentConfiguration
         : IEntityTypeConfiguration<Comment>

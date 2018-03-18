@@ -1,6 +1,6 @@
 using System;
 
-namespace Bloggy.Entities
+namespace Bloggy.API.Entities
 {
     public class Comment
     {

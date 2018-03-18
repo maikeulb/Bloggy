@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Bloggy.Entities
+namespace Bloggy.API.Entities
 {
     public class ApplicationUser
     {
