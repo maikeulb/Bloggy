@@ -13,7 +13,6 @@ namespace Bloggy.API.Features.Posts
 {
     public class Create
     {
-
         public class Command : IRequest
         {
             public string Title { get; set; }
@@ -35,8 +34,7 @@ namespace Bloggy.API.Features.Posts
             private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
 
-            public Handler(BloggyContext context, 
-                    ICurrentUserAccessor currentUserAccessor)
+            public Handler(BloggyContext context,ICurrentUserAccessor currentUserAccessor)
             {
                 _context = context;
                 _currentUserAccessor = currentUserAccessor;
