@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 
-namespace Conduit.Infrastructure.Security
+namespace Bloggy.API.Infrastructure
 {
     public class JwtTokenGenerator : IJwtTokenGenerator
     {

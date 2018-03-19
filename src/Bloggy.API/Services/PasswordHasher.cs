@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Conduit.Infrastructure.Security
+namespace Bloggy.API.Infrastructure
 {
     public class PasswordHasher : IPasswordHasher
     {

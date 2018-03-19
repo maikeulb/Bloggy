@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Conduit.Infrastructure.Security
+namespace Bloggy.API.Infrastructure
 {
     public class JwtIssuerOptions
     {
