@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bloggy.API.Features.Posts
 {
-    public class GetBlog
+    public class List
     {
         public class Query : IRequest<Model>
         {
