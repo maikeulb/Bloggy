@@ -46,9 +46,7 @@ namespace Bloggy.API.Features.Comments
                     .FirstOrDefaultAsync(x => x.Id == message.Id, cancellationToken);
 
                 if (post == null)
-                {
                     throw new RestException(HttpStatusCode.NotFound);
-                }
 
                 var author = await _context.Users.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
                 

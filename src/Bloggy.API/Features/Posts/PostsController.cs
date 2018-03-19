@@ -17,7 +17,7 @@ namespace Bloggy.API.Features.Posts
         }
 
         [HttpGet("List")]
-        public async Task<IActionResult> List([FromQuery] GetPost.Query query)
+        public async Task<IActionResult> List([FromQuery] GetPost.Query query) // suport filtering by tag and category; include comments
         {
             var result = await _mediator.Send(query)
 
@@ -25,7 +25,7 @@ namespace Bloggy.API.Features.Posts
         }
 
         [HttpGet("Mine")]
-        public async Task<IActionResult> Mine([FromQuery] GetPosts.Query query)
+        public async Task<IActionResult> Mine([FromQuery] GetPosts.Query query) // include comments
         {
             var result = await _mediator.Send(query)
 
@@ -53,7 +53,7 @@ namespace Bloggy.API.Features.Posts
 
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task Delete([FromQuery]Create.Command command)
+        public async Task Delete([FromQuery]Create.Command command) //cascade delete comments
         {
             await _mediator.Send(command);
 

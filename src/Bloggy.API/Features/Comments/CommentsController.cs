@@ -17,7 +17,7 @@ namespace Bloggy.API.Features.Comments
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetComments([FromQuery] GetPost.Query query)
+        public async Task<IActionResult> List([FromQuery] GetPost.Query query)
         {
             result = await _mediator.Send(query)
 
@@ -29,6 +29,15 @@ namespace Bloggy.API.Features.Comments
         public async Task<IActionResult> Create([FromBody]Create.Command command)
         {
             command.Id = id;
+            await _mediator.Send(command);
+
+            return NoContent ();
+        }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+        public async Task<IActionResult> Edit([FromBody]Edit.Command command)
+        {
             await _mediator.Send(command);
 
             return NoContent ();
