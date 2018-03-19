@@ -6,6 +6,6 @@ namespace Bloggy.API.Entities
     {
         public string Id { get; set; }
 
-        public List<PostTag> PostTags { get; set; }
+        public ICollection<PostTag> PostTags { get; set; } = new List<PostTag> ();
     }
 }

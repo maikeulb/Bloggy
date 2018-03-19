@@ -12,7 +12,7 @@ namespace Bloggy.API.Entities
         public ApplicationUser Author { get; set; }
         public DateTime CreationDate { get; set; }
 
-        public List<Comment> Comments { get; set; }
-        public List<Tag> Tags { get; set; }
+        public ICollection<Comment> Comments { get; set; } = new List<Comment> ();
+        public ICollection<Tag> Tags { get; set; } = new List<Tag> ();
     }
 }
