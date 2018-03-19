@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace Bloggy.API.Entities
 {
-    public class Tag
+    public class Category
     {
         public string Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<PostTag> PostTags { get; set; } = new List<PostTag> ();
+        public ICollection<Post> Posts { get; set; } = new List<Post> ();
     }
 }
