@@ -4,22 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggy.API.Features.Tags
 {
-    [Route("api/tags")]
+    [Route ("api/tags")]
     public class TagsController : Controller
     {
         private readonly IMediator _mediator;
 
-        public TagsController(IMediator mediator)
+        public TagsController (IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTags()
+        public async Task<IActionResult> List ()
         {
-            var result = await _mediator.Send(new GetCommands.Query query)
+            var result = await _mediator.Send (new List.Query query)
 
-            return OK(result) 
+            return OK (result)
         }
     }
 }

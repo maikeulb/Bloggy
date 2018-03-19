@@ -4,28 +4,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggy.API.Features.Auth
 {
-    [Route("api/auth")]
+    [Route ("api/auth")]
     public class AuthController
     {
         private readonly IMediator _mediator;
 
-        public AuthController(IMediator mediator)
+        public AuthController (IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] Create.Command command)
+        [HttpPost ("Create")]
+        public async Task<IActionResult> Create ([FromBody] Create.Command command)
         {
-            await _mediator.Send(command);
+            await _mediator.Send (command);
 
             return NoContent ();
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] Login.Command command)
+        [HttpPost ("Login")]
+        public async Task<IActionResult> Login ([FromBody] Login.Command command)
         {
-            await _mediator.Send(command);
+            await _mediator.Send (command);
 
             return NoContent ();
         }
