@@ -1,7 +1,7 @@
 using Bloggy.API.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bloggy.API.Data.Context
+namespace Bloggy.API.Data
 {
     public class BloggyContext : DbContext
     {
