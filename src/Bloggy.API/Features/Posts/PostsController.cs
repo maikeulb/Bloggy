@@ -16,7 +16,7 @@ namespace Bloggy.API.Features.Posts
             _mediator = mediator;
         }
 
-        [HttpGet("List")]
+        [HttpGet]
         public async Task<IActionResult> List([FromQuery] GetPost.Query query) // suport filtering by tag and category; include comments
         {
             var result = await _mediator.Send(query)
