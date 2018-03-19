@@ -1,6 +1,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Bloggy.API.Entities;
+using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
 using Bloggy.API.Infrastructure.Interfaces;
 using MediatR;
@@ -14,8 +16,7 @@ namespace Bloggy.API.Features.Tags
         {
             public class Model
             {
-                public int Id { get; set; }
-                public List<PostTag> PostTags { get; set; } = new List<PostTag> ();
+                public List<Tag> Tags { get; set; } = new List<Tag> ();
             }
         }
 
@@ -31,10 +32,7 @@ namespace Bloggy.API.Features.Tags
             protected override async Task<Model> HandleCore (Query message, CancellationToken cancellationToken)
             {
                 var tags = await _context.Tags.OrderBy(x => x.TagId).AsNoTracking().ToListAsync(cancellationToken);
-                return new TagsEnvelope()
-                {
-                    Tags = tags.Select(x => x.TagId).ToList()
-                };
+                return tags.Select(x => x.TagId).ToList()
             }
         }
     }

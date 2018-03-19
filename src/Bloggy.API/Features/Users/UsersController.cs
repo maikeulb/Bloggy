@@ -22,11 +22,9 @@ namespace Bloggy.API.Features.Users
             _currentUserAccessor = currentUserAccessor;
         }
 
-        [HttpGet("{username}")]
-        public async Task<IActionResult> GetUser([FromBody] GetUser.Query query)
+        [HttpGet("{username}")] 
+        public async Task<IActionResult> Details([FromBody] Details.Query query)
         {
-            query.Username = _currentUserAccessor.GetCurrentUsername()
-
             var result =  await _mediator.Send(query);
 
             return OK(result) 
@@ -34,8 +32,9 @@ namespace Bloggy.API.Features.Users
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<IActionResult> GetCurrent()
+        public async Task<IActionResult> GetCurrent(Details.Query query)
         {
+            query.Username = _currentUserAccessor.GetCurrentUsername()
             var result = await _mediator.Send(command);
 
             return NoContent (result );

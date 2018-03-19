@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Bloggy.API.Entities;
 using Bloggy.API.Infrastructure;
+using Bloggy.API.Infrastructure.Interfaces;
 using Bloggy.API.Data;
 using FluentValidation;
 using MediatR;
@@ -20,9 +21,9 @@ namespace Bloggy.API.Features.Users
             public string Password { get; set; }
         }
 
-        public class Validator : AbstractValidator<Query>
+        public class Validator : AbstractValidator<Command>
         {
-            public QueryValidator()
+            public Validator()
             {
                 RuleFor(x => x.Email).NotNull().NotEmpty();
                 RuleFor(x => x.Password).NotNull().NotEmpty();
@@ -59,7 +60,6 @@ namespace Bloggy.API.Features.Users
              
                 var user  = _mapper.Map<Domain.User, User>(user); ;
                 user.Token = await _jwtTokenGenerator.CreateToken(user.Username);
-                return new UserEnvelope(user);
             }
         }
     }

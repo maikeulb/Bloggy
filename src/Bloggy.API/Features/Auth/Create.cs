@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Bloggy.API.Entities;
 using Bloggy.API.Infrastructure;
+using Bloggy.API.Infrastructure.Interfaces;
 using Bloggy.API.Data;
 using FluentValidation;
 using MediatR;

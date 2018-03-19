@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Bloggy.API.Entities;
 using Bloggy.API.Infrastructure;
+using Bloggy.API.Infrastructure.Interfaces;
 using Bloggy.API.Data;
 using FluentValidation;
 using MediatR;
@@ -63,8 +64,6 @@ namespace Bloggy.API.Features.Users
                 }
                 
                 await _context.SaveChangesAsync(cancellationToken);
-
-                return new UserEnvelope(_mapper.Map<Domain.User, User>(user));
             }
         }
     }

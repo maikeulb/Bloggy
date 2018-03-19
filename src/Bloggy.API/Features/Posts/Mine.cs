@@ -2,8 +2,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
-using Bloggy.API.Infrastructure;
 using Bloggy.API.Data;
+using Bloggy.API.Infrastructure;
+using Bloggy.API.Infrastructure.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,8 +48,8 @@ namespace Bloggy.API.Features.Posts
             {
                 IQueryable<Post> queryable = _context.Posts.GetAllData();
 
-                var currentUser = await _context.Users.Include(x => x.Following).FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
-                queryable = queryable.Where(x => currentUser.Following.Select(y => y.TargetId).Contains(x.Author.Id));
+                var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
+                queryable = queryable.Where(x => currentUser.Select(y => y.TargetId).Contains(x.Author.Id));
 
                 if (!string.IsNullOrWhiteSpace(message.Tag))
                 {

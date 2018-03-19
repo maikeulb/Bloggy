@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Bloggy.API.Entities;
+using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
 using Bloggy.API.Infrastructure.Interfaces;
 using FluentValidation;
@@ -116,10 +118,7 @@ namespace Bloggy.API.Features.Posts
                 }
                 
                 await _context.SaveChangesAsync(cancellationToken);
-
-                return new PostEnvelope(await _context.Posts.GetAllData()
-                    .Where(x => x.Id == post.Id)
-                    .FirstOrDefaultAsync(cancellationToken));            }
+            }
         }
     }
 }
