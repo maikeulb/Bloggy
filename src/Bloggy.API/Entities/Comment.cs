@@ -6,9 +6,9 @@ namespace Bloggy.API.Entities
     {
         public int Id { get; set; }
         public string Body { get; set; }
-        public ApplicationUser Author { get; set; }
         public DateTime CreationDate { get; set; }
 
-        public Blog Blog { get; set; }
+        public ApplicationUser Author { get; set; }
+        public Post Post { get; set; }
     }
 }
