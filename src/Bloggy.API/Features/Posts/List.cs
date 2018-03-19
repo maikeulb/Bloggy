@@ -27,8 +27,9 @@ namespace Bloggy.API.Features.Posts
                 public ApplicationUser Author { get; set; }
                 public DateTime CreationDate { get; set; }
 
-                public List<Comment> Comments { get; set; }
-                public List<Tag> Tags { get; set; }
+                public List<PostTag> PostTags { get; set; } = new List<PostTag> ();
+                public List<Comment> Comments { get; set; } = new List<Comment> ();
+                public List<Tag> Tags { get; set; } = new List<Tag> ();
             }
         }
 

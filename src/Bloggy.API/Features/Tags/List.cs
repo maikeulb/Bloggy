@@ -1,32 +1,21 @@
-using System.Net;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Bloggy.API.Entities;
-using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
 using Bloggy.API.Infrastructure.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bloggy.API.Features.Comments
+namespace Bloggy.API.Features.Tags
 {
     public class List
     {
         public class Query : IRequest<Model>
         {
-            public Query
-            {
-                public int Id { get; }
-            }
-
             public class Model
             {
                 public int Id { get; set; }
-                public string Body { get; set; }
-                public DateTime CreationDate { get; set; }
-
-                public ApplicationUser Author { get; set; }
-                public Post Post { get; set; }
+                public List<PostTag> PostTags { get; set; } = new List<PostTag> ();
             }
         }
 
@@ -41,16 +30,11 @@ namespace Bloggy.API.Features.Comments
 
             protected override async Task<Model> HandleCore (Query message, CancellationToken cancellationToken)
             {
-                var post = await _context.Posts
-                    .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Id == message.Id, cancellationToken);
-
-                if (post == null)
+                var tags = await _context.Tags.OrderBy(x => x.TagId).AsNoTracking().ToListAsync(cancellationToken);
+                return new TagsEnvelope()
                 {
-                    throw new RestException(HttpStatusCode.NotFound);
-                }
-
-                return post;
+                    Tags = tags.Select(x => x.TagId).ToList()
+                };
             }
         }
     }

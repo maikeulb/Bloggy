@@ -28,7 +28,7 @@ namespace Bloggy.API.Features.Posts
         {
             private readonly BloggyContext _context;
 
-            public QueryHandler(ConduitContext context)
+            public QueryHandler(BloggyContext context)
             {
                 _context = context;
             }
