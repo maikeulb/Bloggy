@@ -13,6 +13,7 @@ namespace Bloggy.API.Features.Posts
 {
     public class Create
     {
+
         public class Command : IRequest
         {
             public string Title { get; set; }
@@ -31,7 +32,7 @@ namespace Bloggy.API.Features.Posts
 
         public class Handler : AsyncRequestHandler<Command>
         {
-            private readonly ConduitContext _context;
+            private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
 
             public Handler(ConduitContext context, 
