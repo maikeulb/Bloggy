@@ -4,10 +4,9 @@ using Bloggy.API.Entities;
 
 namespace Bloggy.API.Data.Configurations
 {
-    class CommentConfiguration
-        : IEntityTypeConfiguration<Comment>
+    class CommentConfiguration : IEntityTypeConfiguration<PostTag>
     {
-        public void Configure(EntityTypeBuilder<Comment> builder)
+        public void Configure (EntityTypeBuilder<PostTag> builder)
         {
             builder.ToTable("PostTag");
 
@@ -15,11 +14,13 @@ namespace Bloggy.API.Data.Configurations
 
             builder.HasOne(pt => pt.Post)
               .WithMany(p => p.PostTags)
-              .HasForeignKey(pt => pt.PostId);
+              .HasForeignKey(pt => pt.PostId)
+              .IsRequired();
 
             builder.HasOne(pt => pt.Tag)
               .WithMany(t => t.PostTags)
-              .HasForeignKey(pt => pt.TagId);
+              .HasForeignKey(pt => pt.TagId)
+              .IsRequired();
         }
     }
 }
