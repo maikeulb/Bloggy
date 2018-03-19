@@ -14,43 +14,29 @@ namespace Bloggy.API.Features.Users
 {
     public class Login
     {
-        public class UserData
+        public class Command : IRequest<Result>
         {
             public string Email { get; set; }
-
             public string Password { get; set; }
         }
 
-        public class UserDataValidator : AbstractValidator<UserData>
+        public class Validator : AbstractValidator<Query>
         {
-            public UserDataValidator()
+            public QueryValidator()
             {
                 RuleFor(x => x.Email).NotNull().NotEmpty();
                 RuleFor(x => x.Password).NotNull().NotEmpty();
             }
         }
 
-        public class Command : IRequest<UserEnvelope>
+        public class Handler : AsyncRequestHandler<Command>
         {
-            public UserData User { get; set; }
-        }
-
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(x => x.User).NotNull().SetValidator(new UserDataValidator());
-            }
-        }
-
-        public class Handler : IRequestHandler<Command, UserEnvelope>
-        {
-            private readonly ConduitContext _context;
+            private readonly BloggyContext _context;
             private readonly IPasswordHasher _passwordHasher;
             private readonly IJwtTokenGenerator _jwtTokenGenerator;
             private readonly IMapper _mapper;
 
-            public Handler(ConduitContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
+            public Handler(BloggyContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
             {
                 _context = context;
                 _passwordHasher = passwordHasher;
@@ -58,21 +44,21 @@ namespace Bloggy.API.Features.Users
                 _mapper = mapper;
             }
 
-            public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
+            protected override async Task HandleCore(Command message, CancellationToken cancellationToken)
             {
-                var person = await _context.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync(cancellationToken);
-                if (person == null)
+                var user = await _context.ApplicationUsers.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync(cancellationToken);
+                if (user == null)
                 {
                     throw new RestException(HttpStatusCode.Unauthorized);
                 }
 
-                if (!person.Hash.SequenceEqual(_passwordHasher.Hash(message.User.Password, person.Salt)))
+                if (!user.Hash.SequenceEqual(_passwordHasher.Hash(message.User.Password, user.Salt)))
                 {
                     throw new RestException(HttpStatusCode.Unauthorized);
                 }
              
-                var user  = _mapper.Map<Domain.Person, User>(person); ;
-                user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
+                var user  = _mapper.Map<Domain.User, User>(user); ;
+                user.Token = await _jwtTokenGenerator.CreateToken(user.Username);
                 return new UserEnvelope(user);
             }
         }

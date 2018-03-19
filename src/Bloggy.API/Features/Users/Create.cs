@@ -47,29 +47,29 @@ namespace Bloggy.API.Features.Users
 
             protected override async Task HandleCore(Command message, CancellationToken cancellationToken)
             {
-                if (await _context.Persons.Where(x => x.Username == message.User.Username).AnyAsync(cancellationToken))
+                if (await _context.Users.Where(x => x.Username == message.User.Username).AnyAsync(cancellationToken))
                 {
                     throw new RestException(HttpStatusCode.BadRequest);
                 }
 
-                if (await _context.Persons.Where(x => x.Email == message.User.Email).AnyAsync(cancellationToken))
+                if (await _context.Users.Where(x => x.Email == message.User.Email).AnyAsync(cancellationToken))
                 {
                     throw new RestException(HttpStatusCode.BadRequest);
                 }
 
                 var salt = Guid.NewGuid().ToByteArray();
-                var person = new Person
+                var model = new Model
                 {
                     Username = message.User.Username,
-                    Email = message.User.Email,
-                    Hash = _passwordHasher.Hash(message.User.Password, salt),
+                    Email = message.ApplicationUser.Email,
+                    HashedPassword = _passwordHasher.Hash(message.ApplicationUser.Password, salt),
                     Salt = salt
                 };
 
-                _context.Persons.Add(person);
+                _context.ApplicationUsers.Add(user);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
+                return user
             }
         }
     }
