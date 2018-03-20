@@ -16,7 +16,7 @@ namespace Bloggy.API.Features.Users
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result>
         {
             public string Username { get; set; }
             public string Email { get; set; }
@@ -33,7 +33,7 @@ namespace Bloggy.API.Features.Users
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command, Result>
         {
             private readonly BloggyContext _context;
             private readonly IPasswordHasher _passwordHasher;
@@ -46,31 +46,43 @@ namespace Bloggy.API.Features.Users
                 _mapper = mapper;
             }
 
-            protected override async Task HandleCore(Command message, CancellationToken cancellationToken)
+            protected override async Task<Result> HandleCore(Command message)
             {
-                if (await _context.Users.Where(x => x.Username == message.User.Username).AnyAsync(cancellationToken))
-                {
-                    throw new RestException(HttpStatusCode.BadRequest);
-                }
+                existUser = await ExistUser(message.User.Username)
+                if (existUser)
+                    return Result.Fail<Model> ("User does not exit");
 
-                if (await _context.Users.Where(x => x.Email == message.User.Email).AnyAsync(cancellationToken))
-                {
-                    throw new RestException(HttpStatusCode.BadRequest);
-                }
+                existEmail = await ExistEmail(message.User.Email)
+                if (existEmail)
+                    return Result.Fail<Model> ("User does not exit");
 
                 var salt = Guid.NewGuid().ToByteArray();
                 var model = new Model
                 {
-                    Username = message.User.Username,
-                    Email = message.ApplicationUser.Email,
-                    HashedPassword = _passwordHasher.Hash(message.ApplicationUser.Password, salt),
+                    Username = message.Username,
+                    Email = message.Email,
+                    HashedPassword = _passwordHasher.Hash(message.Password, salt),
                     Salt = salt
                 };
 
                 _context.ApplicationUsers.Add(user);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync();
 
                 return user
+            }
+
+            private async Task<ApplicationUser> ExistUser(int username)
+            {
+                return await _context.ApplicationUsers
+                    .Where(au => au.Username == username)
+                    .AnyAsync();
+            }
+
+            private async Task<ApplicationUser> ExistEmail(int email)
+            {
+                return await _context.ApplicationUsers
+                    .Where(au => au.Email == email)
+                    .AnyAsync();
             }
         }
     }

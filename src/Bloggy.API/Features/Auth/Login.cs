@@ -25,12 +25,12 @@ namespace Bloggy.API.Features.Users
         {
             public Validator()
             {
-                RuleFor(x => x.Email).NotNull().NotEmpty();
-                RuleFor(x => x.Password).NotNull().NotEmpty();
+                RuleFor(x => x.Email).NotEmpty();
+                RuleFor(x => x.Password).NotEmpty();
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command, Result>
         {
             private readonly BloggyContext _context;
             private readonly IPasswordHasher _passwordHasher;
@@ -45,21 +45,25 @@ namespace Bloggy.API.Features.Users
                 _mapper = mapper;
             }
 
-            protected override async Task HandleCore(Command message, CancellationToken cancellationToken)
+            protected override async Task<Result> HandleCore(Command message)
             {
-                var user = await _context.ApplicationUsers.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync(cancellationToken);
-                if (user == null)
-                {
-                    throw new RestException(HttpStatusCode.Unauthorized);
-                }
+                if (await SingleAsync())
+                    return Result.Fail<Command> ("User is not authorized");
 
                 if (!user.Hash.SequenceEqual(_passwordHasher.Hash(message.User.Password, user.Salt)))
-                {
-                    throw new RestException(HttpStatusCode.Unauthorized);
-                }
+                    return Result.Fail<Command> ("User is not authorized");
              
-                var user  = _mapper.Map<Domain.User, User>(user); ;
+                var user  = _mapper.Map<Entities.ApplicationUser, Model>(user); ;
                 user.Token = await _jwtTokenGenerator.CreateToken(user.Username);
+
+                return Result.Ok ();
+            }
+
+            private async Task<ApplicationUser> SingleAsync (string email)
+            {
+                return await _context.ApplicationUsers
+                    .Where(au => au.Email == email)
+                    .SingeOrDefaultAsync();
             }
         }
     }
