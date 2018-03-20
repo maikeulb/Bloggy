@@ -14,31 +14,26 @@ namespace Bloggy.API.Features.Tags
     {
         public class Query : IRequest<Model>
         {
-            public List<Tag> Tags { get; set; }
+            public List<string> Tags { get; set; }
         }
 
         public class Model
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
+            public List<string> Tags { get; set; }
         }
 
         public class Handler : AsyncRequestHandler<Query, Model>
         {
             private readonly BloggyContext _context;
 
-            public Handler(BloggyContext context)
+            public Handler(BloggyContext context, IMapper _mapper)
             {
                 _context = context;
             }
 
-            protected override async Task<Model> HandleCore (Query message)
+            protected override async Task<IEnumerable<Model>> HandleCore (Query message)
             {
-                var tags = await _context.Tags.OrderBy(x => x.Name).AsNoTracking().ToListAsync();
-
-                var model = Mapper.Map<IEnumerable<Model>, IEnumerable<Entities.Tag>> (tags);
-
-                return Result.Ok (model);
+                return new Model() { Tags = await _context.Tags.OrderBy(x => x.Name).AsNoTracking().ToListAsync();}
             }
         }
     }

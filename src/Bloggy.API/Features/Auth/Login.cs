@@ -54,7 +54,6 @@ namespace Bloggy.API.Features.Users
                     return Result.Fail<Command> ("User is not authorized");
              
                 var user = _mapper.Map<Entities.ApplicationUser, Model>(user);
-                /* var user = _mapper.Map<source, destination>(user); */
                 user.Token = await _jwtTokenGenerator.CreateToken(user.Username);
 
                 return Result.Ok ();
