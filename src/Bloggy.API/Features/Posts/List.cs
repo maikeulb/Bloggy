@@ -26,9 +26,9 @@ namespace Bloggy.API.Features.Posts
             public ApplicationUser Author { get; set; }
             public DateTime CreationDate { get; set; }
 
-            public List<PostTag> PostTags { get; set; } = new List<PostTag> ();
-            public List<Comment> Comments { get; set; } = new List<Comment> ();
-            public List<Tag> Tags { get; set; } = new List<Tag> ();
+            public List<PostTag> PostTags { get; set; }
+            public List<Comment> Comments { get; set; }
+            public List<Tag> Tags { get; set; } 
         }
 
         public class Handler : AsyncRequestHandler<Query, Model>
@@ -42,16 +42,16 @@ namespace Bloggy.API.Features.Posts
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            protected override async Task<Model> HandleCore (Query message, CancellationToken cancellationToken)
+            protected override async Task<Model> HandleCore (Query message)
             {
-                IQueryable<Post> queryable = _context.Posts.GetAllData();
+                IQueryable<Post> queryable = ListPosts();
 
                 if (!string.IsNullOrWhiteSpace(message.Tag))
                 {
-                    var tag = await _context.PostTags.FirstOrDefaultAsync(x => x.TagId == message.Tag, cancellationToken);
+                    var tag = await SingleTagAsync();
                     if (tag != null)
                     {
-                        queryable = queryable.Where(x => x.PostTags.Select(y => y.TagId).Contains(tag.TagId));
+                        queryable = queryable.Where(x => x.PostTags.Select(y => y.Name).Contains(tag.Name));
                     }
                     else
                     {
@@ -60,7 +60,7 @@ namespace Bloggy.API.Features.Posts
                 }
                 if (!string.IsNullOrWhiteSpace(message.Author))
                 {
-                    var author = await _context.Users.FirstOrDefaultAsync(x => x.Username == message.Author, cancellationToken);
+                    var author = await SingleAuthorAsync();
                     if (author != null)
                     {
                         queryable = queryable.Where(x => x.Author == author);
@@ -71,12 +71,45 @@ namespace Bloggy.API.Features.Posts
                     }
                 }
 
-                var model = await queryable
+                var post = await queryable
                     .OrderByDescending(m => m.CreationDate)
                     .AsNoTracking()
-                    .ToListAsync(cancellationToken);
+                    .ToListAsync();
+
+                var model = Mapper.Map<Model, Entities.Post> (post);
 
                 return model;
+            }
+
+            private async Task<Post> SingleTagAsync(string tag)
+            {
+                return await _context.PostTags
+                    .Include(pt => pt.Tags)
+                    .Where(pt => pt.Tags.Name == tag)
+                    .SingleOrDefaultAsync();
+            }
+
+            private async Task<ApplicationUser> SingleAuthorAsync(string author)
+            {
+                return await _context.ApplicationUsers
+                    .Where(au => au.Username == author)
+                    .SingleOrDefaultAsync();
+            }
+
+            private async Task<Post> ListPostsAsync(string author)
+            {
+                return await _context.ApplicationUsers
+                    .Where(au => au.Username == author)
+                    .SingleOrDefaultAsync();
+            }
+
+            public IQueryable<Article> ListPosts()
+            {
+                return _context.Posts
+                    .Include(x => x.Author)
+                    .Include(x => x.ArticleFavorites)
+                    .Include(x => x.ArticleTags)
+                    .AsNoTracking();
             }
         }
     }
