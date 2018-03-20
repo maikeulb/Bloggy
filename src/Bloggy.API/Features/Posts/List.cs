@@ -44,39 +44,31 @@ namespace Bloggy.API.Features.Posts
 
             protected override async Task<Model> HandleCore (Query message)
             {
-                IQueryable<Post> queryable = ListPosts();
+                IQueryable<Post> queryablePosts = ListPosts();
 
                 if (!string.IsNullOrWhiteSpace(message.Tag))
                 {
-                    var tag = await SingleTagAsync();
+                    var tag = await SingleTagAsync(message.Tag);
                     if (tag != null)
-                    {
-                        queryable = queryable.Where(x => x.PostTags.Select(y => y.Name).Contains(tag.Name));
-                    }
+                        queryablePosts = queryablePosts.Where(p => p.PostTags.Select(pt => pt.Tag.Name).Contains(tag.Name));
                     else
-                    {
                         return new Post();
-                    }
                 }
                 if (!string.IsNullOrWhiteSpace(message.Author))
                 {
-                    var author = await SingleAuthorAsync();
+                    var author = await SingleAuthorAsync(message.Author.username);
                     if (author != null)
-                    {
-                        queryable = queryable.Where(x => x.Author == author);
-                    }
+                        queryablePosts = queryablePosts.Where(p => p.Author == message.Author);
                     else
-                    {
                         return new Model();
-                    }
                 }
 
-                var post = await queryable
+                var posts = await queryablePosts
                     .OrderByDescending(m => m.CreationDate)
                     .AsNoTracking()
                     .ToListAsync();
 
-                var model = Mapper.Map<Model, Entities.Post> (post);
+                var model = Mapper.Map<Model, Entities.Post> (posts);
 
                 return model;
             }
@@ -96,14 +88,7 @@ namespace Bloggy.API.Features.Posts
                     .SingleOrDefaultAsync();
             }
 
-            private async Task<Post> ListPostsAsync(string author)
-            {
-                return await _context.ApplicationUsers
-                    .Where(au => au.Username == author)
-                    .SingleOrDefaultAsync();
-            }
-
-            public IQueryable<Article> ListPosts()
+            public IQueryable<Post> ListPosts()
             {
                 return _context.Posts
                     .Include(x => x.Author)

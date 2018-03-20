@@ -19,44 +19,54 @@ namespace Bloggy.API.Features.Comments
         [HttpGet]
         public async Task<IActionResult> List ([FromQuery] List.Query query)
         {
-            result = await _mediator.Send (query)
+            result = await _mediator.Send (query);
 
-            return OK (result)
+            return result.IsSuccess
+                ? (IActionResult)Ok(result)
+                : (IActionResult)BadRequest(result.Error);
         }
 
         [HttpGet ("{id}", Name = "Details")]
         public async Task<IActionResult> Details ([FromQuery] Detials.Query query)
         {
-            result = await _mediator.Send (query)
+            var result = await _mediator.Send (query);
 
-            return OK (result)
+            return result.IsSuccess
+                ? (IActionResult)Ok()
+                : (IActionResult)BadRequest(result.Error);
         }
 
         [HttpPost]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> Create ([FromBody] Create.Command command)
         {
-            result = await _mediator.Send (command)
+            var result = await _mediator.Send (command);
 
-            return CreatedAtRoute ("Details", new { controller = "Comments", id = result.Id }, result);
+            return result.IsSuccess
+                ? (IActionResult)CreatedAtRoute ("Details", new { controller = "Comments", id = result.Id }, result)
+                : (IActionResult)BadRequest(result.Error);
         }
 
         [HttpPut ("{id}")]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> Edit ([FromBody] Edit.Command command)
         {
-            await _mediator.Send (command);
+            var result = await _mediator.Send (command);
 
-            return NoContent ();
+            return result.IsSuccess
+                ? (IActionResult)NoContent()
+                : (IActionResult)BadRequest(result.Error);
         }
 
         [HttpDelete ("{id}")]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task Delete ([FromQuery] Delete.Command command)
         {
-            await _mediator.Send (command);
+            var result =await _mediator.Send (command);
 
-            return NoContent ();
+            return result.IsSuccess
+                ? (IActionResult)NoContent()
+                : (IActionResult)BadRequest(result.Error);
         }
     }
 }

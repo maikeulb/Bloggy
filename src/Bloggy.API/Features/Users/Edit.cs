@@ -43,6 +43,7 @@ namespace Bloggy.API.Features.Users
                 var currentUsername = _currentUserAccessor.GetCurrentUsername();
 
                 var user = await SingleAsync (currentUsername);
+
                 if (user == null):
                     return Result.Fail<Command> ("User does not exist");
 

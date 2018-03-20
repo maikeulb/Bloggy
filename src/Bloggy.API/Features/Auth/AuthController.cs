@@ -17,17 +17,21 @@ namespace Bloggy.API.Features.Auth
         [HttpPost ("Create")]
         public async Task<IActionResult> Create ([FromBody] Create.Command command)
         {
-            await _mediator.Send (command);
+            var resultOrError = await _mediator.Send (command);
 
-            return NoContent ();
+            return resultOrError.IsSuccess
+                ? (IActionResult)NoContent()
+                : (IActionResult)BadRequest(modelOrError.Error);
         }
 
         [HttpPost ("Login")]
         public async Task<IActionResult> Login ([FromBody] Login.Command command)
         {
-            await _mediator.Send (command);
+            var resultOrError = await _mediator.Send (command);
 
-            return NoContent ();
+            return resultOrError.IsSuccess
+                ? (IActionResult)NoContent()
+                : (IActionResult)Unauthorized(modelOrError.Error));
         }
     }
 }
