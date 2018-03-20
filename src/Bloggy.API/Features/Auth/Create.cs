@@ -71,14 +71,14 @@ namespace Bloggy.API.Features.Users
                 return Result.Ok (model);
             }
 
-            private async Task<ApplicationUser> ExistUser(int username)
+            private async Task<ApplicationUser> ExistUser(string username)
             {
                 return await _context.ApplicationUsers
                     .Where(au => au.Username == username)
                     .AnyAsync();
             }
 
-            private async Task<ApplicationUser> ExistEmail(int email)
+            private async Task<ApplicationUser> ExistEmail(string email)
             {
                 return await _context.ApplicationUsers
                     .Where(au => au.Email == email)
