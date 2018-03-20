@@ -1,3 +1,4 @@
+using AutoMapper;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
@@ -13,50 +14,55 @@ namespace Bloggy.API.Features.Profiles
     {
         public class Query : IRequest<Model>
         {
-            public class Model
-            {
-                public string Username { get; set; }
-            }
+            public string Username { get; set; }
+        }
+
+        public class Model
+        {
+            public string Username { get; set; }
+            public string Email { get; set; }
         }
 
         public class Validator : AbstractValidator<Command>
         {
             public Validator()
             {
-                RuleFor(x => x.Username).NotNull().NotEmpty();
+                RuleFor(x => x.Username).NotEmpty();
             }
         }
 
         public class Handler : AsyncRequestHandler<Query, Model>
         {
             private readonly BloggyContext _context;
-            private readonly ICurrentUserAccessor _currentUserAccessor;
+            private readonly IMapper _mapper;
+            private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context, ICurrentUserAccessor currentUserAccessor)
+            public Handler(BloggyContext context, ICurrentUserAccessor currentUserAccessor, IMapper mapper)
             {
                 _context = context;
                 _currentUserAccessor = currentUserAccessor;
+                _mapper = mapper;
             }
 
             protected override async Task<Model> HandleCore (Query message, CancellationToken cancellationToken)
             {
-                var currentUserName = _currentUserAccessor.GetCurrentUsername();
+                var currentUsername = _currentUserAccessor.GetCurrentUsername();
 
-                var user = await _context.ApplicationUsers.AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Username == username);
+                var user = await SingleAsync (currentUsername);
 
                 if (user == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound);
-                }
-                var profile = _mapper.Map<Domain.ApplicationUsers, Model>(user);
+                    return Result.Fail<Model> ("User does not exit");
 
-                if (currentUserName != null)
-                {
-                    var currentUser = await _context.ApplicationUser
-                        .FirstOrDefaultAsync(x => x.Username == currentUserName);
-                }
-                return profile
+                var model = _mapper.Map<Entities.ApplicationUsers, Model>(user);
+
+                return Result.Ok (model);
+            }
+
+            private async Task<Post> SingleAsync(int username)
+            {
+                return await _context.ApplicationUsers
+                    .Where(au => au.Username == username)
+                    .SingleOrDefaultAsync();
             }
         }
     }

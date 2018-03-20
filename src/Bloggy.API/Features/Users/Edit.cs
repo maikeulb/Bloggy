@@ -22,14 +22,6 @@ namespace Bloggy.API.Features.Users
             public string Password { get; set; }
         }
 
-        public class Validator : AbstractValidator<Command>
-        {
-            public Validator()
-            {
-                RuleFor(x => x.User).NotNull();
-            }
-        }
-
         public class Handler : AsyncRequestHandler<Command>
         {
             private readonly BloggyContext _context;
@@ -49,21 +41,27 @@ namespace Bloggy.API.Features.Users
             protected override async Task HandleCore(Command message, CancellationToken cancellationToken)
             {
                 var currentUsername = _currentUserAccessor.GetCurrentUsername();
-                var user = await _context.Users.Where(x => x.Username == currentUsername).FirstOrDefaultAsync(cancellationToken);
+                var user = await SingleAsync (currentUsername);
 
                 user.Username = message.User.Username ?? user.Username;
                 user.Email = message.User.Email ?? user.Email;
-                user.Bio = message.User.Bio ?? user.Bio;
-                user.Image = message.User.Image ?? user.Image;
+                user.Password = message.User.Email ?? user.Password;
 
                 if (!string.IsNullOrWhiteSpace(message.User.Password))
                 {
                     var salt = Guid.NewGuid().ToByteArray();
-                    user.Hash = _passwordHasher.Hash(message.User.Password, salt);
+                    user.PasswordHash = _passwordHasher.Hash(message.User.Password, salt);
                     user.Salt = salt;
                 }
                 
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync();
+            }
+
+            private async Task<Post> SingleAsync(int username)
+            {
+                return await _context.ApplicationUsers
+                    .Where(au => au.Username == username)
+                    .SingleOrDefaultAsync();
             }
         }
     }
