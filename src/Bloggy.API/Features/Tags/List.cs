@@ -14,10 +14,13 @@ namespace Bloggy.API.Features.Tags
     {
         public class Query : IRequest<Model>
         {
-            public class Model
-            {
-                public List<Tag> Tags { get; set; } = new List<Tag> ();
-            }
+            public List<Tag> Tags { get; set; }
+        }
+
+        public class Model
+        {
+            public int Id { get; set; }
+            public string Body { get; set; }
         }
 
         public class Handler : AsyncRequestHandler<Query, Model>
@@ -33,6 +36,8 @@ namespace Bloggy.API.Features.Tags
             {
                 var tags = await _context.Tags.OrderBy(x => x.TagId).AsNoTracking().ToListAsync(cancellationToken);
                 return tags.Select(x => x.TagId).ToList()
+
+                return Result.Ok (model);
             }
         }
     }
