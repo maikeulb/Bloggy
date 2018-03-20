@@ -22,6 +22,11 @@ namespace Bloggy.API.Features.Comments
             public int Id { get; set; }
         }
 
+        public class Command : IRequest<Result>
+        {
+            public string Body { get; set; }
+        }
+
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
@@ -32,50 +37,33 @@ namespace Bloggy.API.Features.Comments
 
         public class QueryHandler : AsyncRequestHandler<Query, Result<Command>>
         {
-            private readonly ApplicationDbContext _context;
-            private readonly IUrlComposer _urlComposer;
+            private readonly BloggyContext _context;
 
-            public QueryHandler(ApplicationDbContext context,
-                IUrlComposer urlComposer)
+            public QueryHandler(BloggyContext context)
             {
                 _context = context;
-                _urlComposer = urlComposer;
             }
 
             protected override async Task<Result<Command>> HandleCore(Query message)
             {
-                var catalogItem = await SingleAsync(message.Id);
+                var post = await SingleAsync(message.Id);
 
-                if (catalogItem == null)
-                    return Result.Fail<Command> ("Catalog Item does not exit");
+                if (post == null)
+                    return Result.Fail<Model> ("Post does not exit");
 
-                var command =  new Command
+                var currentUsername = await _context.Users.FirstAsync(x => x.Username == username);
+
+                if (post.Author.username != currentUsername)
+                    return Result.Fail<Command> ("User is not authorized");
+
+                var comment = new Comment()
                 {
-                    Id = catalogItem.Id,
-                    Name = catalogItem.Name,
-                    Brand = catalogItem.CatalogBrand.Brand,
-                    Type = catalogItem.CatalogType.Type,
-                    Description = catalogItem.Description,
-                    Stock = catalogItem.AvailableStock,
-                    Price = catalogItem.Price,
-                    ImageUrl = _urlComposer.ComposeImgUrl(catalogItem.ImageUrl)
+                    Body = message.Body,
                 };
 
                 return Result.Ok (command);
             }
 
-            private async Task<CatalogItem> SingleAsync(int id)
-            {
-                return await _context.CatalogItems
-                    .Include(c => c.CatalogBrand)
-                    .Include(c => c.CatalogType)
-                    .SingleOrDefaultAsync(c => c.Id == id);
-            }
-        }
-
-        public class Command : IRequest<Result>
-        {
-            public string Body { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -97,19 +85,22 @@ namespace Bloggy.API.Features.Comments
 
             protected override async Task<Result> HandleCore(Command message, CancellationToken cancellationToken)
             {
-                var post = await _context.Posts
-                    .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Id == message.PostId, cancellationToken);
+                var post = await SingleAsync(message.Id);
 
                 if (post == null)
-                    throw new RestException(HttpStatusCode.NotFound);
+                    return Result.Fail<Model> ("Post does not exit");
 
                 post.Body = message.Body;
 
-                if (_context.ChangeTracker.Entries().First(x => x.Entity == post).State == EntityState.Modified)
-                    post.UpdatedAt = DateTime.UtcNow;
-                
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync();
+            }
+
+            private async Task<User> SingleAsync(int id)
+            {
+                return await _context.Posts
+                    .Include(p => p.Comments)
+                    .Where(p => p.Id == id)
+                    .SingleOrDefaultAsync();
             }
         }
     }

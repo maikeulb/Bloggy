@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
+using CSharpFunctionalExtensions;
 using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
 using Bloggy.API.Infrastructure.Interfaces;
