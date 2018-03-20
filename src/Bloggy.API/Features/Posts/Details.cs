@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using CSharpFunctionalExtensions;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
@@ -14,7 +15,7 @@ namespace Bloggy.API.Features.Posts
 {
     public class Details
     {
-        public class Query : IRequest<Model>
+        public class Query : IRequest<Result<Model>>
         {
             public int Id { get; set; }
         }
@@ -38,7 +39,7 @@ namespace Bloggy.API.Features.Posts
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Model>
+        public class Handler : AsyncRequestHandler<Query, Result<Model>>
         {
             private readonly BloggyContext _context;
 
@@ -47,7 +48,7 @@ namespace Bloggy.API.Features.Posts
                 _context = context;
             }
 
-            protected override async Task<Model> HandleCore (Query message)
+            protected override async Task<Result<Model>> HandleCore(Query message)
             {
                 var post = await SingleAsync(message.Id);
 

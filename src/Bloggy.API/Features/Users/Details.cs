@@ -1,4 +1,5 @@
 using AutoMapper;
+using CSharpFunctionalExtensions;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
@@ -12,7 +13,7 @@ namespace Bloggy.API.Features.Profiles
 {
     public class Details
     {
-        public class Query : IRequest<Model>
+        public class Query : IRequest<Result<Model>>
         {
             public string Username { get; set; }
         }
@@ -31,7 +32,7 @@ namespace Bloggy.API.Features.Profiles
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Result>
+        public class Handler : AsyncRequestHandler<Query, Result<Model>>
         {
             private readonly BloggyContext _context;
             private readonly IMapper _mapper;
@@ -44,7 +45,7 @@ namespace Bloggy.API.Features.Profiles
                 _mapper = mapper;
             }
 
-            protected override async Task<Result> HandleCore(Query message)
+            protected override async Task<Result<Model>> HandleCore(Query message)
             {
                 var currentUsername = _currentUserAccessor.GetCurrentUsername();
 

@@ -14,7 +14,12 @@ namespace Bloggy.API.Features.Comments
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Model>>
+        {
+            public string Body { get; set; }
+        }
+
+        public class Model : IRequest<Result>
         {
             public string Body { get; set; }
         }
@@ -27,7 +32,7 @@ namespace Bloggy.API.Features.Comments
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command, Result<Model>>
         {
             private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -39,30 +44,39 @@ namespace Bloggy.API.Features.Comments
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            protected override async Task HandleCore(Command message, CancellationToken cancellationToken)
+            protected override async Task<Result<Model>> HandleCore(Command message)
             {
-                var post = await _context.Posts
-                    .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Id == message.Id, cancellationToken);
+                var post = await SingleAsync (message.Id);
 
                 if (post == null)
-                    throw new RestException(HttpStatusCode.NotFound);
+                    return Result.Fail<Model> ("Post does not exit");
 
-                var author = await _context.Users.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
+                var currentUsername = _currentUserAccessor.GetCurrentUsername();
+                var author = await _context.Users.FirstAsync(x => x.Username == username);
                 
                 var comment = new Comment()
                 {
                     Author = author,
-                    Body = message.Comment.Body,
+                    Body = message.Body,
                     CreationDate = DateTime.UtcNow,
                 };
-                await _context.Comments.AddAsync(comment, cancellationToken);
 
                 post.Comments.Add(comment);
 
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.Comments.AddAsync(comment);
+                await _context.SaveChangesAsync();
 
-                return comment
+                var model = Mapper.Map<Model, Entities.Comment> (comment);
+
+                return Result.Ok (model); // return comment or post?
+            }
+
+            private async Task<User> SingleAsync(int id)
+            {
+                return await _context.Posts
+                    .Include(p => p.Comments)
+                    .Where(p => p.Id == id)
+                    .SingleOrDefaultAsync();
             }
         }
     }

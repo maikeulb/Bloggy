@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using CSharpFunctionalExtensions;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
@@ -81,7 +82,7 @@ namespace Bloggy.API.Features.Comments
         {
             public CommandValidator()
             {
-                RuleFor(m => m.Body).NotEmpty(); // is this correct?
+                RuleFor(m => m.Body).NotEmpty(); 
             }
         }
 

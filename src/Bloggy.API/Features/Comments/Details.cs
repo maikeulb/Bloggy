@@ -1,4 +1,5 @@
 using System.Net;
+using CSharpFunctionalExtensions;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
@@ -13,7 +14,7 @@ namespace Bloggy.API.Features.Tags
 {
     public class Details
     {
-        public class Query : IRequest<ArticleEnvelope>
+        public class Query : IRequest<Result<Model>>
         {
             public string Id { get; set; }
         }
@@ -23,12 +24,11 @@ namespace Bloggy.API.Features.Tags
             public int Id { get; set; }
             public string Body { get; set; }
             public DateTime CreationDate { get; set; }
-
             public ApplicationUser Author { get; set; }
             public Post Post { get; set; }
         }
 
-        public class QueryValidator : AbstractValidator<Query>
+        public class Validator : AbstractValidator<Query>
         {
             public Validator()
             {
@@ -36,7 +36,7 @@ namespace Bloggy.API.Features.Tags
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Model>
+        public class Handler : AsyncRequestHandler<Query, Result<Model>>
         {
             private readonly BloggyContext _context;
 
@@ -45,7 +45,7 @@ namespace Bloggy.API.Features.Tags
                 _context = context;
             }
 
-            public async Task<ArticleEnvelope> Handle(Query message, CancellationToken cancellationToken)
+            protected override async Task<Result<Model>> HandleCore(Query message)
             {
                 var comment = await SingleAsync(message.Id);
 
