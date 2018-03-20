@@ -1,4 +1,5 @@
 using System;
+using AutoMapper;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,12 +37,15 @@ namespace Bloggy.API.Features.Comments
         {
             private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
+            private readonly IMapper _mapper;
 
             public Handler(BloggyContext context, 
-                    ICurrentUserAccessor currentUserAccessor)
+                    ICurrentUserAccessor currentUserAccessor,
+                    IMapper mapper)
             {
                 _context = context;
                 _currentUserAccessor = currentUserAccessor;
+                _mapper = mapper;
             }
 
             protected override async Task<Result<Model>> HandleCore(Command message)
@@ -58,7 +62,7 @@ namespace Bloggy.API.Features.Comments
                 {
                     Author = author,
                     Body = message.Body,
-                    CreationDate = DateTime.UtcNow,
+                    CreationDate = DateTime.UtcNow
                 };
 
                 post.Comments.Add(comment);
@@ -66,9 +70,9 @@ namespace Bloggy.API.Features.Comments
                 await _context.Comments.AddAsync(comment);
                 await _context.SaveChangesAsync();
 
-                var model = Mapper.Map<Model, Entities.Comment> (comment);
+                var model = _mapper.Map<Entities.Comment, Model>(comment);
 
-                return Result.Ok (model); // return comment or post?
+                return Result.Ok (model); 
             }
 
             private async Task<User> SingleAsync(int id)

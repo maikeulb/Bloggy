@@ -19,7 +19,7 @@ namespace Bloggy.API.Features.Comments
         [HttpGet]
         public async Task<IActionResult> List ([FromQuery] List.Query query)
         {
-            result = await _mediator.Send (query);
+            var result = await _mediator.Send (query);
 
             return result.IsSuccess
                 ? (IActionResult)Ok(result)

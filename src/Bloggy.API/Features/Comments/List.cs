@@ -1,4 +1,5 @@
 using System.Net;
+using AutoMapper;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
@@ -37,10 +38,13 @@ namespace Bloggy.API.Features.Comments
         public class Handler : AsyncRequestHandler<Query, Result<Command>>
         {
             private readonly BloggyContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context)
+            public Handler(BloggyContext context,
+                    IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             protected override async Task<Result<Model>> HandleCore(Query message)
@@ -52,7 +56,7 @@ namespace Bloggy.API.Features.Comments
                 if (post == null)
                     return Result.Fail<Model> ("Post does not exit");
 
-                var model = Mapper.Map<Model, Entities.Post.Comments> (post);
+                var model = _mapper.Map<Entities.Post.Comments, Model>(post);
 
                 return model;
             }

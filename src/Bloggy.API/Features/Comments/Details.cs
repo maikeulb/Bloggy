@@ -1,4 +1,5 @@
 using System.Net;
+using AutoMapper;
 using CSharpFunctionalExtensions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,10 +40,13 @@ namespace Bloggy.API.Features.Tags
         public class Handler : AsyncRequestHandler<Query, Result<Model>>
         {
             private readonly BloggyContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context)
+            public Handler(BloggyContext context,
+                    IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             protected override async Task<Result<Model>> HandleCore(Query message)
@@ -52,7 +56,7 @@ namespace Bloggy.API.Features.Tags
                 if (comment == null)
                     return Result.Fail<Model> ("Comment does not exit");
 
-                var model = Mapper.Map<Model, Entities.Comment> (comment);
+                var model = _mapper.Map<Entities.Comment, Model>(comment);
 
                 return Result.Ok (model);
             }

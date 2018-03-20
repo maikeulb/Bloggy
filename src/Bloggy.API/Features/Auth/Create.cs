@@ -65,7 +65,7 @@ namespace Bloggy.API.Features.Users
                 _context.ApplicationUsers.Add(user);
                 await _context.SaveChangesAsync();
 
-                var model = Mapper.Map<Model, Entities.ApplicationUser> (user);
+                var model = _mapper.Map<Entities.ApplicationUser, Model>(user);
 
                 return Result.Ok (model);
             }
