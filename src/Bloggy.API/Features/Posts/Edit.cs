@@ -20,6 +20,14 @@ namespace Bloggy.API.Features.Posts
             public int Id { get; set; }
         }
 
+        public class Command : IRequest<Result>
+        {
+            public string Title { get; set; }
+            public string Body { get; set; }
+            public List<Comment> Comments { get; set; } 
+            public List<Tag> Tags { get; set; } 
+        }
+
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
@@ -30,52 +38,25 @@ namespace Bloggy.API.Features.Posts
 
         public class QueryHandler : AsyncRequestHandler<Query, Result<Command>>
         {
-            private readonly ApplicationDbContext _context;
-            private readonly IUrlComposer _urlComposer;
+            private readonly BloggyContext _context;
 
-            public QueryHandler(ApplicationDbContext context,
-                IUrlComposer urlComposer)
+            public QueryHandler(BloggyContext context)
             {
                 _context = context;
-                _urlComposer = urlComposer;
             }
 
             protected override async Task<Result<Command>> HandleCore(Query message)
             {
-                var catalogItem = await SingleAsync(message.Id);
+                var post = await SingleAsync(message.Id);
 
-                if (catalogItem == null)
-                    return Result.Fail<Command> ("Catalog Item does not exit");
+                if (post == null)
+                    return Result.Fail<Model> ("Post does not exit");
 
-                var command =  new Command
-                {
-                    Id = catalogItem.Id,
-                    Name = catalogItem.Name,
-                    Brand = catalogItem.CatalogBrand.Brand,
-                    Type = catalogItem.CatalogType.Type,
-                    Description = catalogItem.Description,
-                    Stock = catalogItem.AvailableStock,
-                    Price = catalogItem.Price,
-                    ImageUrl = _urlComposer.ComposeImgUrl(catalogItem.ImageUrl)
-                };
+                var command = Mapper.Map<Command, Entities.Post> (post);
 
                 return Result.Ok (command);
             }
 
-            private async Task<CatalogItem> SingleAsync(int id)
-            {
-                return await _context.CatalogItems
-                    .Include(c => c.CatalogBrand)
-                    .Include(c => c.CatalogType)
-                    .SingleOrDefaultAsync(c => c.Id == id);
-            }
-        }
-
-        public class Command : IRequest<Result>
-        {
-            public string Title { get; set; }
-            public string Description { get; set; }
-            public string Body { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -83,7 +64,6 @@ namespace Bloggy.API.Features.Posts
             public CommandValidator()
             {
                 RuleFor(m => m.Title).NotEmpty();
-                RuleFor(m => m.Description).NotEmpty();
                 RuleFor(m => m.Body).NotEmpty();
             }
         }
@@ -97,28 +77,52 @@ namespace Bloggy.API.Features.Posts
                 _context = context;
             }
 
-            protected override async Task<Result> HandleCore(Command message, CancellationToken cancellationToken)
+            protected override async Task HandleCore(Command message)
             {
-                var post = await _context.Posts
-                    .Where(x => x.Id == message.Id)
-                    .FirstOrDefaultAsync(cancellationToken);
+                var post = await SingleAsync(message.Id);
 
                 if (post == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound);
-                }
+                    return Result.Fail<Model> ("Post does not exit");
 
-                post.Description = message.Description ;
                 post.Body = message.Body;
                 post.Title = message.Title;
 
-                if (_context.ChangeTracker.Entries().First(x => x.Entity == post).State == EntityState.Modified)
+                var oldTags = post.PostTags;
+                post.PostTags.Remove(oldTags);
+
+                var tags = new List<Tag>();
+                var postTags = new List<PostTag>();
+                foreach(var tag in message.Tags)
                 {
-                    post.UpdatedAt = DateTime.UtcNow;
+                    var t = await _context.Tags.FindAsync(tag);
+                    if (t == null)
+                    {
+                        t = new Tag() { Name = tag };
+                        await _context.Tag.AddAsync(t);
+                        await _context.SaveAsync()
+                    }
+                    tags.Add(t);
+                    var pt = new PostTag()
+                    {
+                        Post = post,
+                        Tag = t
+                    };
+                    postTags.Add(pt);
                 }
-                
-                await _context.SaveChangesAsync(cancellationToken);
+
+                await _context.Post.AddAsync(post);
+                await _context.PostTag.AddRangeAsync(postTags);
+                await _context.SaveChangesAsync()
+
+                return Result.Ok ();
             }
         }
+
+    private async Task<Post> SingleAsync(int id)
+    {
+        return await _context.Post
+            .SingleOrDefaultAsync(c => c.Id == id);
+    }
+
     }
 }

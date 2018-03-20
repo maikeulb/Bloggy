@@ -40,9 +40,9 @@ namespace Bloggy.API.Features.Posts
 
         public class Handler : AsyncRequestHandler<Query, Model>
         {
-            private readonly ConduitContext _context;
+            private readonly BloggyContext _context;
 
-            public QueryHandler(ConduitContext context)
+            public QueryHandler(BloggyContext context)
             {
                 _context = context;
             }

@@ -31,9 +31,9 @@ namespace Bloggy.API.Features.Users
 
         [HttpGet]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<IActionResult> Mine (Mine.Query query)
+        public async Task<IActionResult> Mine ()
         {
-            query.Username = _currentUserAccessor.GetCurrentUsername ()
+            new Details.Query() { Username = _currentUserAccessor.GetCurrentUsername ()}
             var result = await _mediator.Send (command);
 
             return NoContent (result);
