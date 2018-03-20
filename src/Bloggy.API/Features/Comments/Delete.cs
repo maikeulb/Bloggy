@@ -46,6 +46,7 @@ namespace Bloggy.API.Features.Comments
                     return Result.Fail<Command> ("Post does not exit");
 
                 var comment = await SingleCommentAsync(message.Id)
+
                 if (comment == null)
                     return Result.Fail<Command> ("Comment does not exit");
 

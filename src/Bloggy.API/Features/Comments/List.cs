@@ -12,25 +12,29 @@ namespace Bloggy.API.Features.Comments
 {
     public class List
     {
-        public class Query : IRequest<Model>
+        public class Query : IRequest<Result<Model>>
         {
-            public Query
-            {
-                public int Id { get; }
-            }
+            public int Id { get; }
+        }
 
-            public class Model
+        public class Validator : AbstractValidator<Query>
+        {
+            public Validator()
             {
-                public int Id { get; set; }
-                public string Body { get; set; }
-                public DateTime CreationDate { get; set; }
-
-                public ApplicationUser Author { get; set; }
-                public Post Post { get; set; }
+                RuleFor(x => x.Id).NotNull();
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Model>
+        public class Model
+        {
+            public int Id { get; set; }
+            public string Body { get; set; }
+            public DateTime CreationDate { get; set; }
+            public ApplicationUser Author { get; set; }
+            public Post Post { get; set; }
+        }
+
+        public class Handler : AsyncRequestHandler<Query, Result<Command>>
         {
             private readonly BloggyContext _context;
 
@@ -39,18 +43,26 @@ namespace Bloggy.API.Features.Comments
                 _context = context;
             }
 
-            protected override async Task<Model> HandleCore (Query message, CancellationToken cancellationToken)
+            protected override async Task<Result<Model>> HandleCore(Query message)
             {
                 var post = await _context.Posts
-                    .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Id == message.Id, cancellationToken);
+
+                var post = await SingleAsync(message.Id);
 
                 if (post == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound);
-                }
+                    return Result.Fail<Model> ("Post does not exit");
 
-                return post;
+                var model = Mapper.Map<Model, Entities.Post.Comments> (post);
+
+                return model;
+            }
+
+            private async Task<Post> SingleAsync(int id)
+            {
+                return await _context.Posts
+                    .Include(c => c.Comments)
+                    .Where(p => p.Id ==id)
+                    .SingleOrDefaultAsync();
             }
         }
     }

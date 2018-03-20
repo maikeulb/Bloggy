@@ -1,0 +1,1 @@
+abstract validator and errors (client api)n

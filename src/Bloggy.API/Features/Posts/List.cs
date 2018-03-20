@@ -14,24 +14,21 @@ namespace Bloggy.API.Features.Posts
     {
         public class Query : IRequest<Model>
         {
-            public Query
-            {
-                public string Tag { get; }
-                public string Author { get; }
-            }
+            public string Tag { get; }
+            public string Author { get; }
+        }
    
-            public class Model
-            {
-                public int Id { get; set; }
-                public string Title { get; set; }
-                public string Body { get; set; }
-                public ApplicationUser Author { get; set; }
-                public DateTime CreationDate { get; set; }
+        public class Model
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+            public string Body { get; set; }
+            public ApplicationUser Author { get; set; }
+            public DateTime CreationDate { get; set; }
 
-                public List<PostTag> PostTags { get; set; } = new List<PostTag> ();
-                public List<Comment> Comments { get; set; } = new List<Comment> ();
-                public List<Tag> Tags { get; set; } = new List<Tag> ();
-            }
+            public List<PostTag> PostTags { get; set; } = new List<PostTag> ();
+            public List<Comment> Comments { get; set; } = new List<Comment> ();
+            public List<Tag> Tags { get; set; } = new List<Tag> ();
         }
 
         public class Handler : AsyncRequestHandler<Query, Model>

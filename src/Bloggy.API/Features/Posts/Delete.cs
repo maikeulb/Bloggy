@@ -12,7 +12,7 @@ namespace Bloggy.API.Features.Posts
 {
     public class Delete
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result>
         {
             public int Id { get; set; }
         }
@@ -25,7 +25,7 @@ namespace Bloggy.API.Features.Posts
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command, Result>
         {
             private readonly BloggyContext _context;
 
@@ -34,19 +34,24 @@ namespace Bloggy.API.Features.Posts
                 _context = context;
             }
 
-            protected override async Task HandleCore(Command message, CancellationToken cancellationToken)
+            protected override async Task<Result> HandleCore(Command message)
             {
-                var post = await _context.Posts
-                    .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
+                var post = await SinglePostAsync(message.Id)
 
                 if (post == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound);
-                }
+                    return Result.Fail<Command> ("Post does not exit");
 
                 _context.Posts.Remove(post);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync();
             }
+
+            private async Task<Post> SinglePostAsync(int id)
+            {
+                return await _context.Posts
+                    .Where(p => p.Id == id)
+                    .SingleOrDefaultAsync();
+            }
+
         }
     }
 }
