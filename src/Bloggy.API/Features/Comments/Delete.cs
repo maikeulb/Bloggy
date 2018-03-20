@@ -60,14 +60,14 @@ namespace Bloggy.API.Features.Comments
             {
                 return await _context.Posts
                     .Include(x => x.Comments)
-                    .Where(p => p.Id == username)
+                    .Where(p => p.Id == id)
                     .SingleOrDefaultAsync();
             }
 
             private async Task<Comment> SingleCommentAsync(int id)
             {
                 return await _context.Comments
-                    .Where(p => p.CommentId == commentId)
+                    .Where(p => p.CommentId == id)
                     .SingleOrDefaultAsync();
             }
         }

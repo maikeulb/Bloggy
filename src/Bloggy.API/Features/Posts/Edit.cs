@@ -15,60 +15,24 @@ namespace Bloggy.API.Features.Posts
 {
     public class Edit
     {
-        public class Query : IRequest<Result<Command>>
+        public class Command : IRequest<Result<Model>>
         {
             public int Id { get; set; }
-        }
-
-        public class Command : IRequest<Result>
-        {
             public string Title { get; set; }
             public string Body { get; set; }
             public List<Comment> Comments { get; set; } 
             public List<Tag> Tags { get; set; } 
         }
 
-        public class QueryValidator : AbstractValidator<Query>
+        public class Validator : AbstractValidator<Model>
         {
-            public QueryValidator()
+            public Validator()
             {
-                RuleFor(m => m.Id).NotNull();
+                RuleFor(m => m.Model).NotNull();
             }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Result<Command>>
-        {
-            private readonly BloggyContext _context;
-
-            public QueryHandler(BloggyContext context)
-            {
-                _context = context;
-            }
-
-            protected override async Task<Result<Command>> HandleCore(Query message)
-            {
-                var post = await SingleAsync(message.Id);
-
-                if (post == null)
-                    return Result.Fail<Model> ("Post does not exit");
-
-                var command = Mapper.Map<Command, Entities.Post> (post);
-
-                return Result.Ok (command);
-            }
-
-        }
-
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(m => m.Title).NotEmpty();
-                RuleFor(m => m.Body).NotEmpty();
-            }
-        }
-
-        public class CommandHandler : AsyncRequestHandler<Command, Result>
+        public class Handler : AsyncRequestHandler<Command.Model, Result<Model>>
         {
             private readonly BloggyContext _context;
 
@@ -77,42 +41,45 @@ namespace Bloggy.API.Features.Posts
                 _context = context;
             }
 
-            protected override async Task HandleCore(Command message)
+            protected override async Task HandleCore(Model message)
             {
                 var post = await SingleAsync(message.Id);
 
                 if (post == null)
                     return Result.Fail<Model> ("Post does not exit");
 
-                post.Body = message.Body;
-                post.Title = message.Title;
+                post.Body = message.Body ?? post.Body;
+                post.Title = message.Title ?? post.Body;
 
-                var oldTags = post.PostTags;
-                post.PostTags.Remove(oldTags);
-
-                var tags = new List<Tag>();
-                var postTags = new List<PostTag>();
-                foreach(var tag in message.Tags)
+                if (message.Tags != null)
                 {
-                    var t = await _context.Tags.FindAsync(tag);
-                    if (t == null)
+                    var oldTags = post.PostTags;
+                    post.PostTags.Remove(oldTags);
+
+                    var tags = new List<Tag>();
+                    var postTags = new List<PostTag>();
+                    foreach(var tag in message.Tags)
                     {
-                        t = new Tag() { Name = tag };
-                        await _context.Tag.AddAsync(t);
-                        await _context.SaveAsync()
+                        var t = await _context.Tags.FindAsync(tag);
+                        if (t == null)
+                        {
+                            t = new Tag() { Name = tag };
+                            await _context.Tag.AddAsync(t);
+                            await _context.SaveAsync();
+                        }
+                        tags.Add(t);
+                        var pt = new PostTag()
+                        {
+                            Post = post,
+                            Tag = t
+                        };
+                        postTags.Add(pt);
                     }
-                    tags.Add(t);
-                    var pt = new PostTag()
-                    {
-                        Post = post,
-                        Tag = t
-                    };
-                    postTags.Add(pt);
+                    await _context.PostTag.AddRangeAsync(postTags);
                 }
 
                 await _context.Post.AddAsync(post);
-                await _context.PostTag.AddRangeAsync(postTags);
-                await _context.SaveChangesAsync()
+                await _context.SaveChangesAsync();
 
                 return Result.Ok ();
             }
@@ -121,7 +88,8 @@ namespace Bloggy.API.Features.Posts
     private async Task<Post> SingleAsync(int id)
     {
         return await _context.Post
-            .SingleOrDefaultAsync(c => c.Id == id);
+            .Where(p => p.Id ==id)
+            .SingleOrDefault();
     }
 
     }

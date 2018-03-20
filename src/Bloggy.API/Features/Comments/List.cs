@@ -49,8 +49,6 @@ namespace Bloggy.API.Features.Comments
 
             protected override async Task<Result<Model>> HandleCore(Query message)
             {
-                var post = await _context.Posts
-
                 var post = await SingleAsync(message.Id);
 
                 if (post == null)

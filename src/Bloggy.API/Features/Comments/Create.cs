@@ -75,7 +75,7 @@ namespace Bloggy.API.Features.Comments
                 return Result.Ok (model); 
             }
 
-            private async Task<User> SingleAsync(int id)
+            private async Task<Post> SingleAsync(int id)
             {
                 return await _context.Posts
                     .Include(p => p.Comments)
