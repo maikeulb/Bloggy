@@ -31,7 +31,7 @@ namespace Bloggy.API.Features.Profiles
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Model>
+        public class Handler : AsyncRequestHandler<Query, Result>
         {
             private readonly BloggyContext _context;
             private readonly IMapper _mapper;
@@ -44,7 +44,7 @@ namespace Bloggy.API.Features.Profiles
                 _mapper = mapper;
             }
 
-            protected override async Task<Model> HandleCore (Query message, CancellationToken cancellationToken)
+            protected override async Task<Result> HandleCore(Query message)
             {
                 var currentUsername = _currentUserAccessor.GetCurrentUsername();
 
