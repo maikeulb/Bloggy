@@ -6,7 +6,7 @@ namespace Bloggy.API.Features.Users
     {
         public MappingProfile()
         {
-            CreateMap<Entities.Person, User>();
+            CreateMap<Entities.ApplicationUser, Details.Model>();
         }
     }
 }

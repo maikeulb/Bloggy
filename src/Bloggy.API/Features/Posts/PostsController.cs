@@ -49,7 +49,7 @@ namespace Bloggy.API.Features.Posts
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> Edit ([FromBody] Edit.Command command)
         {
-            await _mediator.Send (command);
+            var result = await _mediator.Send (command);
 
             return result.IsSuccess
                 ? (IActionResult)NoContent()
@@ -60,7 +60,7 @@ namespace Bloggy.API.Features.Posts
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task Delete ([FromQuery] Delete.Command command) 
         {
-            await _mediator.Send (command);
+            var result = await _mediator.Send (command);
 
             return result.IsSuccess
                 ? (IActionResult)NoContent()

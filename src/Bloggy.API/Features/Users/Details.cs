@@ -36,20 +36,16 @@ namespace Bloggy.API.Features.Profiles
         {
             private readonly BloggyContext _context;
             private readonly IMapper _mapper;
-            private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context, ICurrentUserAccessor currentUserAccessor, IMapper mapper)
+            public Handler(BloggyContext context, IMapper mapper)
             {
                 _context = context;
-                _currentUserAccessor = currentUserAccessor;
                 _mapper = mapper;
             }
 
             protected override async Task<Result<Model>> HandleCore(Query message)
             {
-                var currentUsername = _currentUserAccessor.GetCurrentUsername();
-
-                var user = await SingleAsync (currentUsername);
+                var user = await SingleAsync (Username);
 
                 if (user == null)
                     return Result.Fail<Model> ("User does not exit");
@@ -59,7 +55,7 @@ namespace Bloggy.API.Features.Profiles
                 return Result.Ok (model);
             }
 
-            private async Task<Post> SingleAsync(int username)
+            private async Task<ApplicationUser> SingleAsync(string username)
             {
                 return await _context.ApplicationUsers
                     .Where(au => au.Username == username)

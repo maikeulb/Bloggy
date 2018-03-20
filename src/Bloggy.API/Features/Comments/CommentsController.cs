@@ -62,7 +62,7 @@ namespace Bloggy.API.Features.Comments
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task Delete ([FromQuery] Delete.Command command)
         {
-            var result =await _mediator.Send (command);
+            var result = await _mediator.Send (command);
 
             return result.IsSuccess
                 ? (IActionResult)NoContent()

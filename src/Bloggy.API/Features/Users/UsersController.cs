@@ -26,17 +26,21 @@ namespace Bloggy.API.Features.Users
         {
             var result = await _mediator.Send (query);
 
-            return OK (result)
+            return result.IsSuccess
+                ? (IActionResult)Ok(result)
+                : (IActionResult)BadRequest(result.Error);
         }
 
         [HttpGet]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> Mine ()
         {
-            new Details.Query() { Username = _currentUserAccessor.GetCurrentUsername ()}
+            var command = new Details.Query() { Username = _currentUserAccessor.GetCurrentUsername ()};
             var result = await _mediator.Send (command);
 
-            return NoContent (result);
+            return result.IsSuccess
+                ? (IActionResult)Ok(result)
+                : (IActionResult)BadRequest(result.Error);
         }
 
         [HttpPut]
@@ -45,7 +49,9 @@ namespace Bloggy.API.Features.Users
         {
             await _mediator.Send (command);
 
-            return NoContent ();
+            return result.IsSuccess
+                ? (IActionResult)NoContent(result)
+                : (IActionResult)BadRequest(result.Error);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Bloggy.API.Features.Users
 
                 var user = await SingleAsync (currentUsername);
 
-                if (user == null):
+                if (user == null)
                     return Result.Fail<Command> ("User does not exist");
 
                 user.Username = message.User.Username ?? user.Username;
@@ -61,7 +61,7 @@ namespace Bloggy.API.Features.Users
                 await _context.SaveChangesAsync();
             }
 
-            private async Task<Post> SingleAsync(int username)
+            private async Task<ApplicationUser> SingleAsync(string username)
             {
                 return await _context.ApplicationUsers
                     .Where(au => au.Username == username)
