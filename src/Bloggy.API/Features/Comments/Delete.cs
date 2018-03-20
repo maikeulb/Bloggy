@@ -2,8 +2,8 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Bloggy.API.Entities;
 using CSharpFunctionalExtensions;
+using Bloggy.API.Entities;
 using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
 using Bloggy.API.Infrastructure.Interfaces;
@@ -15,9 +15,10 @@ namespace Bloggy.API.Features.Comments
 {
     public class Delete
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result>
         {
             public int Id { get; }
+            public int PostId { get; }
         }
 
         public class Validator : AbstractValidator<Command>
@@ -28,7 +29,7 @@ namespace Bloggy.API.Features.Comments
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command, Result>
         {
             private readonly BloggyContext _context;
 
@@ -37,25 +38,36 @@ namespace Bloggy.API.Features.Comments
                 _context = context;
             }
 
-            public async Task Handle(Command message, CancellationToken cancellationToken)
+            protected override async Task<Result> HandleCore(Command message)
             {
-                var post = await _context.Posts
-                    .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Id == message.Id, cancellationToken);
+                var post = await SinglePostAsync(message.PostId)
 
                 if (post == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound);
-                }
+                    return Result.Fail<Command> ("Post does not exit");
 
-                var comment = post.Comments.FirstOrDefault(x => x.CommentId == message.Id);
+                var comment = await SingleCommentAsync(message.Id)
                 if (comment == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound);
-                }
-                
+                    return Result.Fail<Command> ("Comment does not exit");
+
                 _context.Comments.Remove(comment);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync();
+
+                return Result.Ok ();
+            }
+
+            private async Task<Post> SinglePostAsync(int id)
+            {
+                return await _context.Posts
+                    .Include(x => x.Comments)
+                    .Where(p => p.Id == username)
+                    .SingleOrDefaultAsync();
+            }
+
+            private async Task<Comment> SingleCommentAsync(int id)
+            {
+                return await _context.Comments
+                    .Where(p => p.CommentId == commentId)
+                    .SingleOrDefaultAsync();
             }
         }
     }
