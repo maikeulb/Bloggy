@@ -48,27 +48,26 @@ namespace Bloggy.API.Features.Users
 
             protected override async Task<Result> HandleCore(Command message)
             {
-                existUser = await ExistUser(message.User.Username)
-                if (existUser)
+                if (await ExistUser(message.Username))
                     return Result.Fail<Model> ("User does not exit");
 
-                existEmail = await ExistEmail(message.User.Email)
-                if (existEmail)
+                if (await ExistEmail(message.Email))
                     return Result.Fail<Model> ("User does not exit");
 
-                var salt = Guid.NewGuid().ToByteArray();
                 var model = new Model
                 {
                     Username = message.Username,
                     Email = message.Email,
                     HashedPassword = _passwordHasher.Hash(message.Password, salt),
-                    Salt = salt
+                    Salt = Guid.NewGuid().ToByteArray()
                 };
 
                 _context.ApplicationUsers.Add(user);
                 await _context.SaveChangesAsync();
 
-                return user
+                var model = Mapper.Map<Model, Entities.ApplicationUser> (user);
+
+                return Result.Ok (model);
             }
 
             private async Task<ApplicationUser> ExistUser(int username)

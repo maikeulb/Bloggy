@@ -53,7 +53,8 @@ namespace Bloggy.API.Features.Users
                 if (!user.Hash.SequenceEqual(_passwordHasher.Hash(message.User.Password, user.Salt)))
                     return Result.Fail<Command> ("User is not authorized");
              
-                var user  = _mapper.Map<Entities.ApplicationUser, Model>(user); ;
+                var user = _mapper.Map<Entities.ApplicationUser, Model>(user);
+                /* var user = _mapper.Map<source, destination>(user); */
                 user.Token = await _jwtTokenGenerator.CreateToken(user.Username);
 
                 return Result.Ok ();
