@@ -47,15 +47,12 @@ namespace Bloggy.API.Features.Posts
                 _context = context;
             }
 
-            protected override async Task<Model> HandleCore (Query message, CancellationToken cancellationToken)
+            protected override async Task<Model> HandleCore (Query message)
             {
                 var post = await SingleAsync(message.Id);
 
                 if (post == null)
                     return Result.Fail<Model> ("Post does not exit");
-
-                /* var model = Mapper.Map<Model> (post); */
-                /* var model = new Model(_mapper.Map<Entities.Post, Model>(post)); */
 
                 var model = Mapper.Map<Model, Entities.Post> (post);
 

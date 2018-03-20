@@ -15,19 +15,30 @@ namespace Bloggy.API.Features.Posts
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Model>
         {
             public string Title { get; set; }
             public string Body { get; set; }
-            public List<string> Tags { get; set; }
+            public List<string> Tags { get; set; } = new List<string> Tags();
+        }
+
+        public class Model
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+            public string Body { get; set; }
+            public ApplicationUser Author { get; set; } 
+            public DateTime CreationDate { get; set; }
+            public List<Comment> Comments { get; set; } 
+            public List<Tag> Tags { get; set; } 
         }
 
         public class Validator : AbstractValidator<Command>
         {
             public Validator()
             {
-                RuleFor(c => c.Title).NotNull();
-                RuleFor(c => c.Body).NotNull();
+                RuleFor(c => c.Title).NotEmpty();
+                RuleFor(c => c.Body).NotEmpty();
             }
         }
 
@@ -42,40 +53,58 @@ namespace Bloggy.API.Features.Posts
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            protected override async Task HandleCore(Command message, CancellationToken cancellationToken)
+            protected override async Task HandleCore(Command message)
             {
-                var author = await _context.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
+                var author = await SingleAsync (_currentUserAccessor.GetCurrentUsername());
+
+                if (author == null)
+                    return Result.Fail<Model> ("Author does not exit");
+
+                var post = new Post()
+                {
+                    Title = message.Title,
+                    Body = message.Body,
+                    Author = author,
+                    CreationDate = DateTime.UtcNow,
+                };
+
                 var tags = new List<Tag>();
-                foreach(var tag in (message.Post.TagList ?? Enumerable.Empty<string>()))
+                var postTags = new List<PostTag>();
+                foreach(var tag in message.Tags)
                 {
                     var t = await _context.Tags.FindAsync(tag);
                     if (t == null)
                     {
-                        t = new Tag()
+                        t = new Tag() 
                         {
-                            TagId = tag
+                            Name = tag
                         };
-                        await _context.Tags.AddAsync(t, cancellationToken);
-                        await _context.SaveChangesAsync(cancellationToken);
+                        await _context.Tag.AddAsync(t);
+                        await _context.SaveAsync()
                     }
                     tags.Add(t);
+                    var pt = new PostTag()
+                    {
+                        Post = post,
+                        Tag = t
+                    };
+                    postTags.Add(pt);
                 }
 
-                var post = new Post()
-                {
-                    Author = author,
-                    Body = message.Post.Body,
-                    CreationDate = DateTime.UtcNow,
-                    Title = message.Post.Title,
-                };
-                await _context.Post.AddAsync(post, cancellationToken);
-                await _context.PostTags.AddRangeAsync(tags.Select(x => new PostTag()
-                {
-                    Post = Post,
-                    Tag = x
-                }), cancellationToken);
+                await _context.Post.AddAsync(post);
+                await _context.PostTag.AddRangeAsync(postTags);
+                await _context.SaveChangesAsync()
 
-                await _context.SaveChangesAsync(cancellationToken);
+                var model = Mapper.Map<Model, Entities.Post> (post);
+
+                return Result.Ok (model);
+            }
+
+            private async Task<User> SingleAsync(string username)
+            {
+                return await _context.Users
+                    .Where(u => u.Username == username)
+                    .SingleOrDefaultAsync();
             }
         }
     }

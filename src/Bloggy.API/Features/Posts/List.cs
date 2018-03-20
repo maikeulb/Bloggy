@@ -2,7 +2,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
-using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
 using Bloggy.API.Infrastructure.Interfaces;
 using Bloggy.API.Data;
