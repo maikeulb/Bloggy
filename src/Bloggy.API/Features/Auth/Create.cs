@@ -27,10 +27,10 @@ namespace Bloggy.API.Features.Users
         {
             public Validator()
             {
-                RuleFor(x => x.Username).NotEmpty().WithMessage("First name cannot be blank");
-                RuleFor(x => x.Email).NotEmpty().WithMessage("Email cannot be blank")
+                RuleFor(u => u.Username).NotEmpty().WithMessage("First name cannot be blank");
+                RuleFor(u => u.Email).NotEmpty().WithMessage("Email cannot be blank")
                                      .EmailAddress().WithMessage("A valid email is required");
-                RuleFor(x => x.Password).NotEmpty().Length(8, 20).WithMessage("Password cannot must be between 8 and 20 characters");
+                RuleFor(u => u.Password).NotEmpty().Length(8, 20).WithMessage("Password cannot must be between 8 and 20 characters");
             }
         }
 

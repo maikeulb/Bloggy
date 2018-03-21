@@ -25,8 +25,8 @@ namespace Bloggy.API.Features.Users
         {
             public Validator()
             {
-                RuleFor(x => x.Email).NotEmpty();
-                RuleFor(x => x.Password).NotEmpty();
+                RuleFor(u => u.Email).NotEmpty();
+                RuleFor(u => u.Password).NotEmpty();
             }
         }
 
