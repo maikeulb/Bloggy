@@ -22,8 +22,9 @@ namespace Bloggy.API.Features.Users
         }
 
         [HttpGet ("{username}")]
-        public async Task<IActionResult> Details ([FromBody] Details.Query query)
+        public async Task<IActionResult> Details ([FromRoute] string username)
         {
+            var query = new Details.Query { Username = username }; 
             var result = await _mediator.Send (query);
 
             return result.IsSuccess
@@ -35,7 +36,7 @@ namespace Bloggy.API.Features.Users
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> Mine ()
         {
-            var command = new Details.Query() { Username = _currentUserAccessor.GetCurrentUsername ()};
+            var command = new Details.Query { Username = _currentUserAccessor.GetCurrentUsername ()};
             var result = await _mediator.Send (command);
 
             return result.IsSuccess

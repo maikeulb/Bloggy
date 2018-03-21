@@ -26,6 +26,7 @@ namespace Bloggy.API.Features.Posts
 
         [HttpGet ("{id}", Name = "Details")]
         public async Task<IActionResult> Details ([FromQuery] Details.Query query) 
+        public async Task<IActionResult> Details ([FromRoute] int id)
         {
             var result = await _mediator.Send (query);
 
