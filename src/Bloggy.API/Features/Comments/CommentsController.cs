@@ -17,8 +17,9 @@ namespace Bloggy.API.Features.Comments
         }
 
         [HttpGet]
-        public async Task<IActionResult> List ([FromQuery] List.Query query)
+        public async Task<IActionResult> List ([FromRoute] int postId)
         {
+            var query = new List.Query { PostId = postId };
             var result = await _mediator.Send (query);
 
             return result.IsSuccess
@@ -27,8 +28,9 @@ namespace Bloggy.API.Features.Comments
         }
 
         [HttpGet ("{id}", Name = "Details")]
-        public async Task<IActionResult> Details ([FromQuery] Detials.Query query)
+        public async Task<IActionResult> Details ([FromRoute] int postId, [FromRoute] int id)
         {
+            var query = new Details.Query { PostId = postId, Id = id };
             var result = await _mediator.Send (query);
 
             return result.IsSuccess
@@ -38,8 +40,9 @@ namespace Bloggy.API.Features.Comments
 
         [HttpPost]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<IActionResult> Create ([FromBody] Create.Command command)
+        public async Task<IActionResult> Create ([FromRoute] int postId, [FromBody] Create.Command command)
         {
+            command.PostId = postid;
             var result = await _mediator.Send (command);
 
             return result.IsSuccess
@@ -49,10 +52,10 @@ namespace Bloggy.API.Features.Comments
 
         [HttpPut ("{id}")]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<IActionResult> Edit ([FromQuery]int id, [FromQuery]int postId, [FromBody] Edit.Command command)
+        public async Task<IActionResult> Edit ([FromRoute] int postId, [FromQuery] int id, [FromBody] Edit.Command command)
         {
+            command.PostId = postid;
             command.Id = id;
-            command.postId = postid;
             var result = await _mediator.Send (command);
 
             return result.IsSuccess
@@ -62,8 +65,9 @@ namespace Bloggy.API.Features.Comments
 
         [HttpDelete ("{id}")]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task Delete ([FromQuery] Delete.Command command)
+        public async Task Delete ([FromRoute] int postId, [FromRoute] int id)
         {
+            var command = new Delete.Command { PostId = postId, Id = id };
             var result = await _mediator.Send (command);
 
             return result.IsSuccess

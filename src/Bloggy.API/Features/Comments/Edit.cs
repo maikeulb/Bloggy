@@ -18,8 +18,8 @@ namespace Bloggy.API.Features.Comments
     {
         public class Command : IRequest<Result>
         {
-            public int Id { get; set; }
             public int PostId { get; set; }
+            public int Id { get; set; }
             public string Body { get; set; }
         }
 

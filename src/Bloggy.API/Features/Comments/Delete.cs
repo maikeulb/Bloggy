@@ -17,8 +17,8 @@ namespace Bloggy.API.Features.Comments
     {
         public class Command : IRequest<Result>
         {
-            public int Id { get; }
-            public int PostId { get; }
+            public int PostId { get; set; }
+            public int Id { get; set; }
         }
 
         public class Validator : AbstractValidator<Command>

@@ -15,7 +15,7 @@ namespace Bloggy.API.Features.Comments
     {
         public class Query : IRequest<Result<Model>>
         {
-            public int Id { get; }
+            public int PostId { get; set}
         }
 
         public class Validator : AbstractValidator<Query>
@@ -48,7 +48,7 @@ namespace Bloggy.API.Features.Comments
 
             protected override async Task<Result<Model>> HandleCore(Query message)
             {
-                var post = await SingleAsync(message.Id);
+                var post = await SingleAsync(message.PostId);
 
                 if (post == null)
                     return Result.Fail<Model> ("Post does not exit");

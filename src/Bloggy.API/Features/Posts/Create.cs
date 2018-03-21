@@ -19,7 +19,7 @@ namespace Bloggy.API.Features.Posts
         {
             public string Title { get; set; }
             public string Body { get; set; }
-            public List<string> Tags { get; set; } = new List<string> Tags();
+            public List<string> Tags { get; set; } 
         }
 
         public class Model
@@ -55,16 +55,11 @@ namespace Bloggy.API.Features.Posts
 
             protected override async Task HandleCore(Command message)
             {
-                var author = await SingleAsync (_currentUserAccessor.GetCurrentUsername());
-
-                if (author == null)
-                    return Result.Fail<Model> ("Author does not exit");
-
                 var post = new Post()
                 {
                     Title = message.Title,
                     Body = message.Body,
-                    Author = author,
+                    Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername()),
                     CreationDate = DateTime.UtcNow,
                 };
 
@@ -72,15 +67,12 @@ namespace Bloggy.API.Features.Posts
                 var postTags = new List<PostTag>();
                 foreach(var tag in message.Tags)
                 {
-                    var t = await _context.Tags.FindAsync(tag);
+                    var t = await _context.Tags.SingleTagAsync(tag);
                     if (t == null)
                     {
-                        t = new Tag() 
-                        {
-                            Name = tag
-                        };
+                        t = new Tag() { Name = tag };
                         await _context.Tag.AddAsync(t);
-                        await _context.SaveAsync()
+                        await _context.SaveChangesAsync();
                     }
                     tags.Add(t);
                     var pt = new PostTag()
@@ -91,21 +83,29 @@ namespace Bloggy.API.Features.Posts
                     postTags.Add(pt);
                 }
 
-                await _context.Post.AddAsync(post);
-                await _context.PostTag.AddRangeAsync(postTags);
+                await _context.Posts.AddAsync(post);
+                await _context.PostTags.AddRangeAsync(postTags);
                 await _context.SaveChangesAsync()
 
-                var model = Mapper.Map<Model, Entities.Post> (post);
+                var model = _mapper.Map<Entities.Post, Model>(post);
 
                 return Result.Ok (model);
             }
 
-            private async Task<User> SingleAsync(string username)
+            private async Task<ApplicationUser> SingleUserAsync(string username)
             {
                 return await _context.Users
-                    .Where(u => u.Username == username)
-                    .SingleOrDefaultAsync();
+                    .SingleOrDefaultAsync(u => u.Username == username);
             }
+
+            private async Task<Tag> SingleTagAsync(string name)
+            {
+                return await _context.Tags
+                    .SingleOrDefaultAsync(t => t.Name == name);
+            }
+        }
+    }
+}
         }
     }
 }

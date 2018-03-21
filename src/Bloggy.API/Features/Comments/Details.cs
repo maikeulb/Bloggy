@@ -17,6 +17,7 @@ namespace Bloggy.API.Features.Tags
     {
         public class Query : IRequest<Result<Model>>
         {
+            public string PostId { get; set; }
             public string Id { get; set; }
         }
 

@@ -17,6 +17,7 @@ namespace Bloggy.API.Features.Comments
     {
         public class Command : IRequest<Result<Model>>
         {
+            public int PostId { get; set; }
             public string Body { get; set; }
         }
 
