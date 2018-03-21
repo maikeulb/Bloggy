@@ -24,9 +24,8 @@ namespace Bloggy.API.Features.Tags
         {
             public int Id { get; set; }
             public string Body { get; set; }
-            public DateTime CreationDate { get; set; }
             public ApplicationUser Author { get; set; }
-            public Post Post { get; set; }
+            public DateTime CreationDate { get; set; }
         }
 
         public class Validator : AbstractValidator<Query>
@@ -61,11 +60,12 @@ namespace Bloggy.API.Features.Tags
                 return Result.Ok (model);
             }
 
-            private async Task<Post> SingleAsync(int id)
+            private async Task<Comment> SingleAsync(int id)
             {
-                return await _context.Posts
-                    .Where(p => p.Id ==id)
-                    .SingleOrDefaultAsync();
+                return await _context.Comments
+                    .Include(c => c.ApplicationUser)
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(p => p.Id == id);
             }
         }
     }

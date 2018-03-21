@@ -30,9 +30,8 @@ namespace Bloggy.API.Features.Comments
         {
             public int Id { get; set; }
             public string Body { get; set; }
-            public DateTime CreationDate { get; set; }
             public ApplicationUser Author { get; set; }
-            public Post Post { get; set; }
+            public DateTime CreatedDate { get; set; }
         }
 
         public class Handler : AsyncRequestHandler<Query, Result<Command>>
@@ -63,8 +62,8 @@ namespace Bloggy.API.Features.Comments
             {
                 return await _context.Posts
                     .Include(c => c.Comments)
-                    .Where(p => p.Id ==id)
-                    .SingleOrDefaultAsync();
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(p => p.Id ==id);
             }
         }
     }

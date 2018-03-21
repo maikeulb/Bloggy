@@ -22,7 +22,10 @@ namespace Bloggy.API.Features.Comments
 
         public class Model : IRequest<Result>
         {
+            public int Id { get; set; }
             public string Body { get; set; }
+            public ApplicationUser Author { get; set; }
+            public DateTime CreatedDate { get; set; }
         }
 
         public class Validator : AbstractValidator<Command>
@@ -55,19 +58,17 @@ namespace Bloggy.API.Features.Comments
                 if (post == null)
                     return Result.Fail<Model> ("Post does not exit");
 
-                var currentUsername = _currentUserAccessor.GetCurrentUsername();
-                var author = await _context.Users.FirstAsync(x => x.Username == username);
-                
                 var comment = new Comment()
                 {
-                    Author = author,
+                    Author = await SingleAsync (_currentUserAccessor.GetCurrentUsername()),
                     Body = message.Body,
                     CreationDate = DateTime.UtcNow
                 };
 
+                await _context.Comments.AddAsync(comment);
+
                 post.Comments.Add(comment);
 
-                await _context.Comments.AddAsync(comment);
                 await _context.SaveChangesAsync();
 
                 var model = _mapper.Map<Entities.Comment, Model>(comment);
@@ -75,12 +76,17 @@ namespace Bloggy.API.Features.Comments
                 return Result.Ok (model); 
             }
 
-            private async Task<Post> SingleAsync(int id)
+            private async Task<Post> SinglePostAsync(int id)
             {
                 return await _context.Posts
                     .Include(p => p.Comments)
-                    .Where(p => p.Id == id)
-                    .SingleOrDefaultAsync();
+                    .SingleOrDefaultAsync(p => p.Id == id);
+            }
+
+            private async Task<ApplicationUser> SingleUserAsync(string username)
+            {
+                return await _context.ApplicationUsers
+                    .SingleOrDefaultAsync(au => au.Username == username);
             }
         }
     }

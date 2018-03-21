@@ -40,12 +40,12 @@ namespace Bloggy.API.Features.Comments
 
             protected override async Task<Result> HandleCore(Command message)
             {
-                var post = await SinglePostAsync(message.PostId)
+                var post = await SinglePostAsync(message.PostId);
 
                 if (post == null)
                     return Result.Fail<Command> ("Post does not exit");
 
-                var comment = await SingleCommentAsync(message.Id)
+                var comment = await SingleCommentAsync(message.Id);
 
                 if (comment == null)
                     return Result.Fail<Command> ("Comment does not exit");
@@ -60,15 +60,13 @@ namespace Bloggy.API.Features.Comments
             {
                 return await _context.Posts
                     .Include(x => x.Comments)
-                    .Where(p => p.Id == id)
-                    .SingleOrDefaultAsync();
+                    .SingleOrDefaultAsync(p => p.Id == id);
             }
 
             private async Task<Comment> SingleCommentAsync(int id)
             {
                 return await _context.Comments
-                    .Where(p => p.CommentId == id)
-                    .SingleOrDefaultAsync();
+                    .SingleOrDefaultAsync(p => p.CommentId == id);
             }
         }
     }

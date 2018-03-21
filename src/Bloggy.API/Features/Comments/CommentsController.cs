@@ -49,8 +49,10 @@ namespace Bloggy.API.Features.Comments
 
         [HttpPut ("{id}")]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<IActionResult> Edit ([FromBody] Edit.Command command)
+        public async Task<IActionResult> Edit ([FromQuery]int id, [FromQuery]int postId, [FromBody] Edit.Command command)
         {
+            command.Id = id;
+            command.postId = postid;
             var result = await _mediator.Send (command);
 
             return result.IsSuccess

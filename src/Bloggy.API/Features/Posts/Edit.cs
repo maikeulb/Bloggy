@@ -15,7 +15,7 @@ namespace Bloggy.API.Features.Posts
 {
     public class Edit
     {
-        public class Command : IRequest<Result<Model>>
+        public class Command : IRequest<Result>
         {
             public int Id { get; set; }
             public string Title { get; set; }
@@ -24,15 +24,15 @@ namespace Bloggy.API.Features.Posts
             public List<Tag> Tags { get; set; } 
         }
 
-        public class Validator : AbstractValidator<Model>
+        public class Validator : AbstractValidator<Command>
         {
             public Validator()
             {
-                RuleFor(m => m.Model).NotNull();
+                RuleFor(m => m.Id).NotNull();
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command.Model, Result<Model>>
+        public class Handler : AsyncRequestHandler<Command, Result>
         {
             private readonly BloggyContext _context;
 
@@ -41,7 +41,7 @@ namespace Bloggy.API.Features.Posts
                 _context = context;
             }
 
-            protected override async Task HandleCore(Model message)
+            protected override async Task<Result> HandleCore(Command message)
             {
                 var post = await SingleAsync(message.Id);
 
@@ -91,6 +91,5 @@ namespace Bloggy.API.Features.Posts
             .Where(p => p.Id ==id)
             .SingleOrDefault();
     }
-
     }
 }

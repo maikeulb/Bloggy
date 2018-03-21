@@ -16,91 +16,99 @@ namespace Bloggy.API.Features.Comments
 {
     public class Edit
     {
-        public class Query : IRequest<Result<Command>>
+        public class Command : IRequest<Result>
         {
             public int Id { get; set; }
             public int PostId { get; set; }
-        }
-
-        public class Command : IRequest<Result>
-        {
             public string Body { get; set; }
         }
 
-        public class QueryValidator : AbstractValidator<Query>
+        public class Validator : AbstractValidator<Command>
         {
-            public QueryValidator()
+            public Validator()
             {
                 RuleFor(m => m.Id).NotNull();
             }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Result<Command>>
+        public class Handler : AsyncRequestHandler<Command, Result>
         {
             private readonly BloggyContext _context;
 
-            public QueryHandler(BloggyContext context)
+            public Handler(BloggyContext context)
             {
                 _context = context;
             }
 
-            protected override async Task<Result<Command>> HandleCore(Query message)
+            protected override async Task<Result> HandleCore(Command message)
             {
-                var post = await SingleAsync(message.Id);
+                var post = await SinglePostAsync(message.PostId);
 
                 if (post == null)
                     return Result.Fail<Model> ("Post does not exit");
 
-                var currentUsername = await _context.Users.FirstAsync(x => x.Username == username);
-
-                if (post.Author.username != currentUsername)
-                    return Result.Fail<Command> ("User is not authorized");
-
-                var comment = new Comment()
+                if (message.Body != null)
                 {
-                    Body = message.Body,
-                };
+                    var comment = await SingleCommentAsync(message.Id);
+                    _context.Comments.Remove(comment);
+                    await _context.SaveChangesAsync();
 
-                return Result.Ok (command);
-            }
-        }
+                    var comment = new Comment
+                    {
+                        Author = await SingleAsync (_currentUserAccessor.GetCurrentUsername()),
+                        Body = message.Body,
+                        CreationDate = DateTime.UtcNow
+                    }
 
-        public class CommandValidator : AbstractValidator<Command>
-        {
-            public CommandValidator()
-            {
-                RuleFor(m => m.Body).NotEmpty(); 
-            }
-        }
+                    await _context.Comments.AddAsync(comment);
+                    post.Comments.Add(comment);
+                    await _context.SaveChangesAsync();
+                } 
 
-        public class CommandHandler : AsyncRequestHandler<Command, Result>
-        {
-            private readonly BloggyContext _context;
+                return Result.Ok ()
 
-            public CommandHandler(BloggyContext context)
-            {
-                _context = context;
-            }
-
-            protected override async Task<Result> HandleCore(Command message, CancellationToken cancellationToken)
-            {
-                var post = await SingleAsync(message.Id);
-
-                if (post == null)
-                    return Result.Fail<Model> ("Post does not exit");
-
-                post.Body = message.Body;
-
-                await _context.SaveChangesAsync();
-            }
-
-            private async Task<Post> SingleAsync(int id)
+            private async Task<Post> SinglePostAsync(int id)
             {
                 return await _context.Posts
                     .Include(p => p.Comments)
-                    .Where(p => p.Id == id)
-                    .SingleOrDefaultAsync();
+                    .SingleOrDefaultAsync(p => p.Id == id);
             }
+
+            private async Task<Comment> SingleCommentAsync(int id)
+            {
+                return await _context.Comments
+                    .SingleOrDefaultAsync(c => c.Id == id);
+            }
+
+            private async Task<ApplicationUser> SingleUserAsync(string username)
+            {
+                return await _context.ApplicationUsers
+                    .SingleOrDefaultAsync(au => au.Username == username);
         }
     }
 }
+
+ // ananymous types
+ // var sumeProp = _context.Samurais.Select(s => new {s.Id,
+ // s.Name}).ToList();
+ //
+ //_context.Quotes.Text +="hi"
+ // delete
+ //_context.Quotes.Remove(samurai.Quotrs)
+ //
+ //Find does not need asnotracking
+ //asnotracking k
+ //
+ //_context.Add(samura)
+ //_context.Update(samurai)
+ //_context.Samurais.Remove(samurai);
+ //use find for list<T>
+ //
+ //use where/firstordefault for ienumerable<T>
+ // IQueryable<Order> _context.Orders
+ // Order Find(int id) _context.Orders.Find(id)
+ // Insert _context.Orders.Add(order);
+ // _context.Orders.Update(order);
+ // _context.Orders.Remove(order);
+ //
+ //AsNoTracking
