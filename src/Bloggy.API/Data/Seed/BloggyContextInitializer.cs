@@ -47,14 +47,6 @@ namespace Bloggy.API.Data.Seed
                 await context.SaveChangesAsync();
             }
 
-            if (!context.Comments.Any())
-            {
-                context.Comments.AddRange(
-                    GetPreconfiguredComments());
-
-                await context.SaveChangesAsync();
-            }
-
             if (!context.Posts.Any())
             {
                 context.Posts.AddRange(
@@ -67,6 +59,14 @@ namespace Bloggy.API.Data.Seed
             {
                 context.PostTags.AddRange(
                     GetPreconfiguredPostTags());
+
+                await context.SaveChangesAsync();
+            }
+
+            if (!context.Comments.Any())
+            {
+                context.Comments.AddRange(
+                    GetPreconfiguredComments());
 
                 await context.SaveChangesAsync();
             }
@@ -141,7 +141,7 @@ namespace Bloggy.API.Data.Seed
                     CategoryId = 1,
                     AuthorId = 1,
                     Title  = "integer massa",
-                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.",
+                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
                     CreatedDate = new DateTime(2018, 2, 11), 
                 },
                 new Post()
@@ -150,7 +150,7 @@ namespace Bloggy.API.Data.Seed
                     CategoryId = 2,
                     AuthorId = 1,
                     Title  = "adipsicing elit",
-                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.",
+                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
                     CreatedDate = new DateTime(2018, 1, 21), 
                 },
                 new Post()
@@ -159,7 +159,7 @@ namespace Bloggy.API.Data.Seed
                     CategoryId = 1,
                     AuthorId = 1,
                     Title  = "efficitur",
-                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.",
+                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
                     CreatedDate = new DateTime(2018, 3, 21), 
                 },
                 new Post()
@@ -168,7 +168,7 @@ namespace Bloggy.API.Data.Seed
                     CategoryId = 2,
                     AuthorId = 2,
                     Title  = "sit amet",
-                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.",
+                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
                     CreatedDate = new DateTime(2018, 2, 19), 
                 },
                 new Post()
@@ -177,7 +177,7 @@ namespace Bloggy.API.Data.Seed
                     CategoryId = 2,
                     AuthorId = 2,
                     Title  = "pulvinar velit",
-                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.",
+                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
                     CreatedDate = new DateTime(2018, 1, 12), 
                 },
                 new Post()
@@ -186,7 +186,7 @@ namespace Bloggy.API.Data.Seed
                     CategoryId = 1,
                     AuthorId = 2,
                     Title  = "dolor lorem",
-                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit. Integer massa arcu, efficitur et posuere in, posuere ac velit. Nullam a gravida arcu. In velit odio, tincidunt in augue id, efficitur gravida nisl. Maecenas volutpat enim vel tempus dapibus. Etiam lacinia ipsum at ex eleifend, eleifend efficitur eros accumsan. Etiam elementum malesuada sagittis. Etiam mattis, lorem id pharetra vestibulum, sapien sem sodales sem, nec tincidunt metus enim ac massa.",
+                    Body  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
                     CreatedDate = new DateTime(2018, 1, 30), 
                 },
             };

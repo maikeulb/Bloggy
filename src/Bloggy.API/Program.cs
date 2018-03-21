@@ -26,7 +26,7 @@ namespace Bloggy.API
                 try
                 {
                     var bloggyContext = services.GetRequiredService<BloggyContext>();
-                    var passwordHasher = services.GetRequiredService<PasswordHasher>();
+                    var passwordHasher = services.GetRequiredService<IPasswordHasher>();
                     var bloggyContextInitializerLogger = services.GetRequiredService<ILogger<BloggyContextInitializer>>();
                     BloggyContextInitializer.Initialize(bloggyContext, passwordHasher, bloggyContextInitializerLogger).Wait();
                 }
