@@ -77,15 +77,13 @@ namespace Bloggy.API.Features.Posts
             {
                 return await _context.PostTags
                     .Include(pt => pt.Tags)
-                    .Where(pt => pt.Tags.Name == tag)
-                    .SingleOrDefaultAsync();
+                    .SingleOrDefaultAsync(pt => pt.Tags.Name == tag);
             }
 
             private async Task<ApplicationUser> SingleAuthorAsync(string author)
             {
                 return await _context.ApplicationUsers
-                    .Where(au => au.Username == author)
-                    .SingleOrDefaultAsync();
+                    .SingleOrDefaultAsync(au => au.Username == author);
             }
 
             public IQueryable<Post> ListPosts()

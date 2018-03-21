@@ -15,7 +15,7 @@ namespace Bloggy.API.Features.Posts
 {
     public class Create
     {
-        public class Command : IRequest<Model>
+        public class Command : IRequest<Result<Model>>
         {
             public string Title { get; set; }
             public string Body { get; set; }
@@ -37,12 +37,12 @@ namespace Bloggy.API.Features.Posts
         {
             public Validator()
             {
-                RuleFor(c => c.Title).NotEmpty();
-                RuleFor(c => c.Body).NotEmpty();
+                RuleFor(p => p.Title).NotEmpty();
+                RuleFor(p => p.Body).NotEmpty();
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command>
+        public class Handler : AsyncRequestHandler<Command, Result<Model>>
         {
             private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -53,14 +53,14 @@ namespace Bloggy.API.Features.Posts
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            protected override async Task HandleCore(Command message)
+            protected override async Task<Result<Model>> HandleCore (Command message)
             {
                 var post = new Post()
                 {
                     Title = message.Title,
                     Body = message.Body,
                     Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername()),
-                    CreationDate = DateTime.UtcNow,
+                    CreationDate = DateTime.UtcNow
                 };
 
                 var tags = new List<Tag>();
@@ -85,7 +85,7 @@ namespace Bloggy.API.Features.Posts
 
                 await _context.Posts.AddAsync(post);
                 await _context.PostTags.AddRangeAsync(postTags);
-                await _context.SaveChangesAsync()
+                await _context.SaveChangesAsync();
 
                 var model = _mapper.Map<Entities.Post, Model>(post);
 
@@ -95,7 +95,7 @@ namespace Bloggy.API.Features.Posts
             private async Task<ApplicationUser> SingleUserAsync(string username)
             {
                 return await _context.Users
-                    .SingleOrDefaultAsync(u => u.Username == username);
+                    .SingleOrDefaultAsync(au => au.Username == username);
             }
 
             private async Task<Tag> SingleTagAsync(string name)
@@ -103,9 +103,6 @@ namespace Bloggy.API.Features.Posts
                 return await _context.Tags
                     .SingleOrDefaultAsync(t => t.Name == name);
             }
-        }
-    }
-}
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Bloggy.API.Features.Posts
         {
             public Validator()
             {
-                RuleFor(x => x.Id).NotNull();
+                RuleFor(p => p.Id).NotNull();
             }
         }
 
@@ -67,8 +67,8 @@ namespace Bloggy.API.Features.Posts
                     .Include(c => c.Comments)
                     .Include(c => c.PostTags)
                         .ThenInclude(c => c.Tag)
-                    .Where(p => p.Id ==id)
-                    .SingleOrDefaultAsync();
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(p => p.Id == id);
             }
         }
     }

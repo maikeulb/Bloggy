@@ -21,7 +21,7 @@ namespace Bloggy.API.Features.Posts
         {
             public Validator()
             {
-                RuleFor(c => c.Id).NotNull();
+                RuleFor(p => p.Id).NotNull();
             }
         }
 
@@ -36,7 +36,7 @@ namespace Bloggy.API.Features.Posts
 
             protected override async Task<Result> HandleCore(Command message)
             {
-                var post = await SinglePostAsync(message.Id)
+                var post = await SinglePostAsync(message.Id);
 
                 if (post == null)
                     return Result.Fail<Command> ("Post does not exit");
@@ -48,10 +48,8 @@ namespace Bloggy.API.Features.Posts
             private async Task<Post> SinglePostAsync(int id)
             {
                 return await _context.Posts
-                    .Where(p => p.Id == id)
-                    .SingleOrDefaultAsync();
+                    .SingleOrDefaultAsync(p => p.Id == id);
             }
-
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Bloggy.API.Features.Posts
         {
             public Validator()
             {
-                RuleFor(m => m.Id).NotNull();
+                RuleFor(p => p.Id).NotNull();
             }
         }
 
@@ -83,13 +83,12 @@ namespace Bloggy.API.Features.Posts
 
                 return Result.Ok ();
             }
-        }
 
-    private async Task<Post> SingleAsync(int id)
-    {
-        return await _context.Post
-            .Where(p => p.Id ==id)
-            .SingleOrDefault();
-    }
+            private async Task<Post> SingleAsync(int id)
+            {
+                return await _context.Post
+                    .SingleOrDefault(p => p.Id == id);
+            }
+        }
     }
 }
