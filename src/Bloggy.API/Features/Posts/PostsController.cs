@@ -25,9 +25,9 @@ namespace Bloggy.API.Features.Posts
         }
 
         [HttpGet ("{id}", Name = "Details")]
-        public async Task<IActionResult> Details ([FromQuery] Details.Query query) 
         public async Task<IActionResult> Details ([FromRoute] int id)
         {
+            var query = new Query.Details { Id = id };
             var result = await _mediator.Send (query);
 
             return result.IsSuccess
@@ -48,7 +48,7 @@ namespace Bloggy.API.Features.Posts
 
         [HttpPut ("{id}")]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<IActionResult> Edit ([FromQuery]int id, [FromBody] Edit.Command command)
+        public async Task<IActionResult> Edit ([FromRoute]int id, [FromBody] Edit.Command command)
         {
             command.Id = id;
             var result = await _mediator.Send (command);
@@ -60,8 +60,9 @@ namespace Bloggy.API.Features.Posts
 
         [HttpDelete ("{id}")]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task Delete ([FromQuery] Delete.Command command) 
+        public async Task<IActionResult> Delete ([FromRoute]int id, [FromBody] Delete.Command command)
         {
+            command.Id = id;
             var result = await _mediator.Send (command);
 
             return result.IsSuccess
