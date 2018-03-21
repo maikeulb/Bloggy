@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
@@ -32,14 +33,8 @@ namespace Bloggy.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMediatR();
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
-
-            services
-                .AddEntityFrameworkSqlite()
-                .AddDbContext<BloggyContext>();
-
-            services.AddCors();
+            services.AddDbContext<BloggyContext> (options =>
+                    options.UseNpgsql (Configuration.GetConnectionString ("BloggyApi")));
 
             services.AddMvc(opt =>
                 {
@@ -88,6 +83,10 @@ namespace Bloggy.API
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; })
                 .AddJwtBearer("Token", options => { options.TokenValidationParameters = tokenValidationParameters; });
+
+            services.AddCors();
+            services.AddMediatR();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
