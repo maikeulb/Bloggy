@@ -15,7 +15,7 @@ namespace Bloggy.API.Features.Users
 {
     public class Edit
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result>
         {
             public string Username { get; set; }
             public string Email { get; set; }

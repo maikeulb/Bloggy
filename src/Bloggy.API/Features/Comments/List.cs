@@ -34,7 +34,7 @@ namespace Bloggy.API.Features.Comments
             public DateTime CreatedDate { get; set; }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Result<Command>>
+        public class Handler : AsyncRequestHandler<Query, Result<Model>>
         {
             private readonly BloggyContext _context;
             private readonly IMapper _mapper;
