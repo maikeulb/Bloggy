@@ -1,3 +1,10 @@
 /home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/obj/Debug/netcoreapp2.0/Bloggy.API.csproj.CoreCompileInputs.cache
 /home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/obj/Debug/netcoreapp2.0/Bloggy.API.AssemblyInfoInputs.cache
 /home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/obj/Debug/netcoreapp2.0/Bloggy.API.AssemblyInfo.cs
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/bin/Debug/netcoreapp2.0/Bloggy.API.deps.json
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/bin/Debug/netcoreapp2.0/Bloggy.API.runtimeconfig.json
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/bin/Debug/netcoreapp2.0/Bloggy.API.runtimeconfig.dev.json
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/bin/Debug/netcoreapp2.0/Bloggy.API.dll
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/bin/Debug/netcoreapp2.0/Bloggy.API.pdb
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/obj/Debug/netcoreapp2.0/Bloggy.API.dll
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/obj/Debug/netcoreapp2.0/Bloggy.API.pdb

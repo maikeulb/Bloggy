@@ -28,6 +28,7 @@ namespace Bloggy.API.Features.Posts
             public int Id { get; set; }
             public string Title { get; set; }
             public string Body { get; set; }
+            public string Category { get; set; }
             public DateTime CreatedDate { get; set; }
             public ApplicationUser Author { get; set; }
             public List<Comment> Comments { get; set; }
@@ -69,6 +70,7 @@ namespace Bloggy.API.Features.Posts
             {
                 return await _context.Posts
                     .Include(c => c.Author)
+                    .Include(c => c.Category)
                     .Include(c => c.Comments)
                     .Include(c => c.PostTags)
                         .ThenInclude(c => c.Tag)

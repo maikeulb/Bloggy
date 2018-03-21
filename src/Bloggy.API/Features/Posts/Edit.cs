@@ -23,6 +23,7 @@ namespace Bloggy.API.Features.Posts
             public int Id { get; set; }
             public string Title { get; set; }
             public string Body { get; set; }
+            public string Category { get; set; }
             public List<Comment> Comments { get; set; }
             public List<Tag> Tags { get; set; }
         }
@@ -51,8 +52,13 @@ namespace Bloggy.API.Features.Posts
                 if (post == null)
                     return Result.Fail<Command> ("Post does not exit");
 
-                post.Body = message.Body ?? post.Body;
                 post.Title = message.Title ?? post.Title;
+                post.Body = message.Body ?? post.Body;
+
+                if (message.Category != null)
+                {
+                    post.Category = await _context.Categories.FindAsync (message.Category); 
+                } 
 
                 if (message.Tags != null)
                 {
@@ -89,7 +95,13 @@ namespace Bloggy.API.Features.Posts
             private async Task<Post> SingleAsync (int id)
             {
                 return await _context.Posts
-                    .SingleOrDefaultAsync (p => p.Id == id);
+                    .Include(c => c.Author)
+                    .Include(c => c.Category)
+                    .Include(c => c.Comments)
+                    .Include(c => c.PostTags)
+                        .ThenInclude(c => c.Tag)
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(p => p.Id == id);
             }
         }
     }

@@ -22,6 +22,7 @@ namespace Bloggy.API.Features.Posts
         {
             public string Title { get; set; }
             public string Body { get; set; }
+            public string Category { get; set; }
             public List<string> Tags { get; set; }
         }
 
@@ -30,6 +31,7 @@ namespace Bloggy.API.Features.Posts
             public int Id { get; set; }
             public string Title { get; set; }
             public string Body { get; set; }
+            public string Category { get; set; }
             public DateTime CreatedDate { get; set; }
             public ApplicationUser Author { get; set; }
             public List<Comment> Comments { get; set; }
@@ -42,6 +44,7 @@ namespace Bloggy.API.Features.Posts
             {
                 RuleFor(p => p.Title).NotEmpty();
                 RuleFor(p => p.Body).NotEmpty();
+                RuleFor(p => p.Category).NotEmpty();
             }
         }
 
@@ -64,6 +67,7 @@ namespace Bloggy.API.Features.Posts
                 {
                     Title = message.Title,
                     Body = message.Body,
+                    Category = await SingleCategoryAsync(message.Category),
                     Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername()),
                     CreatedDate = DateTime.UtcNow
                 };
@@ -107,6 +111,12 @@ namespace Bloggy.API.Features.Posts
             {
                 return await _context.Tags
                     .SingleOrDefaultAsync(t => t.Name == name);
+            }
+
+            private async Task<Category> SingleCategoryAsync(string name)
+            {
+                return await _context.Categories
+                    .SingleOrDefaultAsync(c => c.Name == name);
             }
         }
     }

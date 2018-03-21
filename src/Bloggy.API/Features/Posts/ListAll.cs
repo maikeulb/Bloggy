@@ -21,6 +21,7 @@ namespace Bloggy.API.Features.Posts
         {
             public string Tag { get; }
             public string Author { get; }
+            public string Category { get; }
         }
 
         public class Model
@@ -28,6 +29,7 @@ namespace Bloggy.API.Features.Posts
             public int Id { get; set; }
             public string Title { get; set; }
             public string Body { get; set; }
+            public string Category { get; set; }
             public DateTime CreatedDate { get; set; }
             public ApplicationUser Author { get; set; }
             public List<Comment> Comments { get; set; }
@@ -63,6 +65,12 @@ namespace Bloggy.API.Features.Posts
                     if (author != null)
                         queryablePosts = queryablePosts.Where(p => p.Author.Username == message.Author);
                 }
+                if (!string.IsNullOrWhiteSpace(message.Category))
+                {
+                    var category = await SingleCategoryAsync(message.Category);
+                    if (category != null)
+                        queryablePosts = queryablePosts.Where(p => p.Category.Name == message.Category);
+                }
 
                 var posts = await queryablePosts
                     .OrderByDescending(m => m.CreatedDate)
@@ -80,6 +88,12 @@ namespace Bloggy.API.Features.Posts
                     .SingleOrDefaultAsync(pt => pt.Name == tag);
             }
 
+            private async Task<Category> SingleCategoryAsync(string category)
+            {
+                return await _context.Categories
+                    .SingleOrDefaultAsync(c => c.Name == category);
+            }
+
             private async Task<ApplicationUser> SingleAuthorAsync(string author)
             {
                 return await _context.Users
@@ -90,7 +104,9 @@ namespace Bloggy.API.Features.Posts
             {
                 return _context.Posts
                     .Include(x => x.Author)
+                    .Include(x => x.Category)
                     .Include(x => x.PostTags)
+                      .ThenInclude(x => x.Tag)
                     .AsNoTracking();
             }
         }
