@@ -33,7 +33,8 @@ namespace Bloggy.API.Features.Tags
         {
             public Validator()
             {
-                RuleFor(x => x.Slug).NotNull().NotEmpty();
+                RuleFor(c => c.PostId).NotNull();
+                RuleFor(c => c.Id).NotNull();
             }
         }
 

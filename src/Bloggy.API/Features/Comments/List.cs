@@ -22,7 +22,7 @@ namespace Bloggy.API.Features.Comments
         {
             public Validator()
             {
-                RuleFor(x => x.Id).NotNull();
+                RuleFor(c => c.Id).NotNull();
             }
         }
 

@@ -27,7 +27,8 @@ namespace Bloggy.API.Features.Comments
         {
             public Validator()
             {
-                RuleFor(m => m.Id).NotNull();
+                RuleFor(c => c.PostId).NotNull();
+                RuleFor(c => c.Id).NotNull();
             }
         }
 

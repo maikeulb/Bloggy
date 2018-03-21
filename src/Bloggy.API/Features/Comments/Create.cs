@@ -33,6 +33,7 @@ namespace Bloggy.API.Features.Comments
         {
             public Validator()
             {
+                RuleFor(c => c.PostId).NotNull();
                 RuleFor(c => c.Body).NotEmpty();
             }
         }
