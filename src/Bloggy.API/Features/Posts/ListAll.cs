@@ -17,7 +17,7 @@ namespace Bloggy.API.Features.Posts
 {
     public class ListAll
     {
-        public class Query : IRequest<IEnumerable<Model>>
+        public class Query : IRequest<List<Model>>
         {
             public string Tag { get; }
             public string Author { get; }
@@ -30,13 +30,14 @@ namespace Bloggy.API.Features.Posts
             public string Title { get; set; }
             public string Body { get; set; }
             public string Category { get; set; }
+            public string Author { get; set; }
+            public List<string> Tags { get; set; }
+
             public DateTime CreatedDate { get; set; }
-            public ApplicationUser Author { get; set; }
             public List<Comment> Comments { get; set; }
-            public List<Tag> Tags { get; set; }
         }
 
-        public class Handler : AsyncRequestHandler<Query, IEnumerable<Model>>
+        public class Handler : AsyncRequestHandler<Query, List<Model>>
         {
             private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -49,7 +50,7 @@ namespace Bloggy.API.Features.Posts
                 _mapper = mapper;
             }
 
-            protected override async Task<IEnumerable<Model>> HandleCore (Query message)
+            protected override async Task<List<Model>> HandleCore (Query message)
             {
                 IQueryable<Post> queryablePosts = ListPosts();
 
@@ -77,7 +78,7 @@ namespace Bloggy.API.Features.Posts
                     .AsNoTracking()
                     .ToListAsync();
 
-                var model = _mapper.Map<IEnumerable<Post>, IEnumerable<Model>>(posts);
+                var model = _mapper.Map<List<Post>, List<Model>>(posts);
 
                 return model;
             }
@@ -104,6 +105,7 @@ namespace Bloggy.API.Features.Posts
             {
                 return _context.Posts
                     .Include(x => x.Author)
+                    .Include(x => x.Comments)
                     .Include(x => x.Category)
                     .Include(x => x.PostTags)
                       .ThenInclude(x => x.Tag)

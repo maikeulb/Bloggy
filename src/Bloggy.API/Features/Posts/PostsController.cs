@@ -26,7 +26,7 @@ namespace Bloggy.API.Features.Posts
             return Ok (result);
         }
 
-        [HttpGet ("{id}", Name = "Details")]
+        [HttpGet ("{id}", Name = "PostDetails")]
         public async Task<IActionResult> Details ([FromRoute] int id)
         {
             var query = new Details.Query { Id = id };
@@ -44,7 +44,7 @@ namespace Bloggy.API.Features.Posts
             var result = await _mediator.Send (command);
 
             return result.IsSuccess
-                ? (IActionResult)CreatedAtRoute ("Details", new { controller = "Posts", id = result.Value.Id }, result)
+                ? (IActionResult)CreatedAtRoute ("PostDetails", new { controller = "Posts", id = result.Value.Id }, result)
                 : (IActionResult)BadRequest(result.Error);
         }
 
