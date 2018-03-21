@@ -4,7 +4,7 @@ using Bloggy.API.Entities;
 
 namespace Bloggy.API.Data.Configurations
 {
-    class CommentConfiguration : IEntityTypeConfiguration<ApplicationUser>
+    class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
         public void Configure (EntityTypeBuilder<ApplicationUser> builder)
         {

@@ -1,5 +1,7 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Bloggy.Infrastructure;
+using Bloggy.API.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,17 +19,17 @@ namespace Bloggy.API.Features.Posts
         }
 
         [HttpGet]
-        public async Task<IActionResult> List ([FromQuery] List.Query query)
+        public async Task<IActionResult> ListAll ([FromQuery] ListAll.Query query)
         {
             var result = await _mediator.Send (query);
 
-            return OK (result);
+            return Ok (result);
         }
 
         [HttpGet ("{id}", Name = "Details")]
         public async Task<IActionResult> Details ([FromRoute] int id)
         {
-            var query = new Query.Details { Id = id };
+            var query = new Details.Query { Id = id };
             var result = await _mediator.Send (query);
 
             return result.IsSuccess
@@ -42,7 +44,7 @@ namespace Bloggy.API.Features.Posts
             var result = await _mediator.Send (command);
 
             return result.IsSuccess
-                ? (IActionResult)CreatedAtRoute ("Details", new { controller = "Posts", id = result.Id }, result)
+                ? (IActionResult)CreatedAtRoute ("Details", new { controller = "Posts", id = result.Value.Id }, result)
                 : (IActionResult)BadRequest(result.Error);
         }
 

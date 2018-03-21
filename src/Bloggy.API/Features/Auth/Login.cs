@@ -3,15 +3,17 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using Bloggy.API.Data;
 using Bloggy.API.Entities;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
-using Bloggy.API.Data;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
+using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bloggy.API.Features.Users
+namespace Bloggy.API.Features.Auth
 {
     public class Login
     {
@@ -23,10 +25,10 @@ namespace Bloggy.API.Features.Users
 
         public class Validator : AbstractValidator<Command>
         {
-            public Validator()
+            public Validator ()
             {
-                RuleFor(u => u.Email).NotEmpty();
-                RuleFor(u => u.Password).NotEmpty();
+                RuleFor (u => u.Email).NotEmpty ();
+                RuleFor (u => u.Password).NotEmpty ();
             }
         }
 
@@ -37,7 +39,7 @@ namespace Bloggy.API.Features.Users
             private readonly IJwtTokenGenerator _jwtTokenGenerator;
             private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
+            public Handler (BloggyContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
             {
                 _context = context;
                 _passwordHasher = passwordHasher;
@@ -45,25 +47,26 @@ namespace Bloggy.API.Features.Users
                 _mapper = mapper;
             }
 
-            protected override async Task<Result> HandleCore(Command message)
+            protected override async Task<Result> HandleCore (Command message)
             {
-                if (await SingleAsync())
+                var user = await SingleAsync (message.Email);
+                if (await SingleAsync (message.Email) != null)
                     return Result.Fail<Command> ("User is not authorized");
 
-                if (!user.Hash.SequenceEqual(_passwordHasher.Hash(message.User.Password, user.Salt)))
+                if (!user.HashedPassword.SequenceEqual (_passwordHasher.Hash (message.Password, user.Salt)))
                     return Result.Fail<Command> ("User is not authorized");
-             
-                var user = _mapper.Map<Entities.ApplicationUser, Model>(user);
-                user.Token = await _jwtTokenGenerator.CreateToken(user.Username);
+
+                /* var user = _mapper.Map<Entities.ApplicationUser, Model>(user); */
+                /* user.Token = await _jwtTokenGenerator.CreateToken(user.Username); */
 
                 return Result.Ok ();
             }
 
             private async Task<ApplicationUser> SingleAsync (string email)
             {
-                return await _context.ApplicationUsers
-                    .Where(au => au.Email == email)
-                    .SingeOrDefaultAsync();
+                return await _context.Users
+                    .Where (au => au.Email == email)
+                    .SingleOrDefaultAsync ();
             }
         }
     }

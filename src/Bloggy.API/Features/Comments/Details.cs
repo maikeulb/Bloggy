@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using AutoMapper;
 using CSharpFunctionalExtensions;
@@ -6,19 +7,20 @@ using System.Threading.Tasks;
 using Bloggy.API.Entities;
 using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-
-namespace Bloggy.API.Features.Tags
+//bloggy.api.features.comments.details
+namespace Bloggy.API.Features.Comments
 {
-    public class Details
+    public class DetailsQ
     {
         public class Query : IRequest<Result<Model>>
         {
-            public string PostId { get; set; }
-            public string Id { get; set; }
+            public int PostId { get; set; }
+            public int Id { get; set; }
         }
 
         public class Model
@@ -26,7 +28,7 @@ namespace Bloggy.API.Features.Tags
             public int Id { get; set; }
             public string Body { get; set; }
             public ApplicationUser Author { get; set; }
-            public DateTime CreationDate { get; set; }
+            public DateTime CreatedDate { get; set; }
         }
 
         public class Validator : AbstractValidator<Query>
@@ -57,7 +59,7 @@ namespace Bloggy.API.Features.Tags
                 if (comment == null)
                     return Result.Fail<Model> ("Comment does not exit");
 
-                var model = _mapper.Map<Entities.Comment, Model>(comment);
+                var model = _mapper.Map<Comment, Model>(comment);
 
                 return Result.Ok (model);
             }
@@ -65,7 +67,7 @@ namespace Bloggy.API.Features.Tags
             private async Task<Comment> SingleAsync(int id)
             {
                 return await _context.Comments
-                    .Include(c => c.ApplicationUser)
+                    .Include(c => c.Author)
                     .AsNoTracking()
                     .SingleOrDefaultAsync(p => p.Id == id);
             }

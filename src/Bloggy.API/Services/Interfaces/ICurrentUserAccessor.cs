@@ -1,4 +1,4 @@
-namespace Bloggy.API.Infrastructure.Interfaces
+namespace Bloggy.API.Services.Interfaces
 {
     public interface ICurrentUserAccessor
     {

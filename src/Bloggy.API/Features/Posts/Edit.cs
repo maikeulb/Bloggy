@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Bloggy.API.Entities;
 using Bloggy.API.Data;
+using Bloggy.API.Entities;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
+using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,15 +23,15 @@ namespace Bloggy.API.Features.Posts
             public int Id { get; set; }
             public string Title { get; set; }
             public string Body { get; set; }
-            public List<Comment> Comments { get; set; } 
-            public List<Tag> Tags { get; set; } 
+            public List<Comment> Comments { get; set; }
+            public List<Tag> Tags { get; set; }
         }
 
         public class Validator : AbstractValidator<Command>
         {
-            public Validator()
+            public Validator ()
             {
-                RuleFor(p => p.Id).NotNull();
+                RuleFor (p => p.Id).NotNull ();
             }
         }
 
@@ -36,58 +39,57 @@ namespace Bloggy.API.Features.Posts
         {
             private readonly BloggyContext _context;
 
-            public CommandHandler(BloggyContext context)
+            public Handler (BloggyContext context)
             {
                 _context = context;
             }
 
-            protected override async Task<Result> HandleCore(Command message)
+            protected override async Task<Result> HandleCore (Command message)
             {
-                var post = await SingleAsync(message.Id);
+                var post = await SingleAsync (message.Id);
 
                 if (post == null)
-                    return Result.Fail<Model> ("Post does not exit");
+                    return Result.Fail<Command> ("Post does not exit");
 
                 post.Body = message.Body ?? post.Body;
-                post.Title = message.Title ?? post.Body;
+                post.Title = message.Title ?? post.Title;
 
                 if (message.Tags != null)
                 {
-                    var oldTags = post.PostTags;
-                    post.PostTags.Remove(oldTags);
+                    post.PostTags.Clear ();
 
-                    var tags = new List<Tag>();
-                    var postTags = new List<PostTag>();
-                    foreach(var tag in message.Tags)
+                    var tags = new List<Tag> ();
+                    var postTags = new List<PostTag> ();
+                    foreach (var tag in message.Tags)
                     {
-                        var t = await _context.Tags.FindAsync(tag);
+                        var t = await _context.Tags.FindAsync (tag);
                         if (t == null)
                         {
-                            t = new Tag() { Name = tag };
-                            await _context.Tag.AddAsync(t);
-                            await _context.SaveAsync();
+                            t = new Tag { Name = tag.Name };
+                            await _context.Tags.AddAsync (t);
+                            await _context.SaveChangesAsync ();
                         }
-                        tags.Add(t);
-                        var pt = new PostTag()
+                        tags.Add (t);
+                        var pt = new PostTag
                         {
                             Post = post,
                             Tag = t
                         };
-                        postTags.Add(pt);
+                        postTags.Add (pt);
                     }
-                    await _context.PostTag.AddRangeAsync(postTags);
+                    await _context.PostTags.AddRangeAsync (postTags);
                 }
 
-                await _context.Post.AddAsync(post);
-                await _context.SaveChangesAsync();
+                await _context.Posts.AddAsync (post);
+                await _context.SaveChangesAsync ();
 
                 return Result.Ok ();
             }
 
-            private async Task<Post> SingleAsync(int id)
+            private async Task<Post> SingleAsync (int id)
             {
-                return await _context.Post
-                    .SingleOrDefault(p => p.Id == id);
+                return await _context.Posts
+                    .SingleOrDefaultAsync (p => p.Id == id);
             }
         }
     }

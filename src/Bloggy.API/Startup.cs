@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Bloggy.API.Features.Profiles;
-using Bloggy.API.Data
+using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +11,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Bloggy.API
 {
@@ -32,7 +38,7 @@ namespace Bloggy.API
             services
                 .AddEntityFrameworkSqlite()
                 .AddDbContext<BloggyContext>();
-            
+
             services.AddCors();
 
             services.AddMvc(opt =>
@@ -51,9 +57,8 @@ namespace Bloggy.API
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
-            services.AddScoped<IProfileReader, ProfileReader>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
+
             services.AddOptions();
 
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("somethinglongerforthisdumbalgorithmisrequired"));
@@ -70,18 +75,13 @@ namespace Bloggy.API
 
             var tokenValidationParameters = new TokenValidationParameters
             {
-                // The signing key must match!
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = signingCredentials.Key,
-                // Validate the JWT Issuer (iss) claim
                 ValidateIssuer = true,
                 ValidIssuer = issuer,
-                // Validate the JWT Audience (aud) claim
                 ValidateAudience = true,
                 ValidAudience = audience,
-                // Validate the token expiry
                 ValidateLifetime = true,
-                // If you want to allow a certain amount of clock drift, set that here:
                 ClockSkew = TimeSpan.Zero
             };
 
@@ -89,7 +89,6 @@ namespace Bloggy.API
                 .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; })
                 .AddJwtBearer("Token", options => { options.TokenValidationParameters = tokenValidationParameters; });
         }
-
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {

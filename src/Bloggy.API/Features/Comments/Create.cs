@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using Bloggy.API.Entities;
 using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using CSharpFunctionalExtensions;
 
 namespace Bloggy.API.Features.Comments
 {
@@ -21,7 +23,7 @@ namespace Bloggy.API.Features.Comments
             public string Body { get; set; }
         }
 
-        public class Model 
+        public class Model
         {
             public int Id { get; set; }
             public string Body { get; set; }
@@ -44,7 +46,7 @@ namespace Bloggy.API.Features.Comments
             private readonly ICurrentUserAccessor _currentUserAccessor;
             private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context, 
+            public Handler(BloggyContext context,
                     ICurrentUserAccessor currentUserAccessor,
                     IMapper mapper)
             {
@@ -55,16 +57,16 @@ namespace Bloggy.API.Features.Comments
 
             protected override async Task<Result<Model>> HandleCore(Command message)
             {
-                var post = await SingleAsync (message.Id);
+                var post = await SinglePostAsync (message.PostId);
 
                 if (post == null)
                     return Result.Fail<Model> ("Post does not exit");
 
-                var comment = new Comment()
+                var comment = new Comment
                 {
-                    Author = await SingleAsync (_currentUserAccessor.GetCurrentUsername()),
+                    Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername()),
                     Body = message.Body,
-                    CreationDate = DateTime.UtcNow
+                    CreatedDate = DateTime.UtcNow
                 };
 
                 await _context.Comments.AddAsync(comment);
@@ -73,9 +75,9 @@ namespace Bloggy.API.Features.Comments
 
                 await _context.SaveChangesAsync();
 
-                var model = _mapper.Map<Entities.Comment, Model>(comment);
+                var model = _mapper.Map<Comment, Model>(comment);
 
-                return Result.Ok (model); 
+                return Result.Ok (model);
             }
 
             private async Task<Post> SinglePostAsync(int id)
@@ -87,8 +89,8 @@ namespace Bloggy.API.Features.Comments
 
             private async Task<ApplicationUser> SingleUserAsync(string username)
             {
-                return await _context.ApplicationUsers
-                    .SingleOrDefaultAsync(au => au.Username == username);
+                return await _context.Users
+                    .SingleOrDefaultAsync(u => u.Username == username);
             }
         }
     }

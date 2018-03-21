@@ -32,7 +32,7 @@ namespace Bloggy.API.Infrastructure
                 result.Content = content;
                 result.ContentType = "application/json";
 
-                filterContext.HttpContext.Response.StatusCode = 422; //unprocessable entity;
+                filterContext.HttpContext.Response.StatusCode = 422; 
                 filterContext.Result = result;
             }
         }

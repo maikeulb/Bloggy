@@ -29,12 +29,6 @@ namespace Bloggy.API.Infrastructure
 
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            if (exception is RestException re)
-            {
-                context.Response.StatusCode = (int)re.Code;
-            }
-            else
-            {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 if (!string.IsNullOrWhiteSpace(exception.Message))
                 {
@@ -45,8 +39,6 @@ namespace Bloggy.API.Infrastructure
                     });
                     await context.Response.WriteAsync(result);
                 }
-            }
-
         }
     }
 }

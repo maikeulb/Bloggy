@@ -3,46 +3,51 @@ using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
 using Bloggy.API.Data;
 using MediatR;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System;
+using AutoMapper;
 
 namespace Bloggy.API.Features.Posts
 {
-    public class List
+    public class ListAll
     {
-        public class Query : IRequest<Model>
+        public class Query : IRequest<IEnumerable<Model>>
         {
             public string Tag { get; }
             public string Author { get; }
         }
-   
+
         public class Model
         {
             public int Id { get; set; }
             public string Title { get; set; }
             public string Body { get; set; }
+            public DateTime CreatedDate { get; set; }
             public ApplicationUser Author { get; set; }
-            public DateTime CreationDate { get; set; }
-
-            public List<PostTag> PostTags { get; set; }
             public List<Comment> Comments { get; set; }
-            public List<Tag> Tags { get; set; } 
+            public List<Tag> Tags { get; set; }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Model>
+        public class Handler : AsyncRequestHandler<Query, IEnumerable<Model>>
         {
             private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
+            private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context, ICurrentUserAccessor currentUserAccessor)
+            public Handler(BloggyContext context, ICurrentUserAccessor currentUserAccessor, IMapper mapper)
             {
                 _context = context;
                 _currentUserAccessor = currentUserAccessor;
+                _mapper = mapper;
             }
 
-            protected override async Task<Model> HandleCore (Query message)
+            protected override async Task<IEnumerable<Model>> HandleCore (Query message)
             {
                 IQueryable<Post> queryablePosts = ListPosts();
 
@@ -51,38 +56,33 @@ namespace Bloggy.API.Features.Posts
                     var tag = await SingleTagAsync(message.Tag);
                     if (tag != null)
                         queryablePosts = queryablePosts.Where(p => p.PostTags.Select(pt => pt.Tag.Name).Contains(tag.Name));
-                    else
-                        return new Post();
                 }
                 if (!string.IsNullOrWhiteSpace(message.Author))
                 {
-                    var author = await SingleAuthorAsync(message.Author.username);
+                    var author = await SingleAuthorAsync(message.Author);
                     if (author != null)
-                        queryablePosts = queryablePosts.Where(p => p.Author == message.Author);
-                    else
-                        return new Model();
+                        queryablePosts = queryablePosts.Where(p => p.Author.Username == message.Author);
                 }
 
                 var posts = await queryablePosts
-                    .OrderByDescending(m => m.CreationDate)
+                    .OrderByDescending(m => m.CreatedDate)
                     .AsNoTracking()
                     .ToListAsync();
 
-                var model = Mapper.Map<Model, Entities.Post> (posts);
+                var model = _mapper.Map<IEnumerable<Post>, IEnumerable<Model>>(posts);
 
                 return model;
             }
 
-            private async Task<Post> SingleTagAsync(string tag)
+            private async Task<Tag> SingleTagAsync(string tag)
             {
-                return await _context.PostTags
-                    .Include(pt => pt.Tags)
-                    .SingleOrDefaultAsync(pt => pt.Tags.Name == tag);
+                return await _context.Tags
+                    .SingleOrDefaultAsync(pt => pt.Name == tag);
             }
 
             private async Task<ApplicationUser> SingleAuthorAsync(string author)
             {
-                return await _context.ApplicationUsers
+                return await _context.Users
                     .SingleOrDefaultAsync(au => au.Username == author);
             }
 
@@ -90,8 +90,7 @@ namespace Bloggy.API.Features.Posts
             {
                 return _context.Posts
                     .Include(x => x.Author)
-                    .Include(x => x.ArticleFavorites)
-                    .Include(x => x.ArticleTags)
+                    .Include(x => x.PostTags)
                     .AsNoTracking();
             }
         }

@@ -47,6 +47,28 @@
           "lib/netstandard2.0/CSharpFunctionalExtensions.dll": {}
         }
       },
+      "FluentValidation/7.4.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/FluentValidation.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/FluentValidation.dll": {}
+        }
+      },
+      "FluentValidation.AspNetCore/7.4.0": {
+        "type": "package",
+        "dependencies": {
+          "FluentValidation": "7.4.0",
+          "Microsoft.AspNetCore.Mvc": "2.0.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/FluentValidation.AspNetCore.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/FluentValidation.AspNetCore.dll": {}
+        }
+      },
       "Libuv/1.10.0": {
         "type": "package",
         "dependencies": {
@@ -4856,6 +4878,32 @@
         "lib/net461/CSharpFunctionalExtensions.dll",
         "lib/netstandard1.3/CSharpFunctionalExtensions.dll",
         "lib/netstandard2.0/CSharpFunctionalExtensions.dll"
+      ]
+    },
+    "FluentValidation/7.4.0": {
+      "sha512": "0lvGuTepyt4dniOEuQkoRqzvOtRIpu723k32peSMQutk/09VcBzNUCbmTs/2fKnwrPVx6M/SGKZYN32jH4Fw4A==",
+      "type": "package",
+      "path": "fluentvalidation/7.4.0",
+      "files": [
+        "fluentvalidation.7.4.0.nupkg.sha512",
+        "fluentvalidation.nuspec",
+        "lib/net45/FluentValidation.dll",
+        "lib/net45/FluentValidation.xml",
+        "lib/netstandard1.0/FluentValidation.dll",
+        "lib/netstandard1.0/FluentValidation.xml",
+        "lib/netstandard2.0/FluentValidation.dll",
+        "lib/netstandard2.0/FluentValidation.xml"
+      ]
+    },
+    "FluentValidation.AspNetCore/7.4.0": {
+      "sha512": "w6NFoQcHmyCHUQYLZlBa4cTx2A98aLKmZezLuTXQ+YHrWrLDzycB9LOP/fgdQ9wg0b6iNABwG/eTmiXVidlJhg==",
+      "type": "package",
+      "path": "fluentvalidation.aspnetcore/7.4.0",
+      "files": [
+        "fluentvalidation.aspnetcore.7.4.0.nupkg.sha512",
+        "fluentvalidation.aspnetcore.nuspec",
+        "lib/netstandard2.0/FluentValidation.AspNetCore.dll",
+        "lib/netstandard2.0/FluentValidation.AspNetCore.xml"
       ]
     },
     "Libuv/1.10.0": {
@@ -12678,6 +12726,8 @@
       "AutoMapper >= 6.2.2",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 3.2.0",
       "CSharpFunctionalExtensions >= 1.9.1",
+      "FluentValidation >= 7.4.0",
+      "FluentValidation.AspNetCore >= 7.4.0",
       "MediatR.Extensions.Microsoft.DependencyInjection >= 4.0.0",
       "Microsoft.AspNetCore.All >= 2.0.5",
       "Microsoft.NETCore.App >= 2.0.0",
@@ -12737,6 +12787,14 @@
           "CSharpFunctionalExtensions": {
             "target": "Package",
             "version": "[1.9.1, )"
+          },
+          "FluentValidation": {
+            "target": "Package",
+            "version": "[7.4.0, )"
+          },
+          "FluentValidation.AspNetCore": {
+            "target": "Package",
+            "version": "[7.4.0, )"
           },
           "MediatR.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",

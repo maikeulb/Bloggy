@@ -1,4 +1,5 @@
 using Bloggy.API.Entities;
+using Bloggy.API.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bloggy.API.Data
@@ -7,7 +8,7 @@ namespace Bloggy.API.Data
     {
         public BloggyContext(DbContextOptions<BloggyContext> options) : base(options) {}
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Category> Categories { get; set; }

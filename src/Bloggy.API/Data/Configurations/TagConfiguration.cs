@@ -4,7 +4,7 @@ using Bloggy.API.Entities;
 
 namespace Bloggy.API.Data.Configurations
 {
-    class CommentConfiguration : IEntityTypeConfiguration<Tag>
+    class TagConfiguration : IEntityTypeConfiguration<Tag>
     {
         public void Configure (EntityTypeBuilder<Tag> builder)
         {

@@ -5,11 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
 using Bloggy.API.Data;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System;
 
 namespace Bloggy.API.Features.Posts
 {
@@ -25,10 +28,10 @@ namespace Bloggy.API.Features.Posts
             public int Id { get; set; }
             public string Title { get; set; }
             public string Body { get; set; }
-            public ApplicationUser Author { get; set; } 
-            public DateTime CreationDate { get; set; }
-            public List<Comment> Comments { get; set; } 
-            public List<Tag> Tags { get; set; } 
+            public DateTime CreatedDate { get; set; }
+            public ApplicationUser Author { get; set; }
+            public List<Comment> Comments { get; set; }
+            public List<Tag> Tags { get; set; }
         }
 
         public class Validator : AbstractValidator<Query>
@@ -42,10 +45,12 @@ namespace Bloggy.API.Features.Posts
         public class Handler : AsyncRequestHandler<Query, Result<Model>>
         {
             private readonly BloggyContext _context;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(BloggyContext context)
+            public Handler(BloggyContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             protected override async Task<Result<Model>> HandleCore(Query message)
@@ -55,7 +60,7 @@ namespace Bloggy.API.Features.Posts
                 if (post == null)
                     return Result.Fail<Model> ("Post does not exit");
 
-                var model = Mapper.Map<Model, Entities.Post> (post);
+                var model = _mapper.Map<Post, Model>(post);
 
                 return Result.Ok (model);
             }

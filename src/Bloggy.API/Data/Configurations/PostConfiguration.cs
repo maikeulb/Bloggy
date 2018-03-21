@@ -4,7 +4,7 @@ using Bloggy.API.Entities;
 
 namespace Bloggy.API.Data.Configurations
 {
-    class CommentConfiguration : IEntityTypeConfiguration<Post>
+    class PostConfiguration : IEntityTypeConfiguration<Post>
     {
         public void Configure (EntityTypeBuilder<Post> builder)
         {
@@ -22,13 +22,13 @@ namespace Bloggy.API.Data.Configurations
             builder.Property(p => p.CreatedDate)
                 .HasDefaultValueSql("now()");
 
-            builder.HasOne(p => p.Author) 
+            builder.HasOne(p => p.Author)
                 .WithMany()
                 .HasForeignKey(p => p.AuthorId);
 
-            builder.HasOne(p => p.Category)
-                .WithMany()
-                .HasForeignKey(p => p.CategoryId); 
+            // builder.HasOne(p => p.Category)
+                // .WithMany()
+                // .HasForeignKey(p => p.CategoryId);
         }
     }
 }

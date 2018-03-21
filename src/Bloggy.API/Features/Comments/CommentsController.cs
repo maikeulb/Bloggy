@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
-using Bloggy.Infrastructure;
+using Bloggy.API.Infrastructure;
+using Bloggy.API.Services.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,20 +18,20 @@ namespace Bloggy.API.Features.Comments
         }
 
         [HttpGet]
-        public async Task<IActionResult> List ([FromRoute] int postId)
+        public async Task<IActionResult> ListAll ([FromRoute] int postId)
         {
-            var query = new List.Query { PostId = postId };
+            var query = new ListAll.Query { PostId = postId };
             var result = await _mediator.Send (query);
 
             return result.IsSuccess
-                ? (IActionResult)Ok(result)
+                ? (IActionResult)Ok(result.Value)
                 : (IActionResult)BadRequest(result.Error);
         }
 
         [HttpGet ("{id}", Name = "Details")]
         public async Task<IActionResult> Details ([FromRoute] int postId, [FromRoute] int id)
         {
-            var query = new Details.Query { PostId = postId, Id = id };
+            var query = new DetailsQ.Query { PostId = postId, Id = id };
             var result = await _mediator.Send (query);
 
             return result.IsSuccess
@@ -42,11 +43,11 @@ namespace Bloggy.API.Features.Comments
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> Create ([FromRoute] int postId, [FromBody] Create.Command command)
         {
-            command.PostId = postid;
+            command.PostId = postId;
             var result = await _mediator.Send (command);
 
             return result.IsSuccess
-                ? (IActionResult)CreatedAtRoute ("Details", new { controller = "Comments", id = result.Id }, result)
+                ? (IActionResult)CreatedAtRoute ("Details", new { controller = "Comments", postId = command.PostId, id = result.Value.Id }, result)
                 : (IActionResult)BadRequest(result.Error);
         }
 
@@ -54,7 +55,7 @@ namespace Bloggy.API.Features.Comments
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> Edit ([FromRoute] int postId, [FromQuery] int id, [FromBody] Edit.Command command)
         {
-            command.PostId = postid;
+            command.PostId = postId;
             command.Id = id;
             var result = await _mediator.Send (command);
 
@@ -65,7 +66,7 @@ namespace Bloggy.API.Features.Comments
 
         [HttpDelete ("{id}")]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task Delete ([FromRoute] int postId, [FromRoute] int id)
+        public async Task<IActionResult> Delete ([FromRoute] int postId, [FromRoute] int id)
         {
             var command = new Delete.Command { PostId = postId, Id = id };
             var result = await _mediator.Send (command);

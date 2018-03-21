@@ -1,9 +1,12 @@
 using System.Net;
-using CSharpFunctionalExtensions;
 using System.Threading;
 using System.Threading.Tasks;
+using Bloggy.API.Data;
+using Bloggy.API.Entities;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
+using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +22,9 @@ namespace Bloggy.API.Features.Posts
 
         public class Validator : AbstractValidator<Command>
         {
-            public Validator()
+            public Validator ()
             {
-                RuleFor(p => p.Id).NotNull();
+                RuleFor (p => p.Id).NotNull ();
             }
         }
 
@@ -29,26 +32,25 @@ namespace Bloggy.API.Features.Posts
         {
             private readonly BloggyContext _context;
 
-            public QueryHandler(BloggyContext context)
-            {
-                _context = context;
-            }
+            public Handler (BloggyContext context) => _context = context;
 
-            protected override async Task<Result> HandleCore(Command message)
+            protected override async Task<Result> HandleCore (Command message)
             {
-                var post = await SinglePostAsync(message.Id);
+                var post = await SinglePostAsync (message.Id);
 
                 if (post == null)
                     return Result.Fail<Command> ("Post does not exit");
 
-                _context.Posts.Remove(post);
-                await _context.SaveChangesAsync();
+                _context.Posts.Remove (post);
+                await _context.SaveChangesAsync ();
+
+                return Result.Ok ();
             }
 
-            private async Task<Post> SinglePostAsync(int id)
+            private async Task<Post> SinglePostAsync (int id)
             {
                 return await _context.Posts
-                    .SingleOrDefaultAsync(p => p.Id == id);
+                    .SingleOrDefaultAsync (p => p.Id == id);
             }
         }
     }

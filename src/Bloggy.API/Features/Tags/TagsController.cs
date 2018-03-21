@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace Bloggy.API.Features.Tags
 {
     [Route ("api/tags")]
@@ -15,11 +16,12 @@ namespace Bloggy.API.Features.Tags
         }
 
         [HttpGet]
-        public async Task<IActionResult> List ()
+        public async Task<IActionResult> ListAll ()
         {
-            var result = await _mediator.Send (new List.Query query)
+            var query = new ListAllQ.Query();
+            var result = await _mediator.Send (query);
 
-            return OK (result)
+            return Ok (result);
         }
     }
 }

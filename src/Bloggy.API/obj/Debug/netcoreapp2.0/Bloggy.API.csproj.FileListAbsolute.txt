@@ -1,0 +1,3 @@
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/obj/Debug/netcoreapp2.0/Bloggy.API.csproj.CoreCompileInputs.cache
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/obj/Debug/netcoreapp2.0/Bloggy.API.AssemblyInfoInputs.cache
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.API/obj/Debug/netcoreapp2.0/Bloggy.API.AssemblyInfo.cs

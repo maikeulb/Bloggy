@@ -1,8 +1,9 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using Bloggy.API.Services.Interfaces;
 
-namespace Bloggy.API.Infrastructure
+namespace Bloggy.API.Services
 {
     public class PasswordHasher : IPasswordHasher
     {

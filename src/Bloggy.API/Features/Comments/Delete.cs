@@ -6,7 +6,8 @@ using CSharpFunctionalExtensions;
 using Bloggy.API.Entities;
 using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -60,14 +61,14 @@ namespace Bloggy.API.Features.Comments
             private async Task<Post> SinglePostAsync(int id)
             {
                 return await _context.Posts
-                    .Include(x => x.Comments)
+                    .Include(p => p.Comments)
                     .SingleOrDefaultAsync(p => p.Id == id);
             }
 
             private async Task<Comment> SingleCommentAsync(int id)
             {
                 return await _context.Comments
-                    .SingleOrDefaultAsync(p => p.CommentId == id);
+                    .SingleOrDefaultAsync(c => c.Id == id);
             }
         }
     }

@@ -3,8 +3,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using Bloggy.API.Services.Interfaces;
+using Bloggy.API.Infrastructure;
 
-namespace Bloggy.API.Infrastructure
+namespace Bloggy.API.Services
 {
     public class JwtTokenGenerator : IJwtTokenGenerator
     {

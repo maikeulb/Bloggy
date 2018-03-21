@@ -1,8 +1,9 @@
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Bloggy.API.Services.Interfaces;
 
-namespace Bloggy.API.Infrastructure
+namespace Bloggy.API.Services
 {
     public class CurrentUserAccessor : ICurrentUserAccessor
     {

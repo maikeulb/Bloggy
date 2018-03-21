@@ -1,11 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Bloggy.API.Features.Auth
 {
     [Route ("api/auth")]
-    public class AuthController
+    public class AuthController : Controller
     {
         private readonly IMediator _mediator;
 
@@ -19,9 +25,9 @@ namespace Bloggy.API.Features.Auth
         {
             var resultOrError = await _mediator.Send (command);
 
-            return resultOrError.IsSuccess
-                ? (IActionResult)NoContent()
-                : (IActionResult)BadRequest(modelOrError.Error);
+            return resultOrError.IsSuccess ?
+                (IActionResult) NoContent () :
+                (IActionResult) BadRequest (resultOrError.Error);
         }
 
         [HttpPost ("Login")]
@@ -29,9 +35,9 @@ namespace Bloggy.API.Features.Auth
         {
             var resultOrError = await _mediator.Send (command);
 
-            return resultOrError.IsSuccess
-                ? (IActionResult)NoContent()
-                : (IActionResult)Unauthorized(modelOrError.Error));
+            return resultOrError.IsSuccess ?
+                (IActionResult) NoContent () :
+                (IActionResult) Unauthorized ();
         }
     }
 }

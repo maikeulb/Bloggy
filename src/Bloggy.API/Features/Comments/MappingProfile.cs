@@ -1,13 +1,15 @@
 using AutoMapper;
 using Bloggy.API.Entities;
 
-namespace Bloggy.API.Features.Users
+namespace Bloggy.API.Features.Comments
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<ApplicationUser, DetailsQ.Model>();
+            CreateMap<Comment, Create.Model>();
+            CreateMap<Comment, DetailsQ.Model>();
+            CreateMap<Comment, ListAll.Model>();
         }
     }
 }

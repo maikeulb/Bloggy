@@ -1,24 +1,24 @@
 using AutoMapper;
 using Bloggy.API.Entities;
 
-namespace Bloggy.API.Features.Users
+namespace Bloggy.API.Features.Auth
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<ApplicationUser, DetailsQ.Model>();
+            CreateMap<ApplicationUser, Create.Model>();
         }
     }
 }
 
             /* // StudentsController */
             /* CreateMap<Student, StudentDetailsViewModel>() */
-            /*    .ForMember(vm => vm.Enrollments, */
+            /*    .ForMember(vm => vm.Enrollments, */ 
             /*         opt => opt.MapFrom(s => s.Enrollments.Select(e => new EnrollmentViewModel */
             /*         { */
             /*             Title = e.Course.Title, */
-            /*             Grade = ((Grade)e.Grade).ToString() */
+            /*             Grade = ((Grade)e.Grade).ToString() */ 
             /*         }))); */
             /* CreateMap<Student, StudentViewModel>(); */
 
@@ -30,7 +30,7 @@ namespace Bloggy.API.Features.Users
 
             /* // InstructorsController */
             /* CreateMap<Instructor, InstructorViewModel>() */
-            /*     .ForMember(vm => vm.Office, opt => opt.MapFrom(i => i.OfficeAssignment.Location)) */
+            /*     .ForMember(vm => vm.Office, opt => opt.MapFrom(i => i.OfficeAssignment.Location)) */          
             /*     .ForMember(vm => vm.Courses, opt => opt.MapFrom(i => i.CourseAssignments.Select(ca => new CourseViewModel */
             /*     { */
             /*         CourseID = ca.CourseID, */
@@ -38,7 +38,7 @@ namespace Bloggy.API.Features.Users
             /*     }))); */
             /* CreateMap<Instructor, InstructorEditViewModel>() */
             /*     .ForMember(vm => vm.Office, opt => opt.MapFrom(i => i.OfficeAssignment.Location)); */
-            /* CreateMap<Instructor, InstructorDetailsViewModel>() */
+            /* CreateMap<Instructor, InstructorDetailsViewModel>() */          
             /*    .ForMember(vm => vm.Courses, */
             /*         opt => opt.MapFrom(i => i.CourseAssignments.Select(ca => new CourseViewModel */
             /*         { */
@@ -52,4 +52,6 @@ namespace Bloggy.API.Features.Users
             /*         { */
             /*             FullName = e.Student.FullName, */
             /*             Grade = ((Grade)e.Grade).ToString() */
-            /*         }))); */
+            /*         }))); */     
+
+

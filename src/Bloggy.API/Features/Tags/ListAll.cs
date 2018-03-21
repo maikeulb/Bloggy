@@ -2,15 +2,18 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Entities;
+using FluentValidation;
 using Bloggy.API.Data;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Infrastructure.Interfaces;
+using Bloggy.API.Services;
+using Bloggy.API.Services.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Bloggy.API.Features.Tags
 {
-    public class List
+    public class ListAllQ
     {
         public class Query : IRequest<Model>
         {
@@ -26,14 +29,14 @@ namespace Bloggy.API.Features.Tags
         {
             private readonly BloggyContext _context;
 
-            public Handler(BloggyContext context, IMapper _mapper)
+            public Handler(BloggyContext context)
             {
                 _context = context;
             }
 
-            protected override async Task<IEnumerable<Model>> HandleCore (Query message)
+            protected override async Task<Model> HandleCore (Query message)
             {
-                return new Model() { Tags = await _context.Tags.OrderBy(x => x.Name).AsNoTracking().ToListAsync();}
+                return new Model { Tags = await _context.Tags.OrderBy(t => t.Name).Select(t=> t.Name).AsNoTracking().ToListAsync() };
             }
         }
     }
