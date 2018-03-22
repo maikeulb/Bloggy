@@ -70,8 +70,8 @@ namespace Bloggy.API.Features.Posts
             {
                 return await _context.Posts
                     .Include(c => c.Author)
-                    .Include(c => c.Category)
                     .Include(c => c.Comments)
+                    .Include(c => c.Category)
                     .Include(c => c.PostTags)
                         .ThenInclude(c => c.Tag)
                     .AsNoTracking()

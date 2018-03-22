@@ -5,6 +5,8 @@ using Bloggy.API.Services.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Bloggy.API.Features.Auth;
 
 namespace Bloggy.API.Features.Users
 {
@@ -12,18 +14,24 @@ namespace Bloggy.API.Features.Users
     public class UsersController: Controller
     {
         private readonly IMediator _mediator;
+        private readonly ILogger _logger;
         private readonly ICurrentUserAccessor _currentUserAccessor;
 
-        public UsersController (IMediator mediator, ICurrentUserAccessor currentUserAccessor)
+        public UsersController (
+            IMediator mediator, 
+            ICurrentUserAccessor currentUserAccessor,
+            ILogger<UsersController> logger)
         {
             _mediator = mediator;
             _currentUserAccessor = currentUserAccessor;
+            _logger = logger;
         }
 
         [HttpGet ("{username}")]
         public async Task<IActionResult> Details ([FromRoute] string username)
         {
             var query = new DetailsQ.Query { Username = username };
+
             var result = await _mediator.Send (query);
 
             return result.IsSuccess ?
@@ -35,6 +43,8 @@ namespace Bloggy.API.Features.Users
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<IActionResult> Mine ()
         {
+            var username  = _currentUserAccessor.GetCurrentUsername ();
+            _logger.LogInformation("*********{}", username);
             var command = new DetailsQ.Query { Username = _currentUserAccessor.GetCurrentUsername () };
             var result = await _mediator.Send (command);
 

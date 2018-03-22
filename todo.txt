@@ -1,2 +1,2 @@
-abstract validator and errors (client api)n
-learn fluentvalidation
+learn custom validation works on client;
+learn how to send badreqeust (json)

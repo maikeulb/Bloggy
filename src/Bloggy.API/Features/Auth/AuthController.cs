@@ -23,21 +23,21 @@ namespace Bloggy.API.Features.Auth
         [HttpPost ("Create")]
         public async Task<IActionResult> Create ([FromBody] Create.Command command)
         {
-            var resultOrError = await _mediator.Send (command);
+            var result = await _mediator.Send (command);
 
-            return resultOrError.IsSuccess ?
-                (IActionResult) NoContent () :
-                (IActionResult) BadRequest (resultOrError.Error);
+            return result.IsSuccess ?
+                (IActionResult) Ok (result.Value) :
+                (IActionResult) BadRequest (result.Error);
         }
 
         [HttpPost ("Login")]
         public async Task<IActionResult> Login ([FromBody] Login.Command command)
         {
-            var resultOrError = await _mediator.Send (command);
+            var result = await _mediator.Send (command);
 
-            return resultOrError.IsSuccess ?
-                (IActionResult) NoContent () :
-                (IActionResult) Unauthorized ();
+            return result.IsSuccess ?
+                (IActionResult) Ok (result.Value) :
+                (IActionResult) BadRequest (result.Error);
         }
     }
 }

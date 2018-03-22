@@ -35,7 +35,7 @@ namespace Bloggy.API.Features.Comments
             var result = await _mediator.Send (query);
 
             return result.IsSuccess
-                ? (IActionResult)Ok()
+                ? (IActionResult)Ok(result.Value)
                 : (IActionResult)BadRequest(result.Error);
         }
 

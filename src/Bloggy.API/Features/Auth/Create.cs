@@ -58,10 +58,10 @@ namespace Bloggy.API.Features.Auth
             protected override async Task<Result<Model>> HandleCore (Command message)
             {
                 if (await ExistUser (message.Username))
-                    return Result.Fail<Model> ("User does not exit");
+                    return Result.Fail<Model> ("User exits");
 
                 if (await ExistEmail (message.Email))
-                    return Result.Fail<Model> ("User does not exit");
+                    return Result.Fail<Model> ("User exits");
 
                 var salt = Guid.NewGuid().ToByteArray();
                 var user = new ApplicationUser

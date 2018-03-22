@@ -33,12 +33,12 @@ namespace Bloggy.API.Features.Posts
             var result = await _mediator.Send (query);
 
             return result.IsSuccess
-                ? (IActionResult)Ok()
+                ? (IActionResult)Ok(result.Value)
                 : (IActionResult)BadRequest(result.Error);
         }
 
         [HttpPost]
-        [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+        /* [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)] */
         public async Task<IActionResult> Create ([FromBody] Create.Command command)
         {
             var result = await _mediator.Send (command);
@@ -49,7 +49,7 @@ namespace Bloggy.API.Features.Posts
         }
 
         [HttpPut ("{id}")]
-        [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+        /* [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)] */
         public async Task<IActionResult> Edit ([FromRoute]int id, [FromBody] Edit.Command command)
         {
             command.Id = id;
@@ -61,7 +61,7 @@ namespace Bloggy.API.Features.Posts
         }
 
         [HttpDelete ("{id}")]
-        [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+        /* [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)] */
         public async Task<IActionResult> Delete ([FromRoute]int id, [FromBody] Delete.Command command)
         {
             command.Id = id;

@@ -70,13 +70,13 @@ namespace Bloggy.API
 
             var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuerSigningKey = true,
+                ValidateIssuerSigningKey = false,
                 IssuerSigningKey = signingCredentials.Key,
-                ValidateIssuer = true,
+                ValidateIssuer = false,
                 ValidIssuer = issuer,
-                ValidateAudience = true,
+                ValidateAudience = false,
                 ValidAudience = audience,
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 ClockSkew = TimeSpan.Zero
             };
 

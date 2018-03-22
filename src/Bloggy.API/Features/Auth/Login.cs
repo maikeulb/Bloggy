@@ -8,6 +8,7 @@ using Bloggy.API.Entities;
 using Bloggy.API.Infrastructure;
 using Bloggy.API.Services;
 using Bloggy.API.Services.Interfaces;
+using Bloggy.API.Features.Users;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
@@ -17,11 +18,16 @@ namespace Bloggy.API.Features.Auth
 {
     public class Login
     {
-        public class Command : IRequest<Result>
+        public class Command : IRequest<Result<User>>
         {
             public string Email { get; set; }
             public string Password { get; set; }
         }
+
+        /* public class Model */
+        /* { */
+        /*     public string Token { get; set; } */
+        /* } */
 
         public class Validator : AbstractValidator<Command>
         {
@@ -32,7 +38,7 @@ namespace Bloggy.API.Features.Auth
             }
         }
 
-        public class Handler : AsyncRequestHandler<Command, Result>
+        public class Handler : AsyncRequestHandler<Command, Result<User>>
         {
             private readonly BloggyContext _context;
             private readonly IPasswordHasher _passwordHasher;
@@ -47,19 +53,22 @@ namespace Bloggy.API.Features.Auth
                 _mapper = mapper;
             }
 
-            protected override async Task<Result> HandleCore (Command message)
+            protected override async Task<Result<User>> HandleCore (Command message)
             {
                 var user = await SingleAsync (message.Email);
-                if (await SingleAsync (message.Email) != null)
-                    return Result.Fail<Command> ("User is not authorized");
+                if (await SingleAsync (message.Email) == null)
+                    return Result.Fail<User> ("User does not exist");
 
                 if (!user.HashedPassword.SequenceEqual (_passwordHasher.Hash (message.Password, user.Salt)))
-                    return Result.Fail<Command> ("User is not authorized");
+                    return Result.Fail<User> ("User is not authorized");
 
-                /* var user = _mapper.Map<Entities.ApplicationUser, Model>(user); */
-                /* user.Token = await _jwtTokenGenerator.CreateToken(user.Username); */
+                var loggedInUser = _mapper.Map<ApplicationUser, User>(user);
 
-                return Result.Ok ();
+                loggedInUser.Token = await _jwtTokenGenerator.CreateToken(user.Username);
+
+                /* var model = _mapper.Map<User, Model>(loggedInUser); */
+
+                return Result.Ok (loggedInUser);
             }
 
             private async Task<ApplicationUser> SingleAsync (string email)

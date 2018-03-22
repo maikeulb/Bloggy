@@ -2,6 +2,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Bloggy.API.Services.Interfaces;
+using Bloggy.API.Features.Auth;
 
 namespace Bloggy.API.Services
 {

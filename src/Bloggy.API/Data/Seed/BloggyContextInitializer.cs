@@ -74,13 +74,10 @@ namespace Bloggy.API.Data.Seed
 
         static IEnumerable<ApplicationUser> GetPreconfiguredUsers(byte[] hashedPassword, byte[] salt)
         {
-            /* var demoSalt = new Guid("25320c5e-f58a-4b1f-b63a-8ee07a840bdf").ToByteArray(); */
-            /* var demo2Salt = new Guid("25320c5e-f58a-4b1f-b63a-8ee07a840bde").ToByteArray(); */
             return new List<ApplicationUser>()
             {
                 new ApplicationUser()
                 {
-                    Id = 1,
                     Username = "Demo", 
                     Email = "demo@example.com", 
                     HashedPassword = hashedPassword,
@@ -88,7 +85,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new ApplicationUser()
                 {
-                    Id = 2,
                     Username = "Demo2", 
                     Email = "demo2@example.com", 
                     HashedPassword = hashedPassword,
@@ -103,12 +99,10 @@ namespace Bloggy.API.Data.Seed
             {
                 new Tag()
                 {
-                    Id = 1,
                     Name  = "Csharp"
                 },
                 new Tag()
                 {
-                    Id = 2,
                     Name  = "Python"
                 },
             };
@@ -120,12 +114,10 @@ namespace Bloggy.API.Data.Seed
             {
                 new Category()
                 {
-                    Id = 1,
                     Name  = "Software Architecture",
                 },
                 new Category()
                 {
-                    Id = 2,
                     Name  = "Functional Programming",
                 },
             };
@@ -137,7 +129,6 @@ namespace Bloggy.API.Data.Seed
             {
                 new Post()
                 {
-                    Id = 1,
                     CategoryId = 1,
                     AuthorId = 1,
                     Title  = "integer massa",
@@ -146,7 +137,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Post()
                 {
-                    Id = 2,
                     CategoryId = 2,
                     AuthorId = 1,
                     Title  = "adipsicing elit",
@@ -155,7 +145,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Post()
                 {
-                    Id = 3,
                     CategoryId = 1,
                     AuthorId = 1,
                     Title  = "efficitur",
@@ -164,7 +153,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Post()
                 {
-                    Id = 4,
                     CategoryId = 2,
                     AuthorId = 2,
                     Title  = "sit amet",
@@ -173,7 +161,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Post()
                 {
-                    Id = 5,
                     CategoryId = 2,
                     AuthorId = 2,
                     Title  = "pulvinar velit",
@@ -182,7 +169,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Post()
                 {
-                    Id = 6,
                     CategoryId = 1,
                     AuthorId = 2,
                     Title  = "dolor lorem",
@@ -235,7 +221,6 @@ namespace Bloggy.API.Data.Seed
             {
                 new Comment()
                 {
-                    Id = 1,
                     PostId = 1,
                     AuthorId = 1,
                     Body  = "cool",
@@ -243,7 +228,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Comment()
                 {
-                    Id = 2,
                     PostId = 2,
                     AuthorId = 1,
                     Body  = "nice",
@@ -251,7 +235,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Comment()
                 {
-                    Id = 3,
                     PostId = 3,
                     AuthorId = 1,
                     Body  = "helpful",
@@ -259,7 +242,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Comment()
                 {
-                    Id = 4,
                     PostId = 1,
                     AuthorId = 2,
                     Body  = "good read",
@@ -267,7 +249,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Comment()
                 {
-                    Id = 5,
                     PostId = 1,
                     AuthorId = 2,
                     Body  = "wonderful",
@@ -275,7 +256,6 @@ namespace Bloggy.API.Data.Seed
                 },
                 new Comment()
                 {
-                    Id = 6,
                     PostId = 4,
                     AuthorId = 2,
                     Body  = "amazing",
