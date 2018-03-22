@@ -32,10 +32,10 @@ namespace Bloggy.API.Features.Posts
             public string Title { get; set; }
             public string Body { get; set; }
             public string Category { get; set; }
-            public DateTime CreatedDate { get; set; }
-            public ApplicationUser Author { get; set; }
+            public string Author { get; set; }
+            public List<string> Tags { get; set; }
             public List<Comment> Comments { get; set; }
-            public List<Tag> Tags { get; set; }
+            public DateTime CreatedDate { get; set; }
         }
 
         public class Validator : AbstractValidator<Command>

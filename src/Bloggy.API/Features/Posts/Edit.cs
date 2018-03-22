@@ -24,8 +24,8 @@ namespace Bloggy.API.Features.Posts
             public string Title { get; set; }
             public string Body { get; set; }
             public string Category { get; set; }
+            public List<string> Tags { get; set; }
             public List<Comment> Comments { get; set; }
-            public List<Tag> Tags { get; set; }
         }
 
         public class Validator : AbstractValidator<Command>
@@ -71,7 +71,7 @@ namespace Bloggy.API.Features.Posts
                         var t = await _context.Tags.FindAsync (tag);
                         if (t == null)
                         {
-                            t = new Tag { Name = tag.Name };
+                            t = new Tag { Name = tag };
                             await _context.Tags.AddAsync (t);
                             await _context.SaveChangesAsync ();
                         }

@@ -32,9 +32,8 @@ namespace Bloggy.API.Features.Posts
             public string Category { get; set; }
             public string Author { get; set; }
             public List<string> Tags { get; set; }
-
-            public DateTime CreatedDate { get; set; }
             public List<Comment> Comments { get; set; }
+            public DateTime CreatedDate { get; set; }
         }
 
         public class Handler : AsyncRequestHandler<Query, List<Model>>
