@@ -1,14 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Data;
 using Bloggy.API.Entities;
-using Bloggy.API.Infrastructure;
-using Bloggy.API.Services;
-using Bloggy.API.Services.Interfaces;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
@@ -57,8 +50,8 @@ namespace Bloggy.API.Features.Posts
 
                 if (message.Category != null)
                 {
-                    post.Category = await _context.Categories.FindAsync (message.Category); 
-                } 
+                    post.Category = await _context.Categories.FindAsync (message.Category);
+                }
 
                 if (message.Tags != null)
                 {
@@ -95,13 +88,13 @@ namespace Bloggy.API.Features.Posts
             private async Task<Post> SingleAsync (int id)
             {
                 return await _context.Posts
-                    .Include(c => c.Author)
-                    .Include(c => c.Category)
-                    .Include(c => c.Comments)
-                    .Include(c => c.PostTags)
-                        .ThenInclude(c => c.Tag)
-                    .AsNoTracking()
-                    .SingleOrDefaultAsync(p => p.Id == id);
+                    .Include (c => c.Author)
+                    .Include (c => c.Category)
+                    .Include (c => c.Comments)
+                    .Include (c => c.PostTags)
+                    .ThenInclude (c => c.Tag)
+                    .AsNoTracking ()
+                    .SingleOrDefaultAsync (p => p.Id == id);
             }
         }
     }

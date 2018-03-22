@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Bloggy.API.Infrastructure;
-using Bloggy.API.Services.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +22,9 @@ namespace Bloggy.API.Features.Comments
             var query = new ListAll.Query { PostId = postId };
             var result = await _mediator.Send (query);
 
-            return result.IsSuccess
-                ? (IActionResult)Ok(result.Value)
-                : (IActionResult)BadRequest(result.Error);
+            return result.IsSuccess ?
+                (IActionResult) Ok (result.Value) :
+                (IActionResult) BadRequest (result.Error);
         }
 
         [HttpGet ("{id}", Name = "CommentDetails")]
@@ -34,9 +33,9 @@ namespace Bloggy.API.Features.Comments
             var query = new DetailsQ.Query { PostId = postId, Id = id };
             var result = await _mediator.Send (query);
 
-            return result.IsSuccess
-                ? (IActionResult)Ok(result.Value)
-                : (IActionResult)BadRequest(result.Error);
+            return result.IsSuccess ?
+                (IActionResult) Ok (result.Value) :
+                (IActionResult) BadRequest (result.Error);
         }
 
         [HttpPost]
@@ -46,9 +45,9 @@ namespace Bloggy.API.Features.Comments
             command.PostId = postId;
             var result = await _mediator.Send (command);
 
-            return result.IsSuccess
-                ? (IActionResult)CreatedAtRoute ("CommentDetails", new { controller = "Comments", postId = command.PostId, id = result.Value.Id }, result)
-                : (IActionResult)BadRequest(result.Error);
+            return result.IsSuccess ?
+                (IActionResult) CreatedAtRoute ("CommentDetails", new { controller = "Comments", postId = command.PostId, id = result.Value.Id }, result) :
+                (IActionResult) BadRequest (result.Error);
         }
 
         [HttpPut ("{id}")]
@@ -59,9 +58,9 @@ namespace Bloggy.API.Features.Comments
             command.Id = id;
             var result = await _mediator.Send (command);
 
-            return result.IsSuccess
-                ? (IActionResult)NoContent()
-                : (IActionResult)BadRequest(result.Error);
+            return result.IsSuccess ?
+                (IActionResult) NoContent () :
+                (IActionResult) BadRequest (result.Error);
         }
 
         [HttpDelete ("{id}")]
@@ -71,9 +70,9 @@ namespace Bloggy.API.Features.Comments
             var command = new Delete.Command { PostId = postId, Id = id };
             var result = await _mediator.Send (command);
 
-            return result.IsSuccess
-                ? (IActionResult)NoContent()
-                : (IActionResult)BadRequest(result.Error);
+            return result.IsSuccess ?
+                (IActionResult) NoContent () :
+                (IActionResult) BadRequest (result.Error);
         }
     }
 }

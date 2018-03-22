@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace Bloggy.API.Features.Categories
 {
     [Route ("api/categories")]
@@ -18,7 +17,7 @@ namespace Bloggy.API.Features.Categories
         [HttpGet]
         public async Task<IActionResult> ListAll ()
         {
-            var query = new ListAllQ.Query();
+            var query = new ListAllQ.Query ();
             var result = await _mediator.Send (query);
 
             return Ok (result);

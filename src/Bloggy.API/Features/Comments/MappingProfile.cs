@@ -5,11 +5,11 @@ namespace Bloggy.API.Features.Comments
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile()
+        public MappingProfile ()
         {
-            CreateMap<Comment, Create.Model>();
-            CreateMap<Comment, DetailsQ.Model>();
-            CreateMap<Comment, ListAll.Model>();
+            CreateMap<Comment, Create.Model> ();
+            CreateMap<Comment, DetailsQ.Model> ();
+            CreateMap<Comment, ListAll.Model> ();
         }
     }
 }

@@ -1,6 +1,6 @@
+using Bloggy.API.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Bloggy.API.Entities;
 
 namespace Bloggy.API.Data.Configurations
 {
@@ -8,27 +8,21 @@ namespace Bloggy.API.Data.Configurations
     {
         public void Configure (EntityTypeBuilder<Post> builder)
         {
-            builder.ToTable("Post");
+            builder.HasKey (p => p.Id);
 
-            builder.HasKey(p => p.Id);
+            builder.Property (p => p.Id)
+                .IsRequired ();
 
-            builder.Property(p => p.Id)
-               .IsRequired();
+            builder.Property (p => p.Body)
+                .IsRequired ()
+                .HasMaxLength (140);
 
-            builder.Property(p => p.Body)
-                .IsRequired()
-                .HasMaxLength(140);
+            builder.Property (p => p.CreatedDate)
+                .HasDefaultValueSql ("now()");
 
-            builder.Property(p => p.CreatedDate)
-                .HasDefaultValueSql("now()");
-
-            builder.HasOne(p => p.Author)
-                .WithMany()
-                .HasForeignKey(p => p.AuthorId);
-
-            // builder.HasOne(p => p.Category)
-                // .WithMany()
-                // .HasForeignKey(p => p.CategoryId);
+            builder.HasOne (p => p.Author)
+                .WithMany ()
+                .HasForeignKey (p => p.AuthorId);
         }
     }
 }

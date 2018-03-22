@@ -1,13 +1,9 @@
 using System;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Bloggy.API.Data;
 using Bloggy.API.Entities;
-using Bloggy.API.Infrastructure;
-using Bloggy.API.Services;
 using Bloggy.API.Services.Interfaces;
 using CSharpFunctionalExtensions;
 using FluentValidation;
@@ -63,7 +59,7 @@ namespace Bloggy.API.Features.Auth
                 if (await ExistEmail (message.Email))
                     return Result.Fail<Model> ("User exits");
 
-                var salt = Guid.NewGuid().ToByteArray();
+                var salt = Guid.NewGuid ().ToByteArray ();
                 var user = new ApplicationUser
                 {
                     Username = message.Username,

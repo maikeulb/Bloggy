@@ -5,9 +5,9 @@ namespace Bloggy.API.Features.Users
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile()
+        public MappingProfile ()
         {
-            CreateMap<ApplicationUser, DetailsQ.Model>();
+            CreateMap<ApplicationUser, DetailsQ.Model> ();
         }
     }
 }

@@ -1,17 +1,13 @@
 using System;
-using AutoMapper;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
-using Bloggy.API.Entities;
+using AutoMapper;
 using Bloggy.API.Data;
-using Bloggy.API.Infrastructure;
-using Bloggy.API.Services;
+using Bloggy.API.Entities;
 using Bloggy.API.Services.Interfaces;
+using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using CSharpFunctionalExtensions;
 
 namespace Bloggy.API.Features.Comments
 {
@@ -33,10 +29,10 @@ namespace Bloggy.API.Features.Comments
 
         public class Validator : AbstractValidator<Command>
         {
-            public Validator()
+            public Validator ()
             {
-                RuleFor(c => c.PostId).NotNull();
-                RuleFor(c => c.Body).NotEmpty();
+                RuleFor (c => c.PostId).NotNull ();
+                RuleFor (c => c.Body).NotEmpty ();
             }
         }
 
@@ -46,16 +42,16 @@ namespace Bloggy.API.Features.Comments
             private readonly ICurrentUserAccessor _currentUserAccessor;
             private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context,
-                    ICurrentUserAccessor currentUserAccessor,
-                    IMapper mapper)
+            public Handler (BloggyContext context,
+                ICurrentUserAccessor currentUserAccessor,
+                IMapper mapper)
             {
                 _context = context;
                 _currentUserAccessor = currentUserAccessor;
                 _mapper = mapper;
             }
 
-            protected override async Task<Result<Model>> HandleCore(Command message)
+            protected override async Task<Result<Model>> HandleCore (Command message)
             {
                 var post = await SinglePostAsync (message.PostId);
 
@@ -64,33 +60,33 @@ namespace Bloggy.API.Features.Comments
 
                 var comment = new Comment
                 {
-                    Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername()),
+                    Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername ()),
                     Body = message.Body,
                     CreatedDate = DateTime.UtcNow
                 };
 
-                await _context.Comments.AddAsync(comment);
+                await _context.Comments.AddAsync (comment);
 
-                post.Comments.Add(comment);
+                post.Comments.Add (comment);
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync ();
 
-                var model = _mapper.Map<Comment, Model>(comment);
+                var model = _mapper.Map<Comment, Model> (comment);
 
                 return Result.Ok (model);
             }
 
-            private async Task<Post> SinglePostAsync(int id)
+            private async Task<Post> SinglePostAsync (int id)
             {
                 return await _context.Posts
-                    .Include(p => p.Comments)
-                    .SingleOrDefaultAsync(p => p.Id == id);
+                    .Include (p => p.Comments)
+                    .SingleOrDefaultAsync (p => p.Id == id);
             }
 
-            private async Task<ApplicationUser> SingleUserAsync(string username)
+            private async Task<ApplicationUser> SingleUserAsync (string username)
             {
                 return await _context.Users
-                    .SingleOrDefaultAsync(u => u.Username == username);
+                    .SingleOrDefaultAsync (u => u.Username == username);
             }
         }
     }

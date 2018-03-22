@@ -1,14 +1,10 @@
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Bloggy.API.Data;
 using Bloggy.API.Entities;
-using Bloggy.API.Infrastructure;
-using Bloggy.API.Services;
 using Bloggy.API.Services.Interfaces;
 using CSharpFunctionalExtensions;
-using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,14 +1,9 @@
 using System;
-using System.Linq;
-using System.Net;
-using CSharpFunctionalExtensions;
-using System.Threading;
 using System.Threading.Tasks;
-using Bloggy.API.Entities;
 using Bloggy.API.Data;
-using Bloggy.API.Infrastructure;
-using Bloggy.API.Services;
+using Bloggy.API.Entities;
 using Bloggy.API.Services.Interfaces;
+using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,10 +21,10 @@ namespace Bloggy.API.Features.Comments
 
         public class Validator : AbstractValidator<Command>
         {
-            public Validator()
+            public Validator ()
             {
-                RuleFor(c => c.PostId).NotNull();
-                RuleFor(c => c.Id).NotNull();
+                RuleFor (c => c.PostId).NotNull ();
+                RuleFor (c => c.Id).NotNull ();
             }
         }
 
@@ -38,83 +33,58 @@ namespace Bloggy.API.Features.Comments
             private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
 
-            public Handler(BloggyContext context, ICurrentUserAccessor currentUserAccessor)
+            public Handler (BloggyContext context, ICurrentUserAccessor currentUserAccessor)
             {
                 _context = context;
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            protected override async Task<Result> HandleCore(Command message)
+            protected override async Task<Result> HandleCore (Command message)
             {
-                var post = await SinglePostAsync(message.PostId);
+                var post = await SinglePostAsync (message.PostId);
 
                 if (post == null)
                     return Result.Fail<Command> ("Post does not exit");
 
                 if (message.Body != null)
                 {
-                    var existComment = await SingleCommentAsync(message.Id);
-                    _context.Comments.Remove(existComment);
-                    await _context.SaveChangesAsync();
+                    var existComment = await SingleCommentAsync (message.Id);
+                    _context.Comments.Remove (existComment);
+                    await _context.SaveChangesAsync ();
 
                     var comment = new Comment
                     {
-                        Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername()),
+                        Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername ()),
                         Body = message.Body,
                         CreatedDate = DateTime.UtcNow
                     };
 
-                    await _context.Comments.AddAsync(comment);
-                    post.Comments.Add(comment);
-                    await _context.SaveChangesAsync();
+                    await _context.Comments.AddAsync (comment);
+                    post.Comments.Add (comment);
+                    await _context.SaveChangesAsync ();
                 }
 
                 return Result.Ok ();
             }
 
-            private async Task<Post> SinglePostAsync(int id)
+            private async Task<Post> SinglePostAsync (int id)
             {
                 return await _context.Posts
-                    .Include(p => p.Comments)
-                    .SingleOrDefaultAsync(p => p.Id == id);
+                    .Include (p => p.Comments)
+                    .SingleOrDefaultAsync (p => p.Id == id);
             }
 
-            private async Task<Comment> SingleCommentAsync(int id)
+            private async Task<Comment> SingleCommentAsync (int id)
             {
                 return await _context.Comments
-                    .SingleOrDefaultAsync(c => c.Id == id);
+                    .SingleOrDefaultAsync (c => c.Id == id);
             }
 
-            private async Task<ApplicationUser> SingleUserAsync(string username)
+            private async Task<ApplicationUser> SingleUserAsync (string username)
             {
                 return await _context.Users
-                    .SingleOrDefaultAsync(u => u.Username == username);
+                    .SingleOrDefaultAsync (u => u.Username == username);
             }
         }
     }
 }
-
- // ananymous types
- // var sumeProp = _context.Samurais.Select(s => new {s.Id,
- // s.Name}).ToList();
- //
- //_context.Quotes.Text +="hi"
- // delete
- //_context.Quotes.Remove(samurai.Quotrs)
- //
- //Find does not need asnotracking
- //asnotracking k
- //
- //_context.Add(samura)
- //_context.Update(samurai)
- //_context.Samurais.Remove(samurai);
- //use find for list<T>
- //
- //use where/firstordefault for ienumerable<T>
- // IQueryable<Order> _context.Orders
- // Order Find(int id) _context.Orders.Find(id)
- // Insert _context.Orders.Add(order);
- // _context.Orders.Update(order);
- // _context.Orders.Remove(order);
- //
- //AsNoTracking

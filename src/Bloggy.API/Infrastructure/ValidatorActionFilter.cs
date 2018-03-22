@@ -11,33 +11,33 @@ namespace Bloggy.API.Infrastructure
     {
         private readonly ILogger logger;
 
-        public ValidatorActionFilter(ILogger<ValidatorActionFilter> logger)
+        public ValidatorActionFilter (ILogger<ValidatorActionFilter> logger)
         {
             this.logger = logger;
         }
 
-        public void OnActionExecuting(ActionExecutingContext filterContext)
+        public void OnActionExecuting (ActionExecutingContext filterContext)
         {
             if (!filterContext.ModelState.IsValid)
             {
-                var result = new ContentResult();
-                var errors = new Dictionary<string, string[]>();
+                var result = new ContentResult ();
+                var errors = new Dictionary<string, string[]> ();
 
                 foreach (var valuePair in filterContext.ModelState)
                 {
-                    errors.Add(valuePair.Key, valuePair.Value.Errors.Select(x => x.ErrorMessage).ToArray());
+                    errors.Add (valuePair.Key, valuePair.Value.Errors.Select (x => x.ErrorMessage).ToArray ());
                 }
 
-                string content = JsonConvert.SerializeObject(new { errors});
+                string content = JsonConvert.SerializeObject (new { errors });
                 result.Content = content;
                 result.ContentType = "application/json";
 
-                filterContext.HttpContext.Response.StatusCode = 422; 
+                filterContext.HttpContext.Response.StatusCode = 422;
                 filterContext.Result = result;
             }
         }
 
-        public void OnActionExecuted(ActionExecutedContext filterContext)
+        public void OnActionExecuted (ActionExecutedContext filterContext)
         {
 
         }

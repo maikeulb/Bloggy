@@ -1,6 +1,6 @@
+using Bloggy.API.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Bloggy.API.Entities;
 
 namespace Bloggy.API.Data.Configurations
 {
@@ -8,16 +8,14 @@ namespace Bloggy.API.Data.Configurations
     {
         public void Configure (EntityTypeBuilder<Tag> builder)
         {
-            builder.ToTable("Tag");
+            builder.HasKey (t => t.Id);
 
-            builder.HasKey(t => t.Id);
+            builder.Property (t => t.Id)
+                .IsRequired ();
 
-            builder.Property(t => t.Id)
-               .IsRequired();
-
-            builder.Property(t => t.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+            builder.Property (t => t.Name)
+                .IsRequired ()
+                .HasMaxLength (100);
         }
     }
 }

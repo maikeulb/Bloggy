@@ -6,10 +6,10 @@ namespace Bloggy.API.Features.Auth
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile()
+        public MappingProfile ()
         {
-            CreateMap<ApplicationUser, Create.Model>();
-            CreateMap<ApplicationUser, User>();
+            CreateMap<ApplicationUser, Create.Model> ();
+            CreateMap<ApplicationUser, User> ();
             /* CreateMap<User, Login.Model>(); */
         }
     }

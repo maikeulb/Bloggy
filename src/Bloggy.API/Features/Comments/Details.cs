@@ -1,18 +1,13 @@
 using System;
-using System.Net;
-using AutoMapper;
-using CSharpFunctionalExtensions;
-using System.Threading;
 using System.Threading.Tasks;
-using Bloggy.API.Entities;
+using AutoMapper;
 using Bloggy.API.Data;
-using Bloggy.API.Infrastructure;
-using Bloggy.API.Services;
-using Bloggy.API.Services.Interfaces;
+using Bloggy.API.Entities;
+using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-//bloggy.api.features.comments.details
+
 namespace Bloggy.API.Features.Comments
 {
     public class DetailsQ
@@ -33,10 +28,10 @@ namespace Bloggy.API.Features.Comments
 
         public class Validator : AbstractValidator<Query>
         {
-            public Validator()
+            public Validator ()
             {
-                RuleFor(c => c.PostId).NotNull();
-                RuleFor(c => c.Id).NotNull();
+                RuleFor (c => c.PostId).NotNull ();
+                RuleFor (c => c.Id).NotNull ();
             }
         }
 
@@ -45,31 +40,31 @@ namespace Bloggy.API.Features.Comments
             private readonly BloggyContext _context;
             private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context,
-                    IMapper mapper)
+            public Handler (BloggyContext context,
+                IMapper mapper)
             {
                 _context = context;
                 _mapper = mapper;
             }
 
-            protected override async Task<Result<Model>> HandleCore(Query message)
+            protected override async Task<Result<Model>> HandleCore (Query message)
             {
-                var comment = await SingleAsync(message.Id);
+                var comment = await SingleAsync (message.Id);
 
                 if (comment == null)
                     return Result.Fail<Model> ("Comment does not exit");
 
-                var model = _mapper.Map<Comment, Model>(comment);
+                var model = _mapper.Map<Comment, Model> (comment);
 
                 return Result.Ok (model);
             }
 
-            private async Task<Comment> SingleAsync(int id)
+            private async Task<Comment> SingleAsync (int id)
             {
                 return await _context.Comments
-                    .Include(c => c.Author)
-                    .AsNoTracking()
-                    .SingleOrDefaultAsync(p => p.Id == id);
+                    .Include (c => c.Author)
+                    .AsNoTracking ()
+                    .SingleOrDefaultAsync (p => p.Id == id);
             }
         }
     }

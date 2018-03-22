@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Bloggy.API.Entities
 {
     public class ApplicationUser

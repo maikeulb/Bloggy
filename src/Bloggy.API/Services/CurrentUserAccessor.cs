@@ -1,8 +1,7 @@
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using Bloggy.API.Services.Interfaces;
-using Bloggy.API.Features.Auth;
+using Microsoft.AspNetCore.Http;
 
 namespace Bloggy.API.Services
 {
@@ -10,14 +9,14 @@ namespace Bloggy.API.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CurrentUserAccessor(IHttpContextAccessor httpContextAccessor)
+        public CurrentUserAccessor (IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string GetCurrentUsername()
+        public string GetCurrentUsername ()
         {
-            return _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            return _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault (x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         }
     }
 }

@@ -10,35 +10,35 @@ namespace Bloggy.API.Infrastructure
     {
         private readonly RequestDelegate next;
 
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        public ErrorHandlingMiddleware (RequestDelegate next)
         {
             this.next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke (HttpContext context)
         {
             try
             {
-                await next(context);
+                await next (context);
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync (context, ex);
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static async Task HandleExceptionAsync (HttpContext context, Exception exception)
         {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                if (!string.IsNullOrWhiteSpace(exception.Message))
+            context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+            if (!string.IsNullOrWhiteSpace (exception.Message))
+            {
+                context.Response.ContentType = "application/json";
+                var result = JsonConvert.SerializeObject (new
                 {
-                    context.Response.ContentType = "application/json";
-                    var result = JsonConvert.SerializeObject(new
-                    {
-                        errors = exception.Message
-                    });
-                    await context.Response.WriteAsync(result);
-                }
+                    errors = exception.Message
+                });
+                await context.Response.WriteAsync (result);
+            }
         }
     }
 }

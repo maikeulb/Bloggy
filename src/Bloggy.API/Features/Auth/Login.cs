@@ -1,14 +1,10 @@
 using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Bloggy.API.Data;
 using Bloggy.API.Entities;
-using Bloggy.API.Infrastructure;
-using Bloggy.API.Services;
-using Bloggy.API.Services.Interfaces;
 using Bloggy.API.Features.Users;
+using Bloggy.API.Services.Interfaces;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
@@ -23,11 +19,6 @@ namespace Bloggy.API.Features.Auth
             public string Email { get; set; }
             public string Password { get; set; }
         }
-
-        /* public class Model */
-        /* { */
-        /*     public string Token { get; set; } */
-        /* } */
 
         public class Validator : AbstractValidator<Command>
         {
@@ -62,11 +53,9 @@ namespace Bloggy.API.Features.Auth
                 if (!user.HashedPassword.SequenceEqual (_passwordHasher.Hash (message.Password, user.Salt)))
                     return Result.Fail<User> ("User is not authorized");
 
-                var loggedInUser = _mapper.Map<ApplicationUser, User>(user);
+                var loggedInUser = _mapper.Map<ApplicationUser, User> (user);
 
-                loggedInUser.Token = await _jwtTokenGenerator.CreateToken(user.Username);
-
-                /* var model = _mapper.Map<User, Model>(loggedInUser); */
+                loggedInUser.Token = await _jwtTokenGenerator.CreateToken (user.Username);
 
                 return Result.Ok (loggedInUser);
             }

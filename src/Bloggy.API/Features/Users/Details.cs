@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using AutoMapper;
 using Bloggy.API.Data;
 using Bloggy.API.Entities;
@@ -8,6 +7,7 @@ using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Bloggy.API.Features.Users
 {
@@ -38,9 +38,9 @@ namespace Bloggy.API.Features.Users
             private readonly IMapper _mapper;
             private readonly ILogger _logger;
 
-            public Handler (BloggyContext context, 
-                    IMapper mapper,
-                    ILogger<UsersController> logger)
+            public Handler (BloggyContext context,
+                IMapper mapper,
+                ILogger<UsersController> logger)
             {
                 _context = context;
                 _mapper = mapper;
@@ -49,9 +49,9 @@ namespace Bloggy.API.Features.Users
 
             protected override async Task<Result<Model>> HandleCore (Query message)
             {
-                _logger.LogInformation("**********{}", message.Username);
+                _logger.LogInformation ("**********{}", message.Username);
                 var user = await SingleAsync (message.Username);
-                _logger.LogInformation("**********{}", user);
+                _logger.LogInformation ("**********{}", user);
 
                 if (user == null)
                     return Result.Fail<Model> ("User does not exit");

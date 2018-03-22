@@ -1,17 +1,13 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Bloggy.API.Entities;
-using Bloggy.API.Infrastructure;
-using Bloggy.API.Services;
-using Bloggy.API.Services.Interfaces;
-using Bloggy.API.Data;
-using MediatR;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using Bloggy.API.Data;
+using Bloggy.API.Entities;
+using Bloggy.API.Services.Interfaces;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bloggy.API.Features.Posts
 {
@@ -42,7 +38,7 @@ namespace Bloggy.API.Features.Posts
             private readonly ICurrentUserAccessor _currentUserAccessor;
             private readonly IMapper _mapper;
 
-            public Handler(BloggyContext context, ICurrentUserAccessor currentUserAccessor, IMapper mapper)
+            public Handler (BloggyContext context, ICurrentUserAccessor currentUserAccessor, IMapper mapper)
             {
                 _context = context;
                 _currentUserAccessor = currentUserAccessor;
@@ -51,64 +47,64 @@ namespace Bloggy.API.Features.Posts
 
             protected override async Task<List<Model>> HandleCore (Query message)
             {
-                IQueryable<Post> queryablePosts = ListPosts();
+                IQueryable<Post> queryablePosts = ListPosts ();
 
-                if (!string.IsNullOrWhiteSpace(message.Tag))
+                if (!string.IsNullOrWhiteSpace (message.Tag))
                 {
-                    var tag = await SingleTagAsync(message.Tag);
+                    var tag = await SingleTagAsync (message.Tag);
                     if (tag != null)
-                        queryablePosts = queryablePosts.Where(p => p.PostTags.Select(pt => pt.Tag.Name).Contains(tag.Name));
+                        queryablePosts = queryablePosts.Where (p => p.PostTags.Select (pt => pt.Tag.Name).Contains (tag.Name));
                 }
-                if (!string.IsNullOrWhiteSpace(message.Author))
+                if (!string.IsNullOrWhiteSpace (message.Author))
                 {
-                    var author = await SingleAuthorAsync(message.Author);
+                    var author = await SingleAuthorAsync (message.Author);
                     if (author != null)
-                        queryablePosts = queryablePosts.Where(p => p.Author.Username == message.Author);
+                        queryablePosts = queryablePosts.Where (p => p.Author.Username == message.Author);
                 }
-                if (!string.IsNullOrWhiteSpace(message.Category))
+                if (!string.IsNullOrWhiteSpace (message.Category))
                 {
-                    var category = await SingleCategoryAsync(message.Category);
+                    var category = await SingleCategoryAsync (message.Category);
                     if (category != null)
-                        queryablePosts = queryablePosts.Where(p => p.Category.Name == message.Category);
+                        queryablePosts = queryablePosts.Where (p => p.Category.Name == message.Category);
                 }
 
                 var posts = await queryablePosts
-                    .OrderByDescending(m => m.CreatedDate)
-                    .AsNoTracking()
-                    .ToListAsync();
+                    .OrderByDescending (m => m.CreatedDate)
+                    .AsNoTracking ()
+                    .ToListAsync ();
 
-                var model = _mapper.Map<List<Post>, List<Model>>(posts);
+                var model = _mapper.Map<List<Post>, List<Model>> (posts);
 
                 return model;
             }
 
-            private async Task<Tag> SingleTagAsync(string tag)
+            private async Task<Tag> SingleTagAsync (string tag)
             {
                 return await _context.Tags
-                    .SingleOrDefaultAsync(pt => pt.Name == tag);
+                    .SingleOrDefaultAsync (pt => pt.Name == tag);
             }
 
-            private async Task<Category> SingleCategoryAsync(string category)
+            private async Task<Category> SingleCategoryAsync (string category)
             {
                 return await _context.Categories
-                    .SingleOrDefaultAsync(c => c.Name == category);
+                    .SingleOrDefaultAsync (c => c.Name == category);
             }
 
-            private async Task<ApplicationUser> SingleAuthorAsync(string author)
+            private async Task<ApplicationUser> SingleAuthorAsync (string author)
             {
                 return await _context.Users
-                    .SingleOrDefaultAsync(au => au.Username == author);
+                    .SingleOrDefaultAsync (au => au.Username == author);
             }
 
-            public IQueryable<Post> ListPosts()
+            public IQueryable<Post> ListPosts ()
             {
                 return _context.Posts
-                    .Include(x => x.Author)
-                    .Include(x => x.Comments)
-                    .Include(x => x.Category)
-                    .Include(x => x.PostTags)
-                      .ThenInclude(x => x.Tag)
-                    .AsNoTracking();
+                    .Include (x => x.Author)
+                    .Include (x => x.Comments)
+                    .Include (x => x.Category)
+                    .Include (x => x.PostTags)
+                    .ThenInclude (x => x.Tag)
+                    .AsNoTracking ();
             }
         }
     }

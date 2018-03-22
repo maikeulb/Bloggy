@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Bloggy.API.Data;
 using Bloggy.API.Entities;
-using Bloggy.API.Infrastructure;
-using Bloggy.API.Services;
-using Bloggy.API.Services.Interfaces;
 using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
@@ -18,7 +13,7 @@ namespace Bloggy.API.Features.Comments
 {
     public class ListAll
     {
-        public class Query : IRequest<Result<IEnumerable<Model>>>
+        public class Query : IRequest<Result<IEnumerable<Model>> >
         {
             public int PostId { get; set; }
         }
@@ -39,7 +34,7 @@ namespace Bloggy.API.Features.Comments
             public DateTime CreatedDate { get; set; }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Result<IEnumerable<Model>>>
+        public class Handler : AsyncRequestHandler<Query, Result<IEnumerable<Model>> >
         {
             private readonly BloggyContext _context;
             private readonly IMapper _mapper;
@@ -51,7 +46,7 @@ namespace Bloggy.API.Features.Comments
                 _mapper = mapper;
             }
 
-            protected override async Task<Result<IEnumerable<Model>>> HandleCore (Query message)
+            protected override async Task<Result<IEnumerable<Model>> > HandleCore (Query message)
             {
                 var post = await SingleAsync (message.PostId);
 

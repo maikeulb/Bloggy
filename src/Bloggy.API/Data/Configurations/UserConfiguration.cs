@@ -1,6 +1,6 @@
+using Bloggy.API.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Bloggy.API.Entities;
 
 namespace Bloggy.API.Data.Configurations
 {
@@ -8,12 +8,10 @@ namespace Bloggy.API.Data.Configurations
     {
         public void Configure (EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.ToTable("ApplicationUser");
+            builder.HasKey (t => t.Id);
 
-            builder.HasKey(t => t.Id);
-
-            builder.Property(t => t.Id)
-               .IsRequired();
+            builder.Property (t => t.Id)
+                .IsRequired ();
 
             builder.Property (au => au.Username)
                 .IsRequired ();
