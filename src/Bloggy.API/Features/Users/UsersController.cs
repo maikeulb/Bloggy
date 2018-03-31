@@ -42,7 +42,6 @@ namespace Bloggy.API.Features.Users
         public async Task<IActionResult> Mine ()
         {
             var username = _currentUserAccessor.GetCurrentUsername ();
-            _logger.LogInformation ("*********{}", username);
             var command = new DetailsQ.Query { Username = _currentUserAccessor.GetCurrentUsername () };
             var result = await _mediator.Send (command);
 

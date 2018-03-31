@@ -8,6 +8,8 @@ namespace Bloggy.API.Data.Configurations
     {
         public void Configure (EntityTypeBuilder<Tag> builder)
         {
+            builder.ToTable ("Tags");
+
             builder.HasKey (t => t.Id);
 
             builder.Property (t => t.Id)

@@ -15,7 +15,6 @@ namespace Bloggy.API.Data.Seed
             IPasswordHasher passwordHasher,
             ILogger<BloggyContextInitializer> logger)
         {
-
             context.Database.EnsureCreated ();
 
             if (!context.Users.Any ())
