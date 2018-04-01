@@ -1,6 +1,8 @@
+using Bloggy.API.Entities.Interfaces;
+
 namespace Bloggy.API.Entities
 {
-    public class PostTag
+    public class PostTag: IEntity
     {
         public int PostId { get; set; }
         public int TagId { get; set; }

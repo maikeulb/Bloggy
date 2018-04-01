@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Bloggy.API.Entities.Interfaces;
 
 namespace Bloggy.API.Entities
 {
-    public class Post
+    public class Post: IEntity
     {
         public int Id { get; set; }
         public int CategoryId { get; set; }

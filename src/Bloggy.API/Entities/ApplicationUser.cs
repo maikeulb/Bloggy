@@ -1,6 +1,8 @@
+using Bloggy.API.Entities.Interfaces;
+
 namespace Bloggy.API.Entities
 {
-    public class ApplicationUser
+    public class ApplicationUser: IEntity
     {
         public int Id { get; set; }
         public string Username { get; set; }
