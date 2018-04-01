@@ -109,13 +109,13 @@ namespace Bloggy.API.Data.Seed
             return new List<Category> ()
             {
                 new Category ()
-                    {
-                        Name = "Software Architecture",
-                    },
-                    new Category ()
-                    {
-                        Name = "Functional Programming",
-                    },
+                {
+                    Name = "Software Architecture",
+                },
+                new Category ()
+                {
+                    Name = "Functional Programming",
+                },
             };
         }
 

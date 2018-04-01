@@ -17,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
-namespace Bloggy.API
+namespace Bloggy
 {
     public class Startup
     {

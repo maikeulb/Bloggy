@@ -1,0 +1,15 @@
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/obj/Debug/netcoreapp2.0/Bloggy.Tests.csproj.CoreCompileInputs.cache
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/obj/Debug/netcoreapp2.0/Bloggy.Tests.AssemblyInfoInputs.cache
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/obj/Debug/netcoreapp2.0/Bloggy.Tests.AssemblyInfo.cs
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/xunit.runner.reporters.netcoreapp10.dll
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/xunit.runner.utility.netcoreapp10.dll
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/Bloggy.Tests.deps.json
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/Bloggy.Tests.runtimeconfig.json
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/Bloggy.Tests.runtimeconfig.dev.json
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/Bloggy.Tests.dll
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/Bloggy.Tests.pdb
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/Bloggy.API.dll
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/bin/Debug/netcoreapp2.0/Bloggy.API.pdb
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/obj/Debug/netcoreapp2.0/Bloggy.Tests.dll
+/home/michael/Projects-DotNet/Bloggy/src/Bloggy.Tests/obj/Debug/netcoreapp2.0/Bloggy.Tests.pdb
