@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Bloggy
 {
@@ -32,6 +33,14 @@ namespace Bloggy
         {
             services.AddDbContext<BloggyContext> (options =>
                 options.UseNpgsql (Configuration.GetConnectionString ("BloggyApi")));
+
+            services.AddSwaggerGen (options =>
+            {
+                options.SwaggerDoc ("v1", new Info { Title = "Bloggy API", Version = "v1" });
+                options.CustomSchemaIds(y => y.FullName);
+                options.DocInclusionPredicate((version, apiDescription) => true);
+                options.TagActionsBy(y => y.GroupName);
+            });
 
             services.AddMvc (opt =>
                 {
@@ -88,7 +97,7 @@ namespace Bloggy
 
         public void Configure (IApplicationBuilder app, IHostingEnvironment env)
         {
-            /* app.UseMiddleware<ErrorHandlingMiddleware>(); */
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseCors (builder =>
                 builder
@@ -97,6 +106,16 @@ namespace Bloggy
                 .AllowAnyMethod ());
 
             app.UseMvc ();
+
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "swagger/{documentName}/swagger.json";
+            });
+
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "Bloggy API V1");
+            });
         }
     }
 }
