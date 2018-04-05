@@ -14,7 +14,7 @@ namespace Bloggy.API.Features.Auth
             _mediator = mediator;
         }
 
-        [HttpPost ("Register")]
+        [HttpPost ("register")]
         public async Task<IActionResult> Register ([FromBody] Register.Command command)
         {
             var result = await _mediator.Send (command);
@@ -24,7 +24,7 @@ namespace Bloggy.API.Features.Auth
                 (IActionResult) BadRequest (result.Error);
         }
 
-        [HttpPost ("Login")]
+        [HttpPost ("login")]
         public async Task<IActionResult> Login ([FromBody] Login.Command command)
         {
             var result = await _mediator.Send (command);

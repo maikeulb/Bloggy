@@ -8,7 +8,7 @@ namespace Bloggy.API.Features.Auth
     {
         public MappingProfile ()
         {
-            CreateMap<ApplicationUser, Create.Model> ();
+            CreateMap<ApplicationUser, Register.Model> ();
             CreateMap<ApplicationUser, User> ();
             /* CreateMap<User, Login.Model>(); */
         }

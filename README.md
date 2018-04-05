@@ -35,13 +35,10 @@ Endpoints
 | `PUT`     | `/api/posts/{pid}/comments/{id}`      | `Edit post comment`                       |
 | `DELETE`  | `/api/posts/{pid}/comments/{id}`      | `Delete post comment`                     |
 
-// update schema to reflect pid
-
 ### Users
 | Method    | URI                                   | Action                                    |
 |-----------|---------------------------------------|-------------------------------------------|
-| `GET`     | `/api/users     `                     | `Retrieve (logged in) user details`       |
-| `GET`     | `/api/users/{username}`               | `Retrieve user          `                 |
+| `GET`     | `/api/users/{username}`               | `Retrieve user details`                   |
 | `PUT`     | `/api/users`                          | `Edit (logged in) user profile`           |
 
 // Check difference between first and second

@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
 using MediatR;
+using Bloggy.API.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggy.API.Features.Posts

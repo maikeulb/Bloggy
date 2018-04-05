@@ -28,7 +28,16 @@ namespace Bloggy.API.Features.Users
         [HttpGet ("{username}")]
         public async Task<IActionResult> Details ([FromRoute] string username)
         {
-            var query = new DetailsQ.Query { Username = username };
+            var currentUsername = _currentUserAccessor.GetCurrentUsername ();
+            var query = new DetailsQ.Query();
+            if (currentUsername != null && username == currentUsername) 
+            {
+                query = new DetailsQ.Query { Username = _currentUserAccessor.GetCurrentUsername () };
+            }
+            else 
+            {
+                query = new DetailsQ.Query { Username = username };
+            }
 
             var result = await _mediator.Send (query);
 
@@ -37,18 +46,30 @@ namespace Bloggy.API.Features.Users
                 (IActionResult) BadRequest (result.Error);
         }
 
-        [HttpGet]
-        [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<IActionResult> Mine ()
-        {
-            var username = _currentUserAccessor.GetCurrentUsername ();
-            var command = new DetailsQ.Query { Username = _currentUserAccessor.GetCurrentUsername () };
-            var result = await _mediator.Send (command);
+        /* [HttpGet ("{username}")] */
+        /* public async Task<IActionResult> Details ([FromRoute] string username) */
+        /* { */
+        /*     var query = new DetailsQ.Query { Username = username }; */
 
-            return result.IsSuccess ?
-                (IActionResult) Ok (result.Value) :
-                (IActionResult) BadRequest (result.Error);
-        }
+            /* var result = await _mediator.Send (query); */
+
+            /* return result.IsSuccess ? */
+            /*     (IActionResult) Ok (result.Value) : */
+            /*     (IActionResult) BadRequest (result.Error); */
+        /* } */
+
+        /* [HttpGet] */
+        /* [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)] */
+        /* public async Task<IActionResult> Mine () */
+        /* { */
+        /*     var username = _currentUserAccessor.GetCurrentUsername (); */
+        /*     var query = new DetailsQ.Query { Username = _currentUserAccessor.GetCurrentUsername () }; */
+        /*     var result = await _mediator.Send (query); */
+
+/*             return result.IsSuccess ? */
+/*                 (IActionResult) Ok (result.Value) : */
+/*                 (IActionResult) BadRequest (result.Error); */
+/*         } */
 
         [HttpPut]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
