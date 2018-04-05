@@ -9,6 +9,7 @@ using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Bloggy.API.Features.Auth
 {
@@ -35,13 +36,16 @@ namespace Bloggy.API.Features.Auth
             private readonly IPasswordHasher _passwordHasher;
             private readonly IJwtTokenGenerator _jwtTokenGenerator;
             private readonly IMapper _mapper;
+            private readonly ILogger _logger;
 
-            public Handler (BloggyContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
+            public Handler (BloggyContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper,
+                ILogger<AuthController> logger)
             {
                 _context = context;
                 _passwordHasher = passwordHasher;
                 _jwtTokenGenerator = jwtTokenGenerator;
                 _mapper = mapper;
+                _logger = logger;
             }
 
             protected override async Task<Result<User>> HandleCore (Command message)

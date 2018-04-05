@@ -49,9 +49,9 @@ namespace Bloggy.API.Features.Users
 
             protected override async Task<Result<Model>> HandleCore (Query message)
             {
-                _logger.LogInformation ("**********{}", message.Username);
+                _logger.LogInformation ("{}", message.Username);
                 var user = await SingleAsync (message.Username);
-                _logger.LogInformation ("**********{}", user);
+                _logger.LogInformation ("{}", user);
 
                 if (user == null)
                     return Result.Fail<Model> ("User does not exit");

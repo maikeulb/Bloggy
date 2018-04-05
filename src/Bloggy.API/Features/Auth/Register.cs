@@ -9,6 +9,7 @@ using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Bloggy.API.Features.Auth
 {
@@ -31,7 +32,7 @@ namespace Bloggy.API.Features.Auth
         {
             public Validator ()
             {
-                RuleFor (u => u.Username).NotEmpty ().WithMessage ("First name cannot be blank");
+                RuleFor (u => u.Username).NotEmpty ().WithMessage ("Username cannot be blank");
                 RuleFor (u => u.Email).NotEmpty ().WithMessage ("Email cannot be blank")
                     .EmailAddress ().WithMessage ("A valid email is required");
                 RuleFor (u => u.Password).NotEmpty ().Length (8, 20).WithMessage ("Password cannot must be between 8 and 20 characters");
@@ -43,12 +44,15 @@ namespace Bloggy.API.Features.Auth
             private readonly BloggyContext _context;
             private readonly IPasswordHasher _passwordHasher;
             private readonly IMapper _mapper;
+            private readonly ILogger _logger;
 
-            public Handler (BloggyContext context, IPasswordHasher passwordHasher, IMapper mapper)
+            public Handler (BloggyContext context, IPasswordHasher passwordHasher, IMapper mapper,
+                ILogger<AuthController> logger)
             {
                 _context = context;
                 _passwordHasher = passwordHasher;
                 _mapper = mapper;
+                _logger = logger;
             }
 
             protected override async Task<Result<Model>> HandleCore (Command message)
@@ -57,7 +61,7 @@ namespace Bloggy.API.Features.Auth
                     return Result.Fail<Model> ("User exits");
 
                 if (await ExistEmail (message.Email))
-                    return Result.Fail<Model> ("User exits");
+                    return Result.Fail<Model> ("Email exits");
 
                 var salt = Guid.NewGuid ().ToByteArray ();
                 var user = new ApplicationUser
@@ -65,7 +69,7 @@ namespace Bloggy.API.Features.Auth
                     Username = message.Username,
                     Email = message.Email,
                     HashedPassword = _passwordHasher.Hash (message.Password, salt),
-                    Salt = Guid.NewGuid ().ToByteArray ()
+                    Salt = salt
                 };
 
                 _context.Users.Add (user);
