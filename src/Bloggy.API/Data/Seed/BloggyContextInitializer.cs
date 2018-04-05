@@ -94,13 +94,21 @@ namespace Bloggy.API.Data.Seed
             return new List<Tag> ()
             {
                 new Tag ()
-                    {
-                        Name = "Csharp"
-                    },
-                    new Tag ()
-                    {
-                        Name = "Python"
-                    },
+                {
+                    Name = "FSharp"
+                },
+                new Tag ()
+                {
+                    Name = "DDD"
+                },
+                new Tag ()
+                {
+                    Name = "CSharp"
+                },
+                new Tag ()
+                {
+                    Name = "Python"
+                },
             };
         }
 
@@ -127,24 +135,24 @@ namespace Bloggy.API.Data.Seed
                     {
                         CategoryId = 1,
                             AuthorId = 1,
-                            Title = "integer massa",
-                            Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
+                            Title = "Domain Driven Design",
+                            Body = "Statically typed functional programming languages like F# encourage a very different way of thinking about types. The type system is your friend, not an annoyance, and can be used in many ways that might not be familiar to OO programmers",
                             CreatedDate = new DateTime (2018, 2, 11),
                     },
                     new Post ()
                     {
                         CategoryId = 2,
                             AuthorId = 1,
-                            Title = "adipsicing elit",
-                            Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
+                            Title = "The best Functional Programming Blogs and how to get started",
+                            Body = "Also, we have included a new section dedicated to posts on getting started with Functional Programming. We never want Functional Programming to seem unreachable to anyone.",
                             CreatedDate = new DateTime (2018, 1, 21),
                     },
                     new Post ()
                     {
-                        CategoryId = 1,
+                        CategoryId = 2,
                             AuthorId = 1,
-                            Title = "efficitur",
-                            Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
+                            Title = "Magic of F# Type Providers",
+                            Body = "The first time I saw a type provider I did not actually get what all the fuss was about",
                             CreatedDate = new DateTime (2018, 3, 21),
                     },
                     new Post ()
@@ -179,35 +187,35 @@ namespace Bloggy.API.Data.Seed
             return new List<PostTag> ()
             {
                 new PostTag ()
-                    {
-                        PostId = 1,
-                            TagId = 1,
-                    },
-                    new PostTag ()
-                    {
-                        PostId = 1,
-                            TagId = 2,
-                    },
-                    new PostTag ()
-                    {
-                        PostId = 2,
-                            TagId = 1,
-                    },
-                    new PostTag ()
-                    {
-                        PostId = 3,
-                            TagId = 1,
-                    },
-                    new PostTag ()
-                    {
-                        PostId = 3,
-                            TagId = 2,
-                    },
-                    new PostTag ()
-                    {
-                        PostId = 4,
-                            TagId = 1,
-                    },
+                {
+                    PostId = 1,
+                    TagId = 1,
+                },
+                new PostTag ()
+                {
+                    PostId = 1,
+                    TagId = 2,
+                },
+                new PostTag ()
+                {
+                    PostId = 2,
+                    TagId = 1,
+                },
+                new PostTag ()
+                {
+                    PostId = 3,
+                    TagId = 1,
+                },
+                new PostTag ()
+                {
+                    PostId = 3,
+                    TagId = 2,
+                },
+                new PostTag ()
+                {
+                    PostId = 4,
+                    TagId = 1,
+                },
             };
         }
 
@@ -233,8 +241,8 @@ namespace Bloggy.API.Data.Seed
                     {
                         PostId = 3,
                             AuthorId = 1,
-                            Body = "helpful",
-                            CreatedDate = new DateTime (2018, 2, 21),
+                            Body = "this is helpful.",
+                            CreatedDate = new DateTime (2018, 4, 21),
                     },
                     new Comment ()
                     {

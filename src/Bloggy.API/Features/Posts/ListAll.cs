@@ -53,19 +53,22 @@ namespace Bloggy.API.Features.Posts
                 {
                     var tag = await SingleTagAsync (message.Tag);
                     if (tag != null)
-                        queryablePosts = queryablePosts.Where (p => p.PostTags.Select (pt => pt.Tag.Name).Contains (tag.Name));
+                        queryablePosts = queryablePosts
+                            .Where (p => p.PostTags.Select (pt => pt.Tag.Name).Contains (tag.Name));
                 }
                 if (!string.IsNullOrWhiteSpace (message.Author))
                 {
                     var author = await SingleAuthorAsync (message.Author);
                     if (author != null)
-                        queryablePosts = queryablePosts.Where (p => p.Author.Username == message.Author);
+                        queryablePosts = queryablePosts
+                            .Where (p => p.Author.Username == message.Author);
                 }
                 if (!string.IsNullOrWhiteSpace (message.Category))
                 {
                     var category = await SingleCategoryAsync (message.Category);
                     if (category != null)
-                        queryablePosts = queryablePosts.Where (p => p.Category.Name == message.Category);
+                        queryablePosts = queryablePosts
+                            .Where (p => p.Category.Name == message.Category);
                 }
 
                 var posts = await queryablePosts

@@ -11,9 +11,10 @@ using System;
 namespace Bloggy.API.Migrations
 {
     [DbContext(typeof(BloggyContext))]
-    partial class BloggyContextModelSnapshot : ModelSnapshot
+    [Migration("20180405230821_remove body restriction")]
+    partial class removebodyrestriction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

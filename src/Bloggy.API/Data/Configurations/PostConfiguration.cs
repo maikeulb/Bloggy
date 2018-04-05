@@ -16,8 +16,7 @@ namespace Bloggy.API.Data.Configurations
                 .IsRequired ();
 
             builder.Property (p => p.Body)
-                .IsRequired ()
-                .HasMaxLength (140);
+                .IsRequired ();
 
             builder.Property (p => p.CreatedDate)
                 .HasDefaultValueSql ("now()");

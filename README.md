@@ -52,21 +52,51 @@ Endpoints
 
 Sample Usage
 ---------------
-`http post localhost:5000/api/register email=user@email.com username=user password=pass`
+`http post localhost:5000/auth/register email=user@example.com username=user password=password`
 
 ```
-TODO
-```
+{
+    "email": "user@example.com", 
+    "username": "user"
+}
 
-`http post localhost:5000/api/login email=user@email.com password=pass`
-```
-TODO
-```
-
-`http localhost:5000/api/users`
 
 ```
-TODO
+
+`http post localhost:5000/auth/login email=user@email.com password=password`
+```
+{
+    "email": "user@example.com", 
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyNSIsImp0aSI6Ijc2MDY3M2Q2LTYxYjEtNDc1ZC1hOWM4LTExMjRlOTRjNWIwMCIsImlhdCI6MTUyMjk2ODczNCwibmJmIjoxNTIyOTY4NzM0LCJleHAiOjE1MjI5NjkwMzQsImlzcyI6Imlzc3VlciIsImF1ZCI6ImF1ZGllbmNlIn0.QDvtbxjkJTUUObB4Bw6nNtepqhi-UivaA4_2I5ufX4k", 
+    "username": "user"
+}
+```
+
+`http localhost:5000/api/users` (unprotected endpoint)
+
+```
+[
+    {
+        "author": "demo", 
+        "body": "The first time I saw a type provider I did not actually get what all the fuss was about", 
+        "category": "Functional Programming", 
+        "comments": [
+            {
+                "authorId": 1, 
+                "body": "this is helpful.", 
+                "createdDate": "2018-04-21T00:00:00", 
+                "id": 3, 
+                "postId": 3
+            }
+        ], 
+        "createdDate": "2018-03-21T00:00:00", 
+        "id": 3, 
+        "tags": [
+            "FSharp", 
+            "DDD"
+        ], 
+        "title": "Magic of F# Type Providers"
+    }, 
 ...
 ```
 
