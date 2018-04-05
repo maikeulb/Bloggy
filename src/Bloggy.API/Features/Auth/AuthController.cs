@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggy.API.Features.Auth
 {
-    [Route ("api/auth")]
+    [Route ("auth")]
     public class AuthController : Controller
     {
         private readonly IMediator _mediator;
@@ -14,8 +14,8 @@ namespace Bloggy.API.Features.Auth
             _mediator = mediator;
         }
 
-        [HttpPost ("Create")]
-        public async Task<IActionResult> Create ([FromBody] Create.Command command)
+        [HttpPost ("Register")]
+        public async Task<IActionResult> Register ([FromBody] Register.Command command)
         {
             var result = await _mediator.Send (command);
 

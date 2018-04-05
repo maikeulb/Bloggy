@@ -1,7 +1,7 @@
 # Friend Meet Friend
 
 Restful API backend for a mini blog engine with token-based authentication
-(using JWTs).// which routes are protected
+(using JWTs).
 
 Technology
 ----------
@@ -40,19 +40,18 @@ Endpoints
 ### Users
 | Method    | URI                                   | Action                                    |
 |-----------|---------------------------------------|-------------------------------------------|
-| `GET`     | `/api/users`                          | `Retrieve all users`                      |
+| `GET`     | `/api/users     `                     | `Retrieve (logged in) user details`       |
 | `GET`     | `/api/users/{username}`               | `Retrieve user          `                 |
 | `PUT`     | `/api/users`                          | `Edit (logged in) user profile`           |
 
-// does put really not need an ID?
+// Check difference between first and second
 
 ### Auth
 | Method     | URI                                   | Action                                   |
 |------------|---------------------------------------|------------------------------------------|
-| `POST`     | `/api/auth/create`                    | `Register User`                          |
-| `POST`     | `/api/auth/login`                     | `Login User`                             |
+| `POST`     | `/auth/register`                      | `Register User`                          |
+| `POST`     | `/auth/login`                         | `Login User`                             |
 
-// remove auth -> register/login
 
 Sample Usage
 ---------------

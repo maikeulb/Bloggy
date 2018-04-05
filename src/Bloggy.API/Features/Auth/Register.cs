@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bloggy.API.Features.Auth
 {
-    public class Create
+    public class Register
     {
         public class Command : IRequest<Result<Model>>
         {
