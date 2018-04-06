@@ -154,5 +154,5 @@ Go to http://localhost:5000 and visit one of the above endpoints (or /swagger)
 
 Run
 ---
-CORS
+CORS  
 PUT For comments creates a new resoruce (and foreign key)

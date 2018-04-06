@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Bloggy.API.Data;
 using Bloggy.API.Entities;
 using Bloggy.API.Entities.Interfaces;
-using FakeItEasy;
 using MediatR;
+using FakeItEasy;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,8 +36,7 @@ namespace Bloggy.Tests
             _checkpoint = new Checkpoint();
         }
 
-        public static Task ResetCheckpoint() => _checkpoint.Reset(_configuration.GetConnectionString("BloggyApi"));
-
+        public static Task ResetCheckpoint() => _checkpoint.Reset("Server=172.17.0.2;Port=5432;Database=BloggyApi;User ID=postgres;Password=P@ssw0rd!;");
         public static async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
         {
             using (var scope = _scopeFactory.CreateScope())
@@ -189,9 +188,9 @@ namespace Bloggy.Tests
             });
         }
 
-        private static int PostNumber = 1;
+        private static int CourseNumber = 1;
 
-        public static int NextPostNumber() => Interlocked.Increment(ref PostNumber);
+        public static int NextCourseNumber() => Interlocked.Increment(ref CourseNumber);
 
     }
 }
