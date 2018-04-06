@@ -30,6 +30,20 @@ namespace Bloggy.API.Features.Posts
             public List<string> Tags { get; set; }
             public List<Comment> Comments { get; set; }
             public DateTime CreatedDate { get; set; }
+               
+            public class Comment
+            {
+                public int Id { get; set; }
+                public string Body { get; set; }
+                public ApplicationUser Author { get; set; }
+                public DateTime CreatedDate { get; set; }
+
+                public class ApplicationUser
+                {
+                    public int Id { get; set; }
+                    public string Username { get; set; }
+                }
+            }
         }
 
         public class Handler : AsyncRequestHandler<Query, List<Model>>
@@ -103,10 +117,11 @@ namespace Bloggy.API.Features.Posts
             {
                 return _context.Posts
                     .Include (x => x.Author)
-                    .Include (x => x.Comments)
                     .Include (x => x.Category)
                     .Include (x => x.PostTags)
-                    .ThenInclude (x => x.Tag)
+                        .ThenInclude (x => x.Tag)
+                    .Include (x => x.Comments)
+                        .ThenInclude (x => x.Author)
                     .AsNoTracking ();
             }
         }

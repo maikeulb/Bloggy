@@ -28,6 +28,20 @@ namespace Bloggy.API.Features.Posts
             public List<string> Tags { get; set; }
             public List<Comment> Comments { get; set; }
             public DateTime CreatedDate { get; set; }
+
+            public class Comment
+            {
+                public int Id { get; set; }
+                public string Body { get; set; }
+                public ApplicationUser Author { get; set; }
+                public DateTime CreatedDate { get; set; }
+
+                public class ApplicationUser
+                {
+                    public int Id { get; set; }
+                    public string Username { get; set; }
+                }
+            }
         }
 
         public class Validator : AbstractValidator<Query>
@@ -65,10 +79,11 @@ namespace Bloggy.API.Features.Posts
             {
                 return await _context.Posts
                     .Include (c => c.Author)
-                    .Include (c => c.Comments)
                     .Include (c => c.Category)
                     .Include (c => c.PostTags)
-                    .ThenInclude (c => c.Tag)
+                        .ThenInclude (c => c.Tag)
+                    .Include (c => c.Comments)
+                        .ThenInclude (c => c.Author)
                     .AsNoTracking ()
                     .SingleOrDefaultAsync (p => p.Id == id);
             }

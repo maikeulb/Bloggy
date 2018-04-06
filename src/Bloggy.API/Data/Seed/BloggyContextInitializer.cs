@@ -74,15 +74,15 @@ namespace Bloggy.API.Data.Seed
             {
                 new ApplicationUser ()
                     {
-                        Username = "demo",
-                            Email = "demo@example.com",
+                        Username = "lazyprogrammer",
+                            Email = "lazyprogrammer@example.com",
                             HashedPassword = hashedPassword,
                             Salt = salt,
                     },
                     new ApplicationUser ()
                     {
-                        Username = "demo2",
-                            Email = "demo2@example.com",
+                        Username = "codemonkey",
+                            Email = "codemonkey@example.com",
                             HashedPassword = hashedPassword,
                             Salt = salt,
                     },
@@ -136,7 +136,7 @@ namespace Bloggy.API.Data.Seed
                         CategoryId = 1,
                             AuthorId = 1,
                             Title = "Domain Driven Design",
-                            Body = "Statically typed functional programming languages like F# encourage a very different way of thinking about types. The type system is your friend, not an annoyance, and can be used in many ways that might not be familiar to OO programmers",
+                            Body = "Statically typed functional programming languages like F# encourage a very different way of thinking about types.",
                             CreatedDate = new DateTime (2018, 2, 11),
                     },
                     new Post ()
@@ -226,9 +226,9 @@ namespace Bloggy.API.Data.Seed
                 new Comment ()
                     {
                         PostId = 1,
-                            AuthorId = 1,
-                            Body = "cool",
-                            CreatedDate = new DateTime (2017, 9, 21),
+                            AuthorId = 2,
+                            Body = "This is very helpful, thanks!",
+                            CreatedDate = new DateTime (2018, 3, 21),
                     },
                     new Comment ()
                     {
@@ -247,9 +247,9 @@ namespace Bloggy.API.Data.Seed
                     new Comment ()
                     {
                         PostId = 1,
-                            AuthorId = 2,
-                            Body = "good read",
-                            CreatedDate = new DateTime (2018, 1, 12),
+                            AuthorId = 1,
+                            Body = "I'm glad you enjoyed it",
+                            CreatedDate = new DateTime (2018, 4, 12),
                     },
                     new Comment ()
                     {

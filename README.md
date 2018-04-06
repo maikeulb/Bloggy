@@ -77,26 +77,46 @@ Sample Usage
 ```
 [
     {
-        "author": "demo", 
-        "body": "The first time I saw a type provider I did not actually get what all the fuss was about", 
-        "category": "Functional Programming", 
+        "author": "lazyprogrammer", 
+        "body": "Statically typed functional programming languages like F# encourage a very different way of thinking about types.", 
+        "category": "Software Architecture", 
         "comments": [
             {
-                "authorId": 1, 
-                "body": "this is helpful.", 
-                "createdDate": "2018-04-21T00:00:00", 
-                "id": 3, 
-                "postId": 3
+                "author": {
+                    "id": 2, 
+                    "username": "codemonkey"
+                }, 
+                "body": "wonderful", 
+                "createdDate": "2018-02-28T00:00:00", 
+                "id": 5
+            }, 
+            {
+                "author": {
+                    "id": 1, 
+                    "username": "lazyprogrammer"
+                }, 
+                "body": "I'm glad you enjoyed it", 
+                "createdDate": "2018-04-12T00:00:00", 
+                "id": 4
+            }, 
+            {
+                "author": {
+                    "id": 2, 
+                    "username": "codemonkey"
+                }, 
+                "body": "This is very helpful, thanks!", 
+                "createdDate": "2018-03-21T00:00:00", 
+                "id": 1
             }
         ], 
-        "createdDate": "2018-03-21T00:00:00", 
-        "id": 3, 
+        "createdDate": "2018-02-11T00:00:00", 
+        "id": 1, 
         "tags": [
             "FSharp", 
             "DDD"
         ], 
-        "title": "Magic of F# Type Providers"
-    }, 
+        "title": "Domain Driven Design"
+    },
 ...
 ```
 
