@@ -32,6 +32,12 @@ namespace Bloggy.API.Features.Comments
             public string Body { get; set; }
             public ApplicationUser Author { get; set; }
             public DateTime CreatedDate { get; set; }
+
+            public class ApplicationUser
+            {
+                public int Id { get; set; }
+                public string Username { get; set; }
+            }
         }
 
         public class Handler : AsyncRequestHandler<Query, Result<IEnumerable<Model>> >

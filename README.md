@@ -125,7 +125,7 @@ post localhost:5000/api/posts title="Event sourcing, CQRS, and Stream Processing
 
 ```
 {
-    "author": "user5", 
+    "author": "user", 
     "body": "Event sourciing as an application architecture pattern is rising in popularity...", 
     "category": "Software Architecture", 
     "createdDate": "2018-04-06T01:31:12.3492258Z", 

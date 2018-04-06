@@ -23,7 +23,6 @@ namespace Bloggy.API.Features.Comments
         {
             public int Id { get; set; }
             public string Body { get; set; }
-            public ApplicationUser Author { get; set; }
             public DateTime CreatedDate { get; set; }
         }
 

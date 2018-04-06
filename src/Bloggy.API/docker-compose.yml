@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+    environment:
+      ConnectionStrings__BloggyApi: "Server=db;Port=5432;Database=postgres;User ID=postgres;Password=P@ssw0rd!;"
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "P@ssw0rd!"

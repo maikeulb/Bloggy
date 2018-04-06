@@ -90,20 +90,20 @@ namespace Bloggy
                 .AddJwtBearer (options => { options.TokenValidationParameters = tokenValidationParameters; })
                 .AddJwtBearer ("Token", options => { options.TokenValidationParameters = tokenValidationParameters; });
 
-            services.AddCors ();
+            /* services.AddCors (); */
             services.AddMediatR ();
             services.AddTransient (typeof (IPipelineBehavior<,>), typeof (ValidationPipelineBehavior<,>));
         }
 
         public void Configure (IApplicationBuilder app, IHostingEnvironment env)
         {
-            /* app.UseMiddleware<ErrorHandlingMiddleware>(); */
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
-            app.UseCors (builder =>
-                builder
-                .AllowAnyOrigin ()
-                .AllowAnyHeader ()
-                .AllowAnyMethod ());
+            /* app.UseCors (builder => */
+            /*     builder */
+            /*     .AllowAnyOrigin () */
+            /*     .AllowAnyHeader () */
+            /*     .AllowAnyMethod ()); */
 
             app.UseMvc ();
 

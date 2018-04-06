@@ -1,2 +1,5 @@
 learn custom validation works on client;
 learn how to send badreqeust (json)
+test all routes (fix comment model -> remove hashed password)
+cors
+add ability to add categories (maybe)
