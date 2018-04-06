@@ -70,6 +70,7 @@ namespace Bloggy.API.Features.Posts
                 var category = await SingleCategoryAsync (message.CategoryId);
                 if (category == null)
                     return Result.Fail<Model> ("Category does not exit");
+
                 var post = new Post
                 {
                     Title = message.Title,
@@ -78,6 +79,7 @@ namespace Bloggy.API.Features.Posts
                     Author = author,
                     CreatedDate = DateTime.UtcNow
                 };
+
                 if (message.Tags!= null)
                 {
                     var tags = new List<Tag> ();
@@ -100,12 +102,8 @@ namespace Bloggy.API.Features.Posts
                         postTags.Add (pt);
                     }
                     await _context.PostTags.AddRangeAsync (postTags);
-                    await _context.Posts.AddAsync (post);
                 }
-                else
-                {
-                    await _context.Posts.AddAsync (post);
-                }
+                await _context.Posts.AddAsync (post);
 
                 await _context.SaveChangesAsync ();
 

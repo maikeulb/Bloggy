@@ -52,7 +52,7 @@ namespace Bloggy.API.Features.Comments
 
         [HttpPut ("{id}")]
         [Authorize (AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<IActionResult> Edit ([FromRoute] int postId, [FromQuery] int id, [FromBody] Edit.Command command)
+        public async Task<IActionResult> Edit ([FromRoute] int postId, [FromRoute] int id, [FromBody] Edit.Command command)
         {
             command.PostId = postId;
             command.Id = id;

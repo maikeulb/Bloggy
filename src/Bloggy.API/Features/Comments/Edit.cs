@@ -7,6 +7,7 @@ using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Bloggy.API.Features.Comments
 {
@@ -25,6 +26,7 @@ namespace Bloggy.API.Features.Comments
             {
                 RuleFor (c => c.PostId).NotNull ();
                 RuleFor (c => c.Id).NotNull ();
+                RuleFor (c => c.Body).NotEmpty ();
             }
         }
 
@@ -32,11 +34,14 @@ namespace Bloggy.API.Features.Comments
         {
             private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
+            private readonly ILogger _logger;
 
-            public Handler (BloggyContext context, ICurrentUserAccessor currentUserAccessor)
+            public Handler (BloggyContext context, ICurrentUserAccessor currentUserAccessor,
+                ILogger<CommentsController> logger)
             {
                 _context = context;
                 _currentUserAccessor = currentUserAccessor;
+                _logger = logger;
             }
 
             protected override async Task<Result> HandleCore (Command message)
@@ -46,24 +51,25 @@ namespace Bloggy.API.Features.Comments
                 if (post == null)
                     return Result.Fail<Command> ("Post does not exit");
 
-                if (message.Body != null)
+                var existComment = await SingleCommentAsync (message.Id);
+                if (existComment == null)
+                    return Result.Fail<Command> ("Comment does not exit");
+                _context.Comments.Remove (existComment);
+                await _context.SaveChangesAsync ();
+
+                var comment = new Comment
                 {
-                    var existComment = await SingleCommentAsync (message.Id);
-                    _context.Comments.Remove (existComment);
-                    await _context.SaveChangesAsync ();
+                    Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername ()),
+                    Body = message.Body,
+                    CreatedDate = DateTime.UtcNow
+                };
+                await _context.Comments.AddAsync (comment);
 
-                    var comment = new Comment
-                    {
-                        Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername ()),
-                        Body = message.Body,
-                        CreatedDate = DateTime.UtcNow
-                    };
+                post.Comments.Add (comment);
 
-                    await _context.Comments.AddAsync (comment);
-                    post.Comments.Add (comment);
-                    await _context.SaveChangesAsync ();
-                }
+                await _context.SaveChangesAsync ();
 
+                _logger.LogInformation("*************about to return ");
                 return Result.Ok ();
             }
 
