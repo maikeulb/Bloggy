@@ -11,7 +11,7 @@ using static Bloggy.Tests.SliceFixture;
 
 namespace Bloggy.Tests.Features.Categories
 {
-    public class ListAllTests : SliceFixture
+    public class ListAllCategoreisTests : SliceFixture
     {
         [Fact]
         public async Task Should_return_all_categories()
@@ -26,7 +26,7 @@ namespace Bloggy.Tests.Features.Categories
                 Name = "Functional Programming",
             };
 
-            await InsertAsync(architecture);
+            await InsertAsync(architecture, functional);
 
             var result = await SendAsync(new ListAllQ.Query());
 

@@ -132,53 +132,53 @@ namespace Bloggy.API.Data.Seed
             return new List<Post> ()
             {
                 new Post ()
-                    {
-                        CategoryId = 1,
-                            AuthorId = 1,
-                            Title = "Domain Driven Design",
-                            Body = "Statically typed functional programming languages like F# encourage a very different way of thinking about types.",
-                            CreatedDate = new DateTime (2018, 2, 11),
-                    },
-                    new Post ()
-                    {
-                        CategoryId = 2,
-                            AuthorId = 1,
-                            Title = "The best Functional Programming Blogs and how to get started",
-                            Body = "Also, we have included a new section dedicated to posts on getting started with Functional Programming. We never want Functional Programming to seem unreachable to anyone.",
-                            CreatedDate = new DateTime (2018, 1, 21),
-                    },
-                    new Post ()
-                    {
-                        CategoryId = 2,
-                            AuthorId = 1,
-                            Title = "Magic of F# Type Providers",
-                            Body = "The first time I saw a type provider I did not actually get what all the fuss was about",
-                            CreatedDate = new DateTime (2018, 3, 21),
-                    },
-                    new Post ()
-                    {
-                        CategoryId = 2,
-                            AuthorId = 2,
-                            Title = "sit amet",
-                            Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
-                            CreatedDate = new DateTime (2018, 2, 19),
-                    },
-                    new Post ()
-                    {
-                        CategoryId = 2,
-                            AuthorId = 2,
-                            Title = "pulvinar velit",
-                            Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
-                            CreatedDate = new DateTime (2018, 1, 12),
-                    },
-                    new Post ()
-                    {
-                        CategoryId = 1,
-                            AuthorId = 2,
-                            Title = "dolor lorem",
-                            Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
-                            CreatedDate = new DateTime (2018, 1, 30),
-                    },
+                {
+                    CategoryId = 1,
+                    AuthorId = 1,
+                    Title = "Domain Driven Design",
+                    Body = "Statically typed functional programming languages like F# encourage a very different way of thinking about types.",
+                    CreatedDate = new DateTime (2018, 2, 11),
+                },
+                new Post ()
+                {
+                    CategoryId = 2,
+                    AuthorId = 1,
+                    Title = "The best Functional Programming Blogs and how to get started",
+                    Body = "Also, we have included a new section dedicated to posts on getting started with Functional Programming. We never want Functional Programming to seem unreachable to anyone.",
+                    CreatedDate = new DateTime (2018, 1, 21),
+                },
+                new Post ()
+                {
+                    CategoryId = 2,
+                    AuthorId = 1,
+                    Title = "Magic of F# Type Providers",
+                    Body = "The first time I saw a type provider I did not actually get what all the fuss was about",
+                    CreatedDate = new DateTime (2018, 3, 21),
+                },
+                new Post ()
+                {
+                    CategoryId = 2,
+                    AuthorId = 2,
+                    Title = "sit amet",
+                    Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
+                    CreatedDate = new DateTime (2018, 2, 19),
+                },
+                new Post ()
+                {
+                    CategoryId = 2,
+                    AuthorId = 2,
+                    Title = "pulvinar velit",
+                    Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
+                    CreatedDate = new DateTime (2018, 1, 12),
+                },
+                new Post ()
+                {
+                    CategoryId = 1,
+                    AuthorId = 2,
+                    Title = "dolor lorem",
+                    Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel pulvinar velit.",
+                    CreatedDate = new DateTime (2018, 1, 30),
+                },
             };
         }
 
@@ -224,47 +224,47 @@ namespace Bloggy.API.Data.Seed
             return new List<Comment> ()
             {
                 new Comment ()
-                    {
-                        PostId = 1,
-                            AuthorId = 2,
-                            Body = "This is very helpful, thanks!",
-                            CreatedDate = new DateTime (2018, 3, 21),
-                    },
-                    new Comment ()
-                    {
-                        PostId = 2,
-                            AuthorId = 1,
-                            Body = "nice",
-                            CreatedDate = new DateTime (2017, 4, 21),
-                    },
-                    new Comment ()
-                    {
-                        PostId = 3,
-                            AuthorId = 1,
-                            Body = "this is helpful.",
-                            CreatedDate = new DateTime (2018, 4, 21),
-                    },
-                    new Comment ()
-                    {
-                        PostId = 1,
-                            AuthorId = 1,
-                            Body = "I'm glad you enjoyed it",
-                            CreatedDate = new DateTime (2018, 4, 12),
-                    },
-                    new Comment ()
-                    {
-                        PostId = 1,
-                            AuthorId = 2,
-                            Body = "wonderful",
-                            CreatedDate = new DateTime (2018, 2, 28),
-                    },
-                    new Comment ()
-                    {
-                        PostId = 4,
-                            AuthorId = 2,
-                            Body = "amazing",
-                            CreatedDate = new DateTime (2018, 1, 15),
-                    },
+                {
+                    PostId = 1,
+                    AuthorId = 2,
+                    Body = "This is very helpful, thanks!",
+                    CreatedDate = new DateTime (2018, 3, 21),
+                },
+                new Comment ()
+                {
+                    PostId = 2,
+                    AuthorId = 1,
+                    Body = "nice",
+                    CreatedDate = new DateTime (2017, 4, 21),
+                },
+                new Comment ()
+                {
+                    PostId = 3,
+                    AuthorId = 1,
+                    Body = "this is helpful.",
+                    CreatedDate = new DateTime (2018, 4, 21),
+                },
+                new Comment ()
+                {
+                    PostId = 1,
+                    AuthorId = 1,
+                    Body = "I'm glad you enjoyed it",
+                    CreatedDate = new DateTime (2018, 4, 12),
+                },
+                new Comment ()
+                {
+                    PostId = 1,
+                    AuthorId = 2,
+                    Body = "wonderful",
+                    CreatedDate = new DateTime (2018, 2, 28),
+                },
+                new Comment ()
+                {
+                    PostId = 4,
+                    AuthorId = 2,
+                    Body = "amazing",
+                    CreatedDate = new DateTime (2018, 1, 15),
+                },
             };
         }
     }

@@ -69,7 +69,6 @@ namespace Bloggy.API.Features.Comments
 
                 await _context.SaveChangesAsync ();
 
-                _logger.LogInformation("*************about to return ");
                 return Result.Ok ();
             }
 

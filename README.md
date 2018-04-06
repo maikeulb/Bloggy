@@ -1,7 +1,8 @@
 # Bloggy
 
 Restful API backend for a mini blog engine. Features include token-based
-authentication (using JWTs + Authorization headers) and swagger.
+authentication (using JWTs + Authorization headers), CORS, and swagger. The
+application architecture is vertically sliced and with CQRS (via MediatR).
 
 Technology
 ----------
@@ -154,5 +155,4 @@ Go to http://localhost:5000 and visit one of the above endpoints (or /swagger)
 
 Run
 ---
-CORS  
-PUT For comments creates a new resoruce (and foreign key)
+Figure out how to test commands involving user context
