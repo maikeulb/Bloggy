@@ -1,7 +1,7 @@
-# Friend Meet Friend
+# Bloggy
 
-Restful API backend for a mini blog engine with token-based authentication
-(using JWTs).
+Restful API backend for a mini blog engine. Features include token-based
+authentication (using JWTs + Authorization headers) and swagger.
 
 Technology
 ----------
@@ -41,14 +41,11 @@ Endpoints
 | `GET`     | `/api/users/{username}`               | `Retrieve user details`                   |
 | `PUT`     | `/api/users`                          | `Edit (logged in) user profile`           |
 
-// Check difference between first and second
-
 ### Auth
 | Method     | URI                                   | Action                                   |
 |------------|---------------------------------------|------------------------------------------|
 | `POST`     | `/auth/register`                      | `Register User`                          |
 | `POST`     | `/auth/login`                         | `Login User`                             |
-
 
 Sample Usage
 ---------------
@@ -59,8 +56,6 @@ Sample Usage
     "email": "user@example.com", 
     "username": "user"
 }
-
-
 ```
 
 `http post localhost:5000/auth/login email=user@email.com password=password`
@@ -121,7 +116,7 @@ Sample Usage
 ```
 
 `http --auth-type=jwt --auth="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyNSIsImp0aSI6Ijc2MDY3M2Q2LTYxYjEtNDc1ZC1hOWM4LTExMjRlOTRjNWIwMCIsImlhdCI6MTUyMjk2ODczNCwibmJmIjoxNTIyOTY4NzM0LCJleHAiOjE1MjI5NjkwMzQsImlzcyI6Imlzc3VlciIsImF1ZCI6ImF1ZGllbmNlIn0.QDvtbxjkJTUUObB4Bw6nNtepqhi-UivaA4_2I5ufX4k" 
-post localhost:5000/api/posts title="Event sourcing, CQRS, and Stream Processing" body="Event sourciing as an application architecture pattern is rising in popularity..." categoryId:=1 tags:='["software", "architecture"]'
+post localhost:5000/api/posts title="Event sourcing, CQRS, and Stream Processing" body="Event sourciing as an application architecture pattern is rising in popularity..." categoryId:=1 tags:='["software", "architecture"]'`
 
 ```
 {
@@ -156,3 +151,8 @@ dotnet ef database update
 dotnet run
 Go to http://localhost:5000 and visit one of the above endpoints (or /swagger)
 ```
+
+Run
+---
+Manually test endpoints
+CORS
