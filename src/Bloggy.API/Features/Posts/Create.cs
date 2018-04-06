@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,6 +10,7 @@ using CSharpFunctionalExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Bloggy.API.Features.Posts
 {
@@ -18,19 +20,18 @@ namespace Bloggy.API.Features.Posts
         {
             public string Title { get; set; }
             public string Body { get; set; }
-            public string Category { get; set; }
             public List<string> Tags { get; set; }
+            public int CategoryId { get; set; }
         }
 
         public class Model
         {
             public int Id { get; set; }
+            public string Category { get; set; }
             public string Title { get; set; }
             public string Body { get; set; }
-            public string Category { get; set; }
             public string Author { get; set; }
             public List<string> Tags { get; set; }
-            public List<Comment> Comments { get; set; }
             public DateTime CreatedDate { get; set; }
         }
 
@@ -40,7 +41,7 @@ namespace Bloggy.API.Features.Posts
             {
                 RuleFor (p => p.Title).NotEmpty ();
                 RuleFor (p => p.Body).NotEmpty ();
-                RuleFor (p => p.Category).NotEmpty ();
+                RuleFor (p => p.CategoryId).NotNull ();
             }
         }
 
@@ -49,47 +50,63 @@ namespace Bloggy.API.Features.Posts
             private readonly BloggyContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
             private readonly IMapper _mapper;
+            private readonly ILogger _logger;
 
-            public Handler (BloggyContext context, ICurrentUserAccessor currentUserAccessor, IMapper mapper)
+            public Handler (BloggyContext context, ICurrentUserAccessor currentUserAccessor, IMapper mapper,
+                ILogger<PostsController> logger)
             {
                 _context = context;
                 _currentUserAccessor = currentUserAccessor;
                 _mapper = mapper;
+                _logger = logger;
             }
 
             protected override async Task<Result<Model>> HandleCore (Command message)
             {
+                var author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername ());
+                if (author == null)
+                    return Result.Fail<Model> ("Author does not exit");
+
+                var category = await SingleCategoryAsync (message.CategoryId);
+                if (category == null)
+                    return Result.Fail<Model> ("Category does not exit");
                 var post = new Post
                 {
                     Title = message.Title,
                     Body = message.Body,
-                    Category = await SingleCategoryAsync (message.Category),
-                    Author = await SingleUserAsync (_currentUserAccessor.GetCurrentUsername ()),
+                    Category = category,
+                    Author = author,
                     CreatedDate = DateTime.UtcNow
                 };
-
-                var tags = new List<Tag> ();
-                var postTags = new List<PostTag> ();
-                foreach (var tag in message.Tags)
+                if (message.Tags!= null)
                 {
-                    var t = await SingleTagAsync (tag);
-                    if (t == null)
+                    var tags = new List<Tag> ();
+                    var postTags = new List<PostTag> ();
+                    foreach (var tag in message.Tags)
                     {
-                        t = new Tag { Name = tag };
-                        await _context.Tags.AddAsync (t);
-                        await _context.SaveChangesAsync ();
+                        var t = await SingleTagAsync (tag);
+                        if (t == null)
+                        {
+                            t = new Tag { Name = tag };
+                            await _context.Tags.AddAsync (t);
+                            await _context.SaveChangesAsync ();
+                        }
+                        tags.Add (t);
+                        var pt = new PostTag
+                        {
+                            Post = post,
+                            Tag = t
+                        };
+                        postTags.Add (pt);
                     }
-                    tags.Add (t);
-                    var pt = new PostTag
-                    {
-                        Post = post,
-                        Tag = t
-                    };
-                    postTags.Add (pt);
+                    await _context.PostTags.AddRangeAsync (postTags);
+                    await _context.Posts.AddAsync (post);
+                }
+                else
+                {
+                    await _context.Posts.AddAsync (post);
                 }
 
-                await _context.Posts.AddAsync (post);
-                await _context.PostTags.AddRangeAsync (postTags);
                 await _context.SaveChangesAsync ();
 
                 var model = _mapper.Map<Post, Model> (post);
@@ -109,10 +126,10 @@ namespace Bloggy.API.Features.Posts
                     .SingleOrDefaultAsync (t => t.Name == name);
             }
 
-            private async Task<Category> SingleCategoryAsync (string name)
+            private async Task<Category> SingleCategoryAsync (int id)
             {
                 return await _context.Categories
-                    .SingleOrDefaultAsync (c => c.Name == name);
+                    .SingleOrDefaultAsync (c => c.Id == id);
             }
         }
     }

@@ -42,7 +42,7 @@ namespace Bloggy.API.Features.Posts
             var result = await _mediator.Send (command);
 
             return result.IsSuccess
-                ? (IActionResult)CreatedAtRoute ("PostDetails", new { controller = "Posts", postId = result.Value.Id }, result)
+                ? (IActionResult)CreatedAtRoute ("PostDetails", new { controller = "Posts", postId = result.Value.Id }, result.Value)
                 : (IActionResult)BadRequest(result.Error);
         }
 

@@ -46,7 +46,7 @@ namespace Bloggy.API.Features.Comments
             var result = await _mediator.Send (command);
 
             return result.IsSuccess ?
-                (IActionResult) CreatedAtRoute ("CommentDetails", new { controller = "Comments", postId = command.PostId, id = result.Value.Id }, result) :
+                (IActionResult) CreatedAtRoute ("CommentDetails", new { controller = "Comments", postId = command.PostId, id = result.Value.Id }, result.Value) :
                 (IActionResult) BadRequest (result.Error);
         }
 

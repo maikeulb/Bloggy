@@ -97,7 +97,7 @@ namespace Bloggy
 
         public void Configure (IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseMiddleware<ErrorHandlingMiddleware>();
+            /* app.UseMiddleware<ErrorHandlingMiddleware>(); */
 
             app.UseCors (builder =>
                 builder

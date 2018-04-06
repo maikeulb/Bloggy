@@ -120,10 +120,22 @@ Sample Usage
 ...
 ```
 
-`http --auth-type=jwt --auth="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlbW9AZW1haWwuY29tIiwiZXhwIjoxNTIyNzQ3NjIxLCJ1c2VySWQiOjV9.M71uY55Za_PjUo4QdZIf3FI-t6mB9ySCMuzWql1BCsE" post localhost:5000/api/users/5/messages recipientId:=3 body="hey, let me know if you want to go to an art museum sometime."`
+`http --auth-type=jwt --auth="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyNSIsImp0aSI6Ijc2MDY3M2Q2LTYxYjEtNDc1ZC1hOWM4LTExMjRlOTRjNWIwMCIsImlhdCI6MTUyMjk2ODczNCwibmJmIjoxNTIyOTY4NzM0LCJleHAiOjE1MjI5NjkwMzQsImlzcyI6Imlzc3VlciIsImF1ZCI6ImF1ZGllbmNlIn0.QDvtbxjkJTUUObB4Bw6nNtepqhi-UivaA4_2I5ufX4k" 
+post localhost:5000/api/posts title="Event sourcing, CQRS, and Stream Processing" body="Event sourciing as an application architecture pattern is rising in popularity..." categoryId:=1 tags:='["software", "architecture"]'
 
 ```
-TODO
+{
+    "author": "user5", 
+    "body": "Event sourciing as an application architecture pattern is rising in popularity...", 
+    "category": "Software Architecture", 
+    "createdDate": "2018-04-06T01:31:12.3492258Z", 
+    "id": 17, 
+    "tags": [
+        "software", 
+        "architecture"
+    ], 
+    "title": "Event sourcing, CQRS, and Stream Processing"
+}
 ```
 
 Run
